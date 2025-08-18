@@ -1,0 +1,75 @@
+/* src/pages/Appointments/Edit/EditAppointment.module.css */
+
+.editAppointmentContainer {
+  max-width: 600px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.06);
+}
+
+.editAppointmentContainer h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #ffc107;
+  font-weight: 700;
+}
+
+.editAppointmentContainer form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.editAppointmentContainer label {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: #495057;
+}
+
+.editAppointmentContainer input,
+.editAppointmentContainer select,
+.editAppointmentContainer textarea {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.editAppointmentContainer input:focus,
+.editAppointmentContainer select:focus,
+.editAppointmentContainer textarea:focus {
+  border-color: #ffc107;
+  outline: none;
+}
+
+.editAppointmentContainer button {
+  background: #ffc107;
+  color: #212529;
+  border: none;
+  padding: 0.65rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.editAppointmentContainer button:hover {
+  background: #e0a800;
+}
+
+.backLink {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: #0056b3;
+}

@@ -1,0 +1,59 @@
+/* src/pages/Appointment/Confirm/ConfirmAppointment.module.css */
+
+.confirmContainer {
+  max-width: 500px;
+  margin: 3rem auto;
+  padding: 2rem 2.5rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.confirmContainer h1 {
+  color: #28a745;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.confirmContainer p {
+  font-size: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.confirmContainer strong {
+  color: #495057;
+}
+
+.btnSuccess {
+  background: #28a745;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-size: 1rem;
+}
+
+.btnSuccess:hover {
+  background: #218838;
+}
+
+.backLink {
+  display: inline-block;
+  margin-top: 1rem;
+  color: #007bff;
+  text-decoration: underline;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.backLink:hover {
+  color: #0056b3;
+}

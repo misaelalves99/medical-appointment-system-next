@@ -1,0 +1,132 @@
+/* src/pages/Patient/Patient.module.css */
+
+.patientIndexContainer {
+  width: 100%;
+  min-height: 100vh;
+  margin: 2rem auto;
+  padding: 1rem;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.06);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.patientIndexContainer h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #6f42c1;
+  font-weight: 700;
+}
+
+/* Container das ações (botão em cima, input abaixo) */
+.patientIndexContainer .actionsContainer {
+  display: flex;
+  flex-direction: column; /* empilha verticalmente */
+  align-items: flex-start;
+  gap: 0.6rem; /* espaço entre botão e input */
+  margin-bottom: 1rem;
+}
+
+/* Botão */
+.patientIndexContainer .createLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #6f42c1;
+  color: #ffffff;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.patientIndexContainer .createLink:hover {
+  background-color: #0056b3;
+}
+
+/* Input */
+.patientIndexContainer .searchInput {
+  padding: 0.5rem;
+  width: 100%;         /* ocupa 100% do container pai */
+  max-width: 320px;    /* limita largura para ficar bonito em telas grandes */
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+/* Tabela */
+.patientIndexContainer table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.patientIndexContainer th,
+.patientIndexContainer td {
+  border: 1px solid #dee2e6;
+  padding: 0.75rem;
+  text-align: left;
+  font-size: 0.95rem;
+  vertical-align: middle;
+}
+
+.patientIndexContainer th {
+  background-color: #383838;
+  color: white;
+  font-weight: 600;
+}
+
+.patientIndexContainer tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.patientIndexContainer tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Links de ação */
+.patientIndexContainer .detailsLink {
+  display: inline-block;
+  background-color: #28a745;
+  color: #ffffff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.patientIndexContainer .detailsLink:hover {
+  background-color: #218838;
+}
+
+.patientIndexContainer .editLink {
+  display: inline-block;
+  background-color: #ffc107;
+  color: #000000;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.patientIndexContainer .editLink:hover {
+  background-color: #e0a800;
+}
+
+.patientIndexContainer .deleteLink {
+  display: inline-block;
+  background-color: #dc3545;
+  color: #ffffff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.patientIndexContainer .deleteLink:hover {
+  background-color: #c82333;
+}

@@ -1,0 +1,90 @@
+/* src/pages/HomePage/HomePage.module.css */
+
+.homeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0f4ff, #e6ecff);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.homeContainer h1 {
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.homeContainer p {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.homeButtons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  max-width: 900px;
+}
+
+.homeButtons a {
+  display: inline-block;
+  padding: 1rem 1.5rem;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.patientBtn {
+  background-color: #4cafef;
+}
+
+.patientBtn:hover {
+  background-color: #3b9ede;
+}
+
+.doctorBtn {
+  background-color: #4caf50;
+}
+
+.doctorBtn:hover {
+  background-color: #3f9443;
+}
+
+.specialtyBtn {
+  background-color: #ff9800;
+}
+
+.specialtyBtn:hover {
+  background-color: #e08600;
+}
+
+.appointmentBtn {
+  background-color: #9c27b0;
+}
+
+.appointmentBtn:hover {
+  background-color: #852196;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .homeContainer h1 {
+    font-size: 1.5rem;
+  }
+
+  .homeButtons {
+    grid-template-columns: 1fr;
+  }
+}

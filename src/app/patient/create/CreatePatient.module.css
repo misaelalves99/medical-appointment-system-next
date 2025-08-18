@@ -1,0 +1,58 @@
+/* src/pages/Patient/Create/CreatePatient.module.css */
+
+.createPatientContainer {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.05);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.createPatientContainer h1 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #007bff;
+}
+
+.createPatientContainer form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.createPatientContainer input,
+.createPatientContainer select,
+.createPatientContainer textarea {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.createPatientContainer label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.createPatientContainer button {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+.createPatientContainer button:hover {
+  background: #0056b3;
+}

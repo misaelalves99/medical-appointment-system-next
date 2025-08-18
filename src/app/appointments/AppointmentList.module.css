@@ -1,0 +1,89 @@
+/* src/pages/Appointments/AppointmentList.module.css */
+
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.06);
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #fd7e14;
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.searchInput {
+  padding: 0.5rem;
+  width: 100%;
+  max-width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.createBtn {
+  background: #fd7e14;
+  color: #fff;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.createBtn:hover { opacity: 0.95; }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.table th, .table td {
+  border: 1px solid #dee2e6;
+  padding: 0.6rem;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.table th {
+  background: #383838;
+  color: #fff;
+}
+
+.table tr:nth-child(even) { background: #f8f9fa; }
+.table tr:hover { background: #f1f1f1; }
+
+.link {
+  color: #0d6efd;
+  text-decoration: none;
+  margin-right: 6px;
+}
+
+.sep {
+  margin: 0 6px;
+  color: #666;
+}
+
+.deleteBtn {
+  background: transparent;
+  color: #dc3545;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: underline;
+  padding: 0;
+}

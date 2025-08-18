@@ -1,0 +1,52 @@
+/* src/pages/Specialty/Details/DetailsSpecialty.module.css */
+
+.specialtyDetailsContainer {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.specialtyDetailsContainer h1 {
+  color: #17a2b8;
+  margin-bottom: 1rem;
+}
+
+.specialtyDetailsContainer p {
+  font-size: 1.2rem;
+  color: #343a40;
+  margin-bottom: 1rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.actions a {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #fff;
+  transition: background 0.2s;
+}
+
+.actions .edit {
+  background-color: #17a2b8;
+}
+
+.actions .edit:hover {
+  background-color: #138496;
+}
+
+.actions .back {
+  background-color: #6c757d;
+}
+
+.actions .back:hover {
+  background-color: #5a6268;
+}

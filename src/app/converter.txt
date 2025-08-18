@@ -1,0 +1,140 @@
+(Converta esse código React 19+ para Next 14+ com TypeScript)
+(Sempre coloque o caminho do arquivo no topo do código comentado)
+
+using SchoolManagementAPI.Models;
+using System.Linq;
+
+namespace SchoolManagementAPI.Data
+{
+    public static class SchoolRepository
+    {
+        // Lista estática de salas de aula para simulação de banco de dados
+        public static List<ClassRoom> ClassRoomsData = new List<ClassRoom>
+        {
+            new ClassRoom { Id = 1, Name = "Sala A", Capacity = 30 },
+            new ClassRoom { Id = 2, Name = "Sala B", Capacity = 25 },
+            new ClassRoom { Id = 3, Name = "Sala C", Capacity = 20 },
+            new ClassRoom { Id = 4, Name = "Sala D", Capacity = 35 }
+        };
+
+        // Lista de matrículas para simulação
+        public static List<Enrollment> Enrollments = new List<Enrollment>
+        {
+            new Enrollment { Id = 1, StudentId = 1, ClassRoomId = 1, EnrollmentDate = DateTime.Now, Status = "Ativa" }
+            // Outros dados de matrículas
+        };
+
+        // Métodos para acessar as salas de aula
+        public static ClassRoom GetClassRoomById(int id)
+        {
+            var classRoom = ClassRoomsData.FirstOrDefault(c => c.Id == id);
+            return classRoom ?? throw new ArgumentNullException(nameof(id), "Sala de aula não encontrada.");
+        }
+
+        // Métodos para acessar as matrículas
+        public static Enrollment GetEnrollmentById(int id)
+        {
+            var enrollment = Enrollments.FirstOrDefault(e => e.Id == id);
+            return enrollment ?? throw new ArgumentNullException(nameof(id), "Matrícula não encontrada.");
+        }
+
+        // Método para adicionar uma nova matrícula
+        public static void AddEnrollment(Enrollment enrollment)
+        {
+            if (enrollment == null) throw new ArgumentNullException(nameof(enrollment), "A matrícula não pode ser nula.");
+
+            enrollment.Id = Enrollments.Max(e => e.Id) + 1;
+            Enrollments.Add(enrollment);
+        }
+
+        // Método para excluir uma matrícula
+        public static void RemoveEnrollment(int id)
+        {
+            var enrollment = Enrollments.FirstOrDefault(e => e.Id == id);
+            if (enrollment == null)
+            {
+                throw new ArgumentNullException(nameof(id), "Matrícula não encontrada para remoção.");
+            }
+            Enrollments.Remove(enrollment);
+        }
+
+        // Método para adicionar uma nova sala
+        public static void AddClassRoom(ClassRoom classRoom)
+        {
+            if (classRoom == null) throw new ArgumentNullException(nameof(classRoom), "A sala de aula não pode ser nula.");
+
+            classRoom.Id = ClassRoomsData.Max(c => c.Id) + 1;
+            ClassRoomsData.Add(classRoom);
+        }
+
+        // Método para excluir uma sala
+        public static void RemoveClassRoom(int id)
+        {
+            var classRoom = ClassRoomsData.FirstOrDefault(c => c.Id == id);
+            if (classRoom == null)
+            {
+                throw new ArgumentNullException(nameof(id), "Sala de aula não encontrada para remoção.");
+            }
+            ClassRoomsData.Remove(classRoom);
+        }
+
+        // Método para atualizar uma sala de aula
+        public static void UpdateClassRoom(ClassRoom updatedClassRoom)
+        {
+            var classRoom = ClassRoomsData.FirstOrDefault(c => c.Id == updatedClassRoom.Id);
+            if (classRoom == null)
+            {
+                throw new ArgumentNullException(nameof(updatedClassRoom), "Sala de aula não encontrada para atualização.");
+            }
+            classRoom.Name = updatedClassRoom.Name;
+            classRoom.Capacity = updatedClassRoom.Capacity;
+        }
+
+        // Método para atualizar uma matrícula
+        public static void UpdateEnrollment(Enrollment updatedEnrollment)
+        {
+            var enrollment = Enrollments.FirstOrDefault(e => e.Id == updatedEnrollment.Id);
+            if (enrollment == null)
+            {
+                throw new ArgumentNullException(nameof(updatedEnrollment), "Matrícula não encontrada para atualização.");
+            }
+            enrollment.StudentId = updatedEnrollment.StudentId;
+            enrollment.ClassRoomId = updatedEnrollment.ClassRoomId;
+            enrollment.EnrollmentDate = updatedEnrollment.EnrollmentDate;
+            enrollment.Status = updatedEnrollment.Status;
+        }
+    }
+}
+
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllersWithViews();
+
+var app = builder.Build();
+
+app.UseStaticFiles();
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+else
+{
+    app.UseDeveloperExceptionPage();
+}
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.Run();
+

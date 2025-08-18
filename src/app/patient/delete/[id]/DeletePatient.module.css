@@ -1,0 +1,53 @@
+/* src/pages/Patient/Delete/DeletePatient.module.css */
+
+.deletePatientContainer {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.05);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+}
+
+.deletePatientContainer h1 {
+  margin-bottom: 1rem;
+  color: #dc3545;
+}
+
+.deletePatientContainer p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.btnDelete {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-right: 1rem;
+  transition: background-color 0.2s ease;
+}
+
+.btnDelete:hover {
+  background-color: #c82333;
+}
+
+.btnCancel {
+  background-color: #6c757d;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.btnCancel:hover {
+  background-color: #5a6268;
+}

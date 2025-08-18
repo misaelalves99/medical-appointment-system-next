@@ -1,0 +1,62 @@
+/* src/pages/Appointment/DeleteAppointment.module.css */
+
+.deleteContainer {
+  max-width: 600px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+}
+
+.deleteContainer h1 {
+  color: #dc3545;
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.deleteContainer h3 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.deleteContainer dl {
+  margin-bottom: 2rem;
+}
+
+.deleteContainer dt {
+  font-weight: 600;
+  color: #555;
+}
+
+.deleteContainer dd {
+  margin-bottom: 1rem;
+}
+
+.btnDanger {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
+
+.btnDanger:hover {
+  background-color: #a71d2a;
+}
+
+.btnSecondary {
+  background-color: #6c757d;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btnSecondary:hover {
+  background-color: #565e64;
+}

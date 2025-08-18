@@ -1,0 +1,76 @@
+/* src/components/Layout/Navbar.module.css */
+
+.navbar {
+  /* max-width: 1400px;
+  width: 100%; */
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  background-color: #0d6efd;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbarLogo {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+.navbarLinks {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.navbarLinks a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  border-radius: 5px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.navbarLinks a:hover,
+.navbarLinks a:focus {
+  background-color: rgba(255, 255, 255, 0.15);
+  outline: none;
+}
+
+.navbarToggle {
+  display: none;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.75rem;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .navbarToggle {
+    display: block;
+  }
+
+  .navbarLinks {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    display: none;
+    margin-top: 0.5rem;
+  }
+
+  .navbarLinks.active {
+    display: flex;
+  }
+
+  .navbarLinks a {
+    width: 100%;
+    padding: 0.75rem 1rem;
+  }
+}

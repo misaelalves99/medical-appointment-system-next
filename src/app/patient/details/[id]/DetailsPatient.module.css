@@ -1,0 +1,71 @@
+/* src/pages/Patient/Details/DetailsPatient.module.css */
+
+.patientDetailsContainer {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.patientDetailsContainer h1 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #343a40;
+}
+
+/* Optional profile image styling */
+/*
+.profileImage {
+  display: block;
+  margin: 0 auto 1rem auto;
+  border-radius: 50%;
+  max-width: 150px;
+  height: auto;
+}
+*/
+
+.patientDetailsContainer p {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+}
+
+.patientDetailsContainer strong {
+  color: #007bff;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.actions button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+  font-size: 1rem;
+}
+
+.actions .edit {
+  background: #28a745;
+}
+
+.actions .edit:hover {
+  background: #218838;
+}
+
+.actions .back {
+  background: #6c757d;
+}
+
+.actions .back:hover {
+  background: #5a6268;
+}

@@ -1,0 +1,53 @@
+/* src/pages/Patient/History/HistoryPatient.module.css */
+
+.patientHistoryContainer {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.patientHistoryContainer h1 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #007bff;
+}
+
+.patientHistoryContainer table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.patientHistoryContainer th,
+.patientHistoryContainer td {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.patientHistoryContainer th {
+  background-color: #007bff;
+  color: white;
+}
+
+.patientHistoryContainer tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.patientHistoryContainer tr:hover {
+  background-color: #f1f1f1;
+}
+
+.backLink {
+  display: inline-block;
+  margin-top: 1rem;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: #0056b3;
+}

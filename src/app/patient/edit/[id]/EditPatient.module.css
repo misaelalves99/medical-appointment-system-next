@@ -1,0 +1,74 @@
+/* src/pages/Patient/Edit/EditPatient.module.css */
+
+.editPatientContainer {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.05);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.editPatientContainer h1 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #ffc107;
+}
+
+.editPatientContainer form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.editPatientContainer input,
+.editPatientContainer select,
+.editPatientContainer textarea {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.editPatientContainer label {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  display: block;
+  color: #212529;
+}
+
+.editPatientContainer button[type="submit"] {
+  background: #ffc107;
+  color: #212529;
+  border: none;
+  padding: 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+.editPatientContainer button[type="submit"]:hover {
+  background: #e0a800;
+}
+
+.back {
+  background: #6c757d;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 1rem;
+  transition: background 0.2s;
+}
+
+.back:hover {
+  background: #5a6268;
+}

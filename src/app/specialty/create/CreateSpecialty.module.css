@@ -1,0 +1,42 @@
+/* src/pages/Specialty/Create/CreateSpecialty.module.css */
+
+.createSpecialtyContainer {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.createSpecialtyContainer h1 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #17a2b8;
+}
+
+.createSpecialtyContainer form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.createSpecialtyContainer input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.createSpecialtyContainer button {
+  background: #17a2b8;
+  color: #fff;
+  border: none;
+  padding: 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.createSpecialtyContainer button:hover {
+  background: #138496;
+}

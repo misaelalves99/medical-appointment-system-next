@@ -1,0 +1,56 @@
+/* src/pages/Specialty/Delete/DeleteSpecialty.module.css */
+
+.deleteSpecialtyContainer {
+  max-width: 480px;
+  margin: 3rem auto;
+  padding: 1.5rem;
+  background-color: #fff3f3;
+  border: 1px solid #f5c2c2;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(220, 53, 69, 0.2);
+  text-align: center;
+  color: #b02a37;
+}
+
+.deleteSpecialtyContainer h1 {
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.deleteSpecialtyContainer h4 {
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.deleteSpecialtyContainer div {
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+}
+
+.deleteSpecialtyContainer form button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.deleteSpecialtyContainer form button:hover {
+  background-color: #bb2d3b;
+}
+
+.cancelLink {
+  display: inline-block;
+  margin-left: 1rem;
+  font-weight: 600;
+  color: #6c757d;
+  text-decoration: none;
+  line-height: 1.5rem;
+}
+
+.cancelLink:hover {
+  text-decoration: underline;
+}

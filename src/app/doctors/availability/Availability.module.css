@@ -1,0 +1,62 @@
+/* src/pages/Doctor/Availability/Availability.module.css */
+
+.availabilityContainer {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.06);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333333;
+}
+
+.availabilityContainer h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #17a2b8;
+    font-weight: 700;
+}
+
+.availabilityContainer table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.availabilityContainer th,
+.availabilityContainer td {
+    border: 1px solid #dee2e6;
+    padding: 0.75rem;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+.availabilityContainer th {
+    background-color: #17a2b8;
+    color: #ffffff;
+}
+
+.availabilityContainer tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.availabilityContainer tr:hover {
+    background-color: #f1f1f1;
+}
+
+.backLink {
+    display: inline-block;
+    background-color: #17a2b8;
+    color: #ffffff;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+    margin-top: 1rem;
+}
+
+.backLink:hover {
+    background-color: #138496;
+}
