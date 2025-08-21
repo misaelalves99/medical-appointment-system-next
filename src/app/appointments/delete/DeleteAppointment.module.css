@@ -1,4 +1,4 @@
-/* src/pages/Appointment/DeleteAppointment.module.css */
+/* src/app/appointments/delete/[id]/DeleteAppointment.module.css */
 
 .deleteContainer {
   max-width: 600px;
@@ -7,30 +7,31 @@
   background: #ffffff;
   border-radius: 10px;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.deleteContainer h1 {
+.title {
   color: #dc3545;
   text-align: center;
   font-weight: 700;
   margin-bottom: 1rem;
 }
 
-.deleteContainer h3 {
+.subtitle {
   text-align: center;
   margin-bottom: 2rem;
 }
 
-.deleteContainer dl {
+.detailsList {
   margin-bottom: 2rem;
 }
 
-.deleteContainer dt {
+.detailsTerm {
   font-weight: 600;
   color: #555;
 }
 
-.deleteContainer dd {
+.detailsDesc {
   margin-bottom: 1rem;
 }
 

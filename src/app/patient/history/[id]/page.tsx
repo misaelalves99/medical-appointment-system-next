@@ -3,7 +3,7 @@
 "use client";
 
 import Link from "next/link";
-import styles from "../History/HistoryPatient.module.css";
+import styles from "../HistoryPatient.module.css"; // caminho corrigido
 
 interface PatientHistoryItem {
   recordDate: string;
@@ -18,7 +18,7 @@ interface PatientHistoryProps {
 const formatDate = (isoDate: string) =>
   new Date(isoDate).toLocaleDateString("pt-BR");
 
-const HistoryPatient: React.FC<PatientHistoryProps> = ({ history }) => {
+export default function HistoryPatient({ history }: PatientHistoryProps) {
   const sortedHistory = [...history].sort(
     (a, b) => new Date(b.recordDate).getTime() - new Date(a.recordDate).getTime()
   );
@@ -27,7 +27,7 @@ const HistoryPatient: React.FC<PatientHistoryProps> = ({ history }) => {
     <div className={styles.patientHistoryContainer}>
       <h1>Histórico do Paciente</h1>
 
-      <table>
+      <table className={styles.table}>
         <thead>
           <tr>
             <th>Data</th>
@@ -51,6 +51,4 @@ const HistoryPatient: React.FC<PatientHistoryProps> = ({ history }) => {
       </Link>
     </div>
   );
-};
-
-export default HistoryPatient;
+}

@@ -1,4 +1,4 @@
-/* src/pages/Patient/History/HistoryPatient.module.css */
+/* src/app/patient/history/HistoryPatient.module.css */
 
 .patientHistoryContainer {
   max-width: 800px;
@@ -13,29 +13,30 @@
   color: #007bff;
 }
 
-.patientHistoryContainer table {
+/* Adicionei uma classe para a tabela para ser CSS Module puro */
+.table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 1rem;
 }
 
-.patientHistoryContainer th,
-.patientHistoryContainer td {
+.table th,
+.table td {
   border: 1px solid #ddd;
   padding: 0.5rem;
   text-align: left;
 }
 
-.patientHistoryContainer th {
+.table th {
   background-color: #007bff;
   color: white;
 }
 
-.patientHistoryContainer tr:nth-child(even) {
+.table tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
-.patientHistoryContainer tr:hover {
+.table tr:hover {
   background-color: #f1f1f1;
 }
 

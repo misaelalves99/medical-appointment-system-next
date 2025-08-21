@@ -3,7 +3,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import styles from "../DeleteAppointment.module.css";
+import styles from "./DeleteAppointment.module.css"; // CSS na mesma pasta [id]
 import { Appointment, AppointmentStatus } from "../../../types/Appointment";
 
 interface DeleteAppointmentProps {
@@ -40,21 +40,21 @@ export default function DeleteAppointment({
 
   return (
     <div className={styles.deleteContainer}>
-      <h1>Excluir Consulta</h1>
-      <h3>Tem certeza que deseja excluir esta consulta?</h3>
+      <h1 className={styles.title}>Excluir Consulta</h1>
+      <h3 className={styles.subtitle}>Tem certeza que deseja excluir esta consulta?</h3>
 
-      <dl>
-        <dt>Paciente</dt>
-        <dd>{appointment.patientName ?? `ID ${appointment.patientId}`}</dd>
+      <dl className={styles.detailsList}>
+        <dt className={styles.detailsTerm}>Paciente</dt>
+        <dd className={styles.detailsDesc}>{appointment.patientName ?? `ID ${appointment.patientId}`}</dd>
 
-        <dt>Médico</dt>
-        <dd>{appointment.doctorName ?? `ID ${appointment.doctorId}`}</dd>
+        <dt className={styles.detailsTerm}>Médico</dt>
+        <dd className={styles.detailsDesc}>{appointment.doctorName ?? `ID ${appointment.doctorId}`}</dd>
 
-        <dt>Data e Hora</dt>
-        <dd>{new Date(appointment.appointmentDate).toLocaleString("pt-BR")}</dd>
+        <dt className={styles.detailsTerm}>Data e Hora</dt>
+        <dd className={styles.detailsDesc}>{new Date(appointment.appointmentDate).toLocaleString("pt-BR")}</dd>
 
-        <dt>Status</dt>
-        <dd>{getStatusLabel(appointment.status)}</dd>
+        <dt className={styles.detailsTerm}>Status</dt>
+        <dd className={styles.detailsDesc}>{getStatusLabel(appointment.status)}</dd>
       </dl>
 
       <form onSubmit={handleSubmit}>
