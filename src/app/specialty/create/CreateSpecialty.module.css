@@ -1,42 +1,68 @@
-/* src/pages/Specialty/Create/CreateSpecialty.module.css */
+/* src/app/specialty/create/CreateSpecialty.module.css */
 
-.createSpecialtyContainer {
-  max-width: 500px;
+.specialtyListContainer {
+  max-width: 900px;
   margin: 2rem auto;
   padding: 1rem;
-  background: #ffffff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
   border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
 }
 
-.createSpecialtyContainer h1 {
+.specialtyListContainer h1 {
   text-align: center;
-  margin-bottom: 1rem;
   color: #17a2b8;
+  margin-bottom: 1.5rem;
 }
 
-.createSpecialtyContainer form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+.specialtyTable {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.createSpecialtyContainer input {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+.specialtyTable th,
+.specialtyTable td {
+  border: 1px solid #dee2e6;
+  padding: 0.75rem;
+  text-align: left;
 }
 
-.createSpecialtyContainer button {
-  background: #17a2b8;
+.specialtyTable th {
+  background-color: #17a2b8;
+  color: #fff;
+}
+
+.specialtyTable tr:nth-child(even) {
+  background-color: #e9f7f9;
+}
+
+.specialtyTable tr:hover {
+  background-color: #d0eef2;
+}
+
+.btn {
+  background-color: #17a2b8;
   color: #fff;
   border: none;
-  padding: 0.6rem;
+  padding: 0.6rem 1rem;
   border-radius: 6px;
   cursor: pointer;
+  font-weight: 600;
   transition: background 0.2s;
 }
 
-.createSpecialtyContainer button:hover {
-  background: #138496;
+.btn:hover {
+  background-color: #138496;
+}
+
+.backLink {
+  display: inline-block;
+  margin-top: 1rem;
+  color: #17a2b8;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.backLink:hover {
+  color: #138496;
 }
