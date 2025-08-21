@@ -23,14 +23,12 @@ const SpecialtyIndex: React.FC = () => {
   const router = useRouter();
 
   const filteredSpecialties = specialties
-    ? specialties
-        .filter(
-          (s) =>
-            s.name.toLowerCase().includes(filter.toLowerCase()) ||
-            s.id.toString().includes(filter)
-        )
-        .sort((a, b) => a.name.localeCompare(b.name))
-    : [];
+    .filter(
+      (s) =>
+        s.name.toLowerCase().includes(filter.toLowerCase()) ||
+        s.id.toString().includes(filter)
+    )
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <div className={styles.specialtyIndexContainer}>
@@ -69,20 +67,25 @@ const SpecialtyIndex: React.FC = () => {
                   <td>{specialty.name}</td>
                   <td>
                     <button
+                      className={styles.detailsLink}
                       onClick={() =>
                         router.push(`/specialty/details/${specialty.id}`)
                       }
                     >
                       Detalhes
-                    </button>{" "}
+                    </button>
                     <button
+                      className={styles.detailsLink}
+                      style={{ backgroundColor: "#ffc107" }}
                       onClick={() =>
                         router.push(`/specialty/edit/${specialty.id}`)
                       }
                     >
                       Editar
-                    </button>{" "}
+                    </button>
                     <button
+                      className={styles.detailsLink}
+                      style={{ backgroundColor: "#dc3545" }}
                       onClick={() =>
                         router.push(`/specialty/delete/${specialty.id}`)
                       }
