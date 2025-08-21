@@ -1,30 +1,23 @@
 // src/app/appointments/confirm/page.tsx
 
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import styles from './ConfirmAppointment.module.css';
+import { useRouter } from "next/navigation";
+import styles from "./ConfirmAppointment.module.css";
+import { appointmentsMock } from "../../mocks/appointments"; // importa o mock
+import { Appointment } from "../../types/Appointment";
 
-export interface Appointment {
-  id: number;
-  patientId: number;
-  patient?: { fullName: string };
-  doctorId: number;
-  doctor?: { fullName: string };
-  appointmentDate: string;
-}
-
-interface ConfirmAppointmentProps {
-  appointment: Appointment;
-  onConfirm: (id: number) => void;
-}
-
-export default function ConfirmAppointment({ appointment, onConfirm }: ConfirmAppointmentProps) {
+export default function ConfirmAppointmentPage() {
   const router = useRouter();
 
-  const handleConfirm = (e: React.FormEvent) => {
-    e.preventDefault();
-    onConfirm(appointment.id);
+  // Pegamos o primeiro appointment do mock como exemplo
+  // Você pode substituir por ID vindo do router params
+  const appointment: Appointment = appointmentsMock[0];
+
+  const handleConfirm = (id: number) => {
+    // Aqui você pode atualizar o mock ou chamar API real
+    console.log("Consulta confirmada:", id);
+    router.push("/appointments");
   };
 
   return (
@@ -34,23 +27,32 @@ export default function ConfirmAppointment({ appointment, onConfirm }: ConfirmAp
 
       <ul>
         <li>
-          <strong>Data e Hora:</strong> {new Date(appointment.appointmentDate).toLocaleString('pt-BR')}
+          <strong>Data e Hora:</strong>{" "}
+          {new Date(appointment.appointmentDate).toLocaleString("pt-BR")}
         </li>
         <li>
-          <strong>Paciente:</strong> {appointment.patient?.fullName ?? `ID ${appointment.patientId}`}
+          <strong>Paciente:</strong>{" "}
+          {appointment.patientName || `ID ${appointment.patientId}`}
         </li>
         <li>
-          <strong>Médico:</strong> {appointment.doctor?.fullName ?? `ID ${appointment.doctorId}`}
+          <strong>Médico:</strong>{" "}
+          {appointment.doctorName || `ID ${appointment.doctorId}`}
         </li>
       </ul>
 
-      <form onSubmit={handleConfirm}>
-        <button type="submit" className={styles.btnSuccess}>
-          Confirmar
-        </button>
-      </form>
+      <button
+        type="button"
+        className={styles.btnSuccess}
+        onClick={() => handleConfirm(appointment.id)}
+      >
+        Confirmar
+      </button>
 
-      <button type="button" className={styles.backLink} onClick={() => router.push('/appointments')}>
+      <button
+        type="button"
+        className={styles.backLink}
+        onClick={() => router.push("/appointments")}
+      >
         Cancelar
       </button>
     </div>
