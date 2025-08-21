@@ -3,48 +3,49 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import styles from "./CreateAppointment.module.css";
+import { patientsMock } from "../../mocks/patients";
+import { doctorsMock } from "../../mocks/doctors";
+import { appointmentsMock } from "../../mocks/appointments";
+import { Appointment as AppointmentType, AppointmentStatus } from "../../types/Appointment";
 
-export interface AppointmentFormData {
-  patientId: string;
-  doctorId: string;
-  appointmentDate: string;
-  status: string;
-  notes: string;
-}
-
-export interface Option {
+interface Option {
   value: string;
   label: string;
 }
 
-interface CreateAppointmentProps {
-  patients: Option[];
-  doctors: Option[];
-  statusOptions: Option[];
-  onSubmit: (data: AppointmentFormData) => void;
-  onCancel: () => void;
-}
+export default function CreateAppointmentPage() {
+  const router = useRouter();
 
-export default function CreateAppointment({
-  patients,
-  doctors,
-  statusOptions,
-  onSubmit,
-  onCancel,
-}: CreateAppointmentProps) {
-  const [formData, setFormData] = useState<AppointmentFormData>({
+  // Preparar options a partir do mock
+  const patients: Option[] = patientsMock.map((p) => ({
+    value: p.id.toString(),
+    label: p.name, // corrigido de fullName para name
+  }));
+
+  const doctors: Option[] = doctorsMock.map((d) => ({
+    value: d.id.toString(),
+    label: d.name, // corrigido de fullName para name
+  }));
+
+  const statusOptions: { value: AppointmentStatus; label: string }[] = [
+    { value: AppointmentStatus.Scheduled, label: "Agendada" },
+    { value: AppointmentStatus.Confirmed, label: "Confirmada" },
+    { value: AppointmentStatus.Cancelled, label: "Cancelada" },
+    { value: AppointmentStatus.Completed, label: "Concluída" },
+  ];
+
+  const [formData, setFormData] = useState({
     patientId: "",
     doctorId: "",
     appointmentDate: "",
-    status: "",
+    status: AppointmentStatus.Scheduled,
     notes: "",
   });
 
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -52,7 +53,29 @@ export default function CreateAppointment({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    const patientId = parseInt(formData.patientId);
+    const doctorId = parseInt(formData.doctorId);
+
+    const patient = patientsMock.find((p) => p.id === patientId);
+    const doctor = doctorsMock.find((d) => d.id === doctorId);
+
+    if (!patient || !doctor) return;
+
+    const newAppointment: AppointmentType = {
+      id: appointmentsMock.length + 1,
+      patientId,
+      patientName: patient.name,
+      doctorId,
+      doctorName: doctor.name,
+      appointmentDate: formData.appointmentDate,
+      status: formData.status as AppointmentStatus,
+      notes: formData.notes,
+    };
+
+    appointmentsMock.push(newAppointment);
+    console.log("Nova consulta criada:", newAppointment);
+    router.push("/appointments");
   };
 
   return (
@@ -116,7 +139,6 @@ export default function CreateAppointment({
             value={formData.status}
             onChange={handleChange}
           >
-            <option value="">-- Selecione o status --</option>
             {statusOptions.map((s) => (
               <option key={s.value} value={s.value}>
                 {s.label}
@@ -139,7 +161,7 @@ export default function CreateAppointment({
 
         {/* Botões */}
         <button type="submit">Salvar</button>
-        <button type="button" onClick={onCancel} className="btn-secondary">
+        <button type="button" onClick={() => router.push("/appointments")} className="btn-secondary">
           Cancelar
         </button>
       </form>
