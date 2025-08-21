@@ -1,35 +1,36 @@
 // src/app/appointments/calendar/page.tsx
 
-'use client';
+"use client";
 
-import styles from './CalendarAppointments.module.css';
-import { Appointment as AppointmentType, AppointmentStatus } from '../../types/Appointment';
+import { useRouter } from "next/navigation";
+import styles from "./CalendarAppointments.module.css";
+import { Appointment, AppointmentStatus } from "../../types/Appointment";
+import { appointmentsMock } from "../../mocks/appointments"; // importe o mock
 
-interface CalendarAppointmentsProps {
-  appointments: AppointmentType[];
-  onBack: () => void;
-}
+export default function CalendarAppointmentsPage() {
+  const router = useRouter();
+  const appointments: Appointment[] = appointmentsMock;
 
-// Helper para converter enum para string legível
-const statusToString = (status: AppointmentStatus) => {
-  switch (status) {
-    case AppointmentStatus.Scheduled:
-      return 'Agendada';
-    case AppointmentStatus.Confirmed:
-      return 'Confirmada';
-    case AppointmentStatus.Cancelled:
-      return 'Cancelada';
-    case AppointmentStatus.Completed:
-      return 'Concluída';
-    default:
-      return 'Desconhecido';
-  }
-};
+  // Helper para converter enum para string legível
+  const statusToString = (status: AppointmentStatus) => {
+    switch (status) {
+      case AppointmentStatus.Scheduled:
+        return "Agendada";
+      case AppointmentStatus.Confirmed:
+        return "Confirmada";
+      case AppointmentStatus.Cancelled:
+        return "Cancelada";
+      case AppointmentStatus.Completed:
+        return "Concluída";
+      default:
+        return "Desconhecido";
+    }
+  };
 
-export default function CalendarAppointments({ appointments, onBack }: CalendarAppointmentsProps) {
   const sortedAppointments = [...appointments].sort(
     (a, b) =>
-      new Date(a.appointmentDate).getTime() - new Date(b.appointmentDate).getTime()
+      new Date(a.appointmentDate).getTime() -
+      new Date(b.appointmentDate).getTime()
   );
 
   return (
@@ -48,12 +49,19 @@ export default function CalendarAppointments({ appointments, onBack }: CalendarA
         <tbody>
           {sortedAppointments.map((appointment) => (
             <tr key={appointment.id}>
-              <td>{new Date(appointment.appointmentDate).toLocaleDateString('pt-BR')}</td>
               <td>
-                {new Date(appointment.appointmentDate).toLocaleTimeString('pt-BR', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
+                {new Date(appointment.appointmentDate).toLocaleDateString(
+                  "pt-BR"
+                )}
+              </td>
+              <td>
+                {new Date(appointment.appointmentDate).toLocaleTimeString(
+                  "pt-BR",
+                  {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }
+                )}
               </td>
               <td>{appointment.patientName || `ID ${appointment.patientId}`}</td>
               <td>{appointment.doctorName || `ID ${appointment.doctorId}`}</td>
@@ -63,7 +71,10 @@ export default function CalendarAppointments({ appointments, onBack }: CalendarA
         </tbody>
       </table>
 
-      <button className={styles.backLink} onClick={onBack}>
+      <button
+        className={styles.backLink}
+        onClick={() => router.push("/appointments")}
+      >
         Voltar
       </button>
     </div>
