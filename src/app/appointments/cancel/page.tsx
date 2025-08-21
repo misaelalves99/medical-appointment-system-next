@@ -1,35 +1,25 @@
 // src/app/appointments/cancel/page.tsx
 
-'use client';
+"use client";
 
-import styles from './CancelAppointment.module.css';
+import { useRouter } from "next/navigation";
+import styles from "./CancelAppointment.module.css";
+import { appointmentsMock } from "../../mocks/appointments"; // importa o mock
+import { Appointment } from "../../types/Appointment";
 
-interface Patient {
-  id: number;
-  fullName?: string;
-}
+export default function CancelAppointmentPage() {
+  const router = useRouter();
 
-interface Doctor {
-  id: number;
-  fullName?: string;
-}
+  // Pegamos o primeiro appointment do mock como exemplo
+  // Você pode alterar para buscar pelo ID via router params se necessário
+  const appointment: Appointment = appointmentsMock[0];
 
-interface Appointment {
-  id: number;
-  appointmentDate: string;
-  patient?: Patient;
-  patientId: number;
-  doctor?: Doctor;
-  doctorId: number;
-}
+  const handleCancel = (id: number) => {
+    // Aqui você pode remover do mock ou chamar API real
+    console.log("Consulta cancelada:", id);
+    router.push("/appointments");
+  };
 
-interface CancelAppointmentProps {
-  appointment: Appointment;
-  onCancel: (id: number) => void;
-  onBack: () => void;
-}
-
-export default function CancelAppointment({ appointment, onCancel, onBack }: CancelAppointmentProps) {
   return (
     <div className={styles.cancelContainer}>
       <h1>Cancelar Consulta</h1>
@@ -37,21 +27,32 @@ export default function CancelAppointment({ appointment, onCancel, onBack }: Can
 
       <ul>
         <li>
-          <strong>Data e Hora:</strong> {new Date(appointment.appointmentDate).toLocaleString('pt-BR')}
+          <strong>Data e Hora:</strong>{" "}
+          {new Date(appointment.appointmentDate).toLocaleString("pt-BR")}
         </li>
         <li>
-          <strong>Paciente:</strong> {appointment.patient?.fullName || `ID ${appointment.patientId}`}
+          <strong>Paciente:</strong>{" "}
+          {appointment.patientName || `ID ${appointment.patientId}`}
         </li>
         <li>
-          <strong>Médico:</strong> {appointment.doctor?.fullName || `ID ${appointment.doctorId}`}
+          <strong>Médico:</strong>{" "}
+          {appointment.doctorName || `ID ${appointment.doctorId}`}
         </li>
       </ul>
 
-      <button type="button" className={styles.btnDanger} onClick={() => onCancel(appointment.id)}>
+      <button
+        type="button"
+        className={styles.btnDanger}
+        onClick={() => handleCancel(appointment.id)}
+      >
         Confirmar Cancelamento
       </button>
 
-      <button type="button" className={styles.backLink} onClick={onBack}>
+      <button
+        type="button"
+        className={styles.backLink}
+        onClick={() => router.push("/appointments")}
+      >
         Voltar
       </button>
     </div>
