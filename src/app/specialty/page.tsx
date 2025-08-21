@@ -5,22 +5,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./SpecialtyList.module.css";
-
-export interface Specialty {
-  id: number;
-  name: string;
-}
-
-const mockSpecialties: Specialty[] = [
-  { id: 1, name: "Cardiologia" },
-  { id: 2, name: "Dermatologia" },
-  { id: 3, name: "Neurologia" },
-];
+import { specialtiesMock, Specialty } from "../mocks/specialties";
 
 const SpecialtyIndex: React.FC = () => {
-  const [specialties] = useState<Specialty[]>(mockSpecialties);
-  const [filter, setFilter] = useState("");
   const router = useRouter();
+  const [specialties, setSpecialties] = useState<Specialty[]>(specialtiesMock);
+  const [filter, setFilter] = useState("");
 
   const filteredSpecialties = specialties
     .filter(
@@ -29,6 +19,17 @@ const SpecialtyIndex: React.FC = () => {
         s.id.toString().includes(filter)
     )
     .sort((a, b) => a.name.localeCompare(b.name));
+
+  const handleDelete = (id: number) => {
+    const confirmed = confirm("Tem certeza que deseja excluir esta especialidade?");
+    if (confirmed) {
+      const updated = specialties.filter((s) => s.id !== id);
+      setSpecialties(updated);
+      // Atualiza o mock centralizado
+      const idx = specialtiesMock.findIndex((s) => s.id === id);
+      if (idx !== -1) specialtiesMock.splice(idx, 1);
+    }
+  };
 
   return (
     <div className={styles.specialtyIndexContainer}>
@@ -86,9 +87,7 @@ const SpecialtyIndex: React.FC = () => {
                     <button
                       className={styles.detailsLink}
                       style={{ backgroundColor: "#dc3545" }}
-                      onClick={() =>
-                        router.push(`/specialty/delete/${specialty.id}`)
-                      }
+                      onClick={() => handleDelete(specialty.id)}
                     >
                       Excluir
                     </button>
@@ -97,10 +96,7 @@ const SpecialtyIndex: React.FC = () => {
               ))
             ) : (
               <tr>
-                <td
-                  colSpan={3}
-                  style={{ textAlign: "center", padding: "1rem" }}
-                >
+                <td colSpan={3} style={{ textAlign: "center", padding: "1rem" }}>
                   Nenhuma especialidade encontrada.
                 </td>
               </tr>

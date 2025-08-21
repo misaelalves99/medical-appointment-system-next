@@ -2,51 +2,43 @@
 
 "use client";
 
-import { useState, FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, FormEvent } from "react";
+import { useParams, useRouter } from "next/navigation";
 import styles from "../EditPatient.module.css";
+import { patientsMock, Patient } from "../../../mocks/patients";
 
-interface PatientEditForm {
-  id: number;
-  name: string;
-  cpf: string;
-  dateOfBirth: string; // ISO date string
-  email: string;
-  phone: string;
-  address: string;
-}
-
-interface EditPatientPageProps {
-  params: { id: string }; // Next.js dynamic route param
-}
-
-export default function EditPatientPage({ params }: EditPatientPageProps) {
+export default function EditPatientPage() {
   const router = useRouter();
+  const params = useParams();
+  const idParam = params?.id ? Number(params.id) : undefined;
 
-  // Simulação de dados iniciais — substituir por fetch real
-  const initialData: PatientEditForm = {
-    id: Number(params.id),
-    name: "João da Silva",
-    cpf: "111.111.111-11",
-    dateOfBirth: "2000-01-15",
-    email: "joao@email.com",
-    phone: "9999-9999",
-    address: "Rua A, 123",
-  };
+  const [formData, setFormData] = useState<Patient | null>(null);
 
-  const [formData, setFormData] = useState<PatientEditForm>(initialData);
+  useEffect(() => {
+    if (idParam) {
+      const found = patientsMock.find((p) => p.id === idParam) || null;
+      setFormData(found);
+    }
+  }, [idParam]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!formData) return;
     const { name, value } = e.target;
-    setFormData((old) => ({ ...old, [name]: value }));
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    // Aqui você pode chamar a API para salvar alterações
-    console.log("Dados salvos:", formData);
+    if (!formData || !idParam) return;
+
+    const idx = patientsMock.findIndex((p) => p.id === idParam);
+    if (idx !== -1) patientsMock[idx] = formData;
+
+    console.log("Paciente atualizado:", formData);
     router.push("/patient");
   };
+
+  if (!formData) return <p>Carregando paciente...</p>;
 
   return (
     <div className={styles.editPatientContainer}>
@@ -73,7 +65,7 @@ export default function EditPatientPage({ params }: EditPatientPageProps) {
             id="cpf"
             name="cpf"
             type="text"
-            value={formData.cpf}
+            value={formData.cpf || ""}
             onChange={handleChange}
             required
           />

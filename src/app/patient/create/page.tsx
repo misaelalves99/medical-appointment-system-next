@@ -4,6 +4,8 @@
 
 import { useState, FormEvent } from "react";
 import styles from "./CreatePatient.module.css";
+import { patientsMock, Patient } from "../../mocks/patients"; // importando mock centralizado
+import { useRouter } from "next/navigation";
 
 interface PatientCreateForm {
   name: string;
@@ -13,7 +15,9 @@ interface PatientCreateForm {
   email: string;
 }
 
-const CreatePatient: React.FC = () => {
+export default function CreatePatientPage() {
+  const router = useRouter();
+
   const [formData, setFormData] = useState<PatientCreateForm>({
     name: "",
     dateOfBirth: "",
@@ -22,13 +26,29 @@ const CreatePatient: React.FC = () => {
     email: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    console.log("Dados enviados:", formData);
+
+    const newPatient: Patient = {
+      id: patientsMock.length + 1,
+      name: formData.name,
+      dateOfBirth: formData.dateOfBirth,
+      gender: formData.gender,
+      phone: formData.phone,
+      email: formData.email,
+      cpf: "", // você pode adicionar campo CPF futuramente
+      address: "", // endereço opcional
+    };
+
+    patientsMock.push(newPatient); // adiciona ao mock
+    console.log("Novo paciente cadastrado:", newPatient);
+    router.push("/patient"); // redireciona para listagem
   };
 
   return (
@@ -102,6 +122,4 @@ const CreatePatient: React.FC = () => {
       </form>
     </div>
   );
-};
-
-export default CreatePatient;
+}

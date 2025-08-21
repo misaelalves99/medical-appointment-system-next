@@ -2,37 +2,57 @@
 
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import styles from "../EditSpecialty.module.css";
+import { specialtiesMock, Specialty } from "../../../mocks/specialties";
 
-interface EditSpecialtyProps {
-  id: number;
-  initialName: string;
-  onSubmit: (id: number, name: string) => void;
-}
-
-const EditSpecialty: React.FC<EditSpecialtyProps> = ({ id, initialName, onSubmit }) => {
-  const [name, setName] = useState(initialName);
-  const [error, setError] = useState<string | null>(null);
+const EditSpecialtyPage: React.FC = () => {
   const router = useRouter();
+  const params = useParams();
+  const idParam = params?.id ? Number(params.id) : undefined;
+
+  const [name, setName] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [specialty, setSpecialty] = useState<Specialty | null>(null);
+
+  useEffect(() => {
+    if (idParam) {
+      const found = specialtiesMock.find((s) => s.id === idParam) || null;
+      if (found) setName(found.name);
+      setSpecialty(found);
+    }
+  }, [idParam]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!specialty) return;
+
     if (name.trim() === "") {
       setError("O nome da especialidade é obrigatório.");
       return;
     }
+
     setError(null);
-    onSubmit(id, name.trim());
+
+    // Atualiza mock
+    const idx = specialtiesMock.findIndex((s) => s.id === specialty.id);
+    if (idx !== -1) specialtiesMock[idx].name = name.trim();
+
+    router.push("/specialty");
   };
+
+  const handleBack = () => {
+    router.push("/specialty");
+  };
+
+  if (!specialty) return <p>Carregando especialidade...</p>;
 
   return (
     <div className={styles.editSpecialtyContainer}>
       <h1>Editar Especialidade</h1>
 
       <form onSubmit={handleSubmit}>
-        <input type="hidden" value={id} />
         <div>
           <label htmlFor="specialtyName">Nome da Especialidade:</label>
           <input
@@ -50,11 +70,11 @@ const EditSpecialty: React.FC<EditSpecialtyProps> = ({ id, initialName, onSubmit
         </button>
       </form>
 
-      <button className="btn btn-secondary mt-3" onClick={() => router.push("/specialty")}>
+      <button className="btn btn-secondary mt-3" onClick={handleBack}>
         Voltar
       </button>
     </div>
   );
 };
 
-export default EditSpecialty;
+export default EditSpecialtyPage;

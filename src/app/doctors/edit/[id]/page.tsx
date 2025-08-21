@@ -1,27 +1,13 @@
 // src/app/doctors/edit/[id]/page.tsx
+
 "use client";
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import styles from "../DoctorEdit.module.css";
+import { doctorsMock, Doctor } from "../../../mocks/doctors";
 
-export interface Doctor {
-  id: number;
-  name: string;
-  crm: string;
-  specialty: string;
-  email: string;
-  phone: string;
-  isActive: boolean;
-}
-
-// Mock de médicos
-const doctorsMock: Doctor[] = [
-  { id: 1, name: "Dr. João", crm: "12345", specialty: "Cardiologia", email: "joao@email.com", phone: "9999-9999", isActive: true },
-  { id: 2, name: "Dra. Maria", crm: "67890", specialty: "Pediatria", email: "maria@email.com", phone: "8888-8888", isActive: false },
-];
-
-const DoctorEditPage: React.FC = () => {
+export default function DoctorEditPage() {
   const params = useParams();
   const router = useRouter();
   const idParam = params?.id ? Number(params.id) : undefined;
@@ -133,12 +119,14 @@ const DoctorEditPage: React.FC = () => {
         <button className={styles.submitButton} type="submit">
           Salvar Alterações
         </button>
-        <button className={styles.cancelButton} type="button" onClick={handleCancel}>
+        <button
+          className={styles.cancelButton}
+          type="button"
+          onClick={handleCancel}
+        >
           Cancelar
         </button>
       </form>
     </div>
   );
-};
-
-export default DoctorEditPage;
+}

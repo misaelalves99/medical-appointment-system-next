@@ -5,53 +5,22 @@
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "../DetailsAppointment.module.css";
+import { appointmentsMock } from "../../../mocks/appointments";
+import { Appointment as AppointmentType } from "../../../types/Appointment";
 
-export interface Appointment {
-  id: number;
-  patientId: number;
-  patient?: { fullName: string };
-  doctorId: number;
-  doctor?: { fullName: string };
-  appointmentDate: string;
-  status: string;
-  notes?: string;
-}
-
-const appointmentsMock: Appointment[] = [
-  {
-    id: 1,
-    patientId: 1,
-    patient: { fullName: "João da Silva" },
-    doctorId: 2,
-    doctor: { fullName: "Dra. Maria Oliveira" },
-    appointmentDate: "2025-08-15T14:30",
-    status: "Confirmada",
-    notes: "Paciente apresentou melhora significativa.",
-  },
-  {
-    id: 2,
-    patientId: 2,
-    patient: { fullName: "Ana Souza" },
-    doctorId: 1,
-    doctor: { fullName: "Dr. João" },
-    appointmentDate: "2025-08-16T10:00",
-    status: "Pendente",
-  },
-];
-
-export default function AppointmentDetails() {
+export default function AppointmentDetailsPage() {
   const router = useRouter();
   const params = useParams();
-  const idParam = params?.id ? Number(params.id) : undefined;
+  const appointmentId = params?.id ? Number(params.id) : undefined;
 
-  const [appointment, setAppointment] = useState<Appointment | null>(null);
+  const [appointment, setAppointment] = useState<AppointmentType | null>(null);
 
   useEffect(() => {
-    if (idParam) {
-      const found = appointmentsMock.find((a) => a.id === idParam) || null;
+    if (appointmentId) {
+      const found = appointmentsMock.find((a) => a.id === appointmentId) || null;
       setAppointment(found);
     }
-  }, [idParam]);
+  }, [appointmentId]);
 
   if (!appointment) return <p>Consulta não encontrada ou carregando...</p>;
 
@@ -64,22 +33,20 @@ export default function AppointmentDetails() {
       <div className={styles.infoRow}>
         <span className={styles.infoLabel}>Paciente</span>
         <span className={styles.infoValue}>
-          {appointment.patient?.fullName ?? `ID ${appointment.patientId}`}
+          {appointment.patientName ?? `ID ${appointment.patientId}`}
         </span>
       </div>
 
       <div className={styles.infoRow}>
         <span className={styles.infoLabel}>Médico</span>
         <span className={styles.infoValue}>
-          {appointment.doctor?.fullName ?? `ID ${appointment.doctorId}`}
+          {appointment.doctorName ?? `ID ${appointment.doctorId}`}
         </span>
       </div>
 
       <div className={styles.infoRow}>
         <span className={styles.infoLabel}>Data e Hora</span>
-        <span className={styles.infoValue}>
-          {dt.toLocaleString("pt-BR")}
-        </span>
+        <span className={styles.infoValue}>{dt.toLocaleString("pt-BR")}</span>
       </div>
 
       <div className={styles.infoRow}>
@@ -100,7 +67,10 @@ export default function AppointmentDetails() {
         >
           Editar
         </button>
-        <button onClick={() => router.push("/appointments")} className={styles.backBtn}>
+        <button
+          onClick={() => router.push("/appointments")}
+          className={styles.backBtn}
+        >
           Voltar
         </button>
       </div>

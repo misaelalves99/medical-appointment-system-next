@@ -5,24 +5,9 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import styles from "../DeleteDoctor.module.css";
+import { doctorsMock, Doctor } from "../../../mocks/doctors";
 
-export interface Doctor {
-  id: number;
-  name: string;
-  crm: string;
-  specialty: string;
-  email: string;
-  phone: string;
-  isActive: boolean;
-}
-
-// Mock de médicos
-const doctorsMock: Doctor[] = [
-  { id: 1, name: "Dr. João", crm: "12345", specialty: "Cardiologia", email: "joao@email.com", phone: "9999-9999", isActive: true },
-  { id: 2, name: "Dra. Maria", crm: "67890", specialty: "Pediatria", email: "maria@email.com", phone: "8888-8888", isActive: false },
-];
-
-export default function DeleteDoctor() {
+export default function DeleteDoctorPage() {
   const router = useRouter();
   const params = useParams();
   const idParam = params?.id ? Number(params.id) : undefined;

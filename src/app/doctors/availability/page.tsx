@@ -4,25 +4,19 @@
 
 import Link from "next/link";
 import styles from "./Availability.module.css";
+import { doctorsMock, doctorAvailabilitiesMock, DoctorAvailability } from "../../mocks/doctors";
 
-export interface DoctorAvailability {
-  doctorId: number;
-  date: string; // formato ISO (ex: "2025-08-08")
-  startTime: string; // ex: "08:00"
-  endTime: string;   // ex: "12:00"
-  isAvailable: boolean;
-}
-
-interface AvailabilityProps {
-  availabilities: DoctorAvailability[];
-}
-
-const Availability: React.FC<AvailabilityProps> = ({ availabilities }) => {
-  const sortedAvailabilities = [...availabilities].sort((a, b) => {
+export default function DoctorAvailabilityPage() {
+  const sortedAvailabilities = [...doctorAvailabilitiesMock].sort((a, b) => {
     const dateA = new Date(a.date + "T" + a.startTime).getTime();
     const dateB = new Date(b.date + "T" + b.startTime).getTime();
     return dateA - dateB;
   });
+
+  const getDoctorName = (id: number) => {
+    const doctor = doctorsMock.find((d) => d.id === id);
+    return doctor ? doctor.name : `ID ${id}`;
+  };
 
   return (
     <div className={styles.availabilityContainer}>
@@ -31,7 +25,7 @@ const Availability: React.FC<AvailabilityProps> = ({ availabilities }) => {
       <table>
         <thead>
           <tr>
-            <th>ID do Médico</th>
+            <th>Médico</th>
             <th>Data</th>
             <th>Hora Início</th>
             <th>Hora Fim</th>
@@ -39,9 +33,9 @@ const Availability: React.FC<AvailabilityProps> = ({ availabilities }) => {
           </tr>
         </thead>
         <tbody>
-          {sortedAvailabilities.map((availability, index) => (
+          {sortedAvailabilities.map((availability: DoctorAvailability, index: number) => (
             <tr key={index}>
-              <td>{availability.doctorId}</td>
+              <td>{getDoctorName(availability.doctorId)}</td>
               <td>{new Date(availability.date).toLocaleDateString("pt-BR")}</td>
               <td>{availability.startTime}</td>
               <td>{availability.endTime}</td>
@@ -51,9 +45,9 @@ const Availability: React.FC<AvailabilityProps> = ({ availabilities }) => {
         </tbody>
       </table>
 
-      <Link href="/doctor" className={styles.backLink}>Voltar</Link>
+      <Link href="/doctor" className={styles.backLink}>
+        Voltar
+      </Link>
     </div>
   );
-};
-
-export default Availability;
+}

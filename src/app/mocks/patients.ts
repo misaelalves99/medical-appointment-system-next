@@ -1,5 +1,6 @@
 // src/mocks/patients.ts
 
+// ================== Pacientes ==================
 export interface Patient {
   id: number;
   name: string;
@@ -31,5 +32,34 @@ export const patientsMock: Patient[] = [
     phone: "4444-4444",
     address: "Rua B, 456",
     gender: "Feminino",
+  },
+];
+
+// ================== Histórico de Pacientes ==================
+export interface PatientHistoryItem {
+  patientId: number;
+  recordDate: string; // ISO string
+  description: string;
+  notes?: string | null;
+}
+
+export const patientsHistoryMock: PatientHistoryItem[] = [
+  {
+    patientId: 1,
+    recordDate: "2025-08-01",
+    description: "Consulta de rotina",
+    notes: "Tudo dentro do esperado",
+  },
+  {
+    patientId: 1,
+    recordDate: "2025-08-10",
+    description: "Exame de sangue",
+    notes: "Alterações leves nos níveis de colesterol",
+  },
+  {
+    patientId: 2,
+    recordDate: "2025-07-15",
+    description: "Consulta de alergia",
+    notes: "Prescrito anti-histamínico",
   },
 ];

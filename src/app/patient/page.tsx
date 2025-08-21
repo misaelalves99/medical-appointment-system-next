@@ -5,29 +5,15 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "./Patient.module.css";
-
-interface Patient {
-  id: number;
-  name: string;
-  cpf: string;
-  email: string;
-  phone: string;
-}
+import { patientsMock, Patient } from "../mocks/patients"; // import do mock centralizado
 
 const PatientIndex: React.FC = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    // Mock de pacientes
-    const fetchPatients = async () => {
-      const data: Patient[] = [
-        { id: 1, name: "João da Silva", cpf: "111.111.111-11", email: "joao@email.com", phone: "9999-9999" },
-        { id: 2, name: "Maria Souza", cpf: "222.222.222-22", email: "maria@email.com", phone: "8888-8888" },
-      ];
-      setPatients(data);
-    };
-    fetchPatients();
+    // Simula fetch do mock
+    setPatients(patientsMock);
   }, []);
 
   const filteredPatients = patients.filter((p) =>
@@ -89,13 +75,25 @@ const PatientIndex: React.FC = () => {
                   className={styles.deleteLink}
                 >
                   Excluir
+                </Link>{" "}
+                <Link
+                  href={`/patient/history/${patient.id}`}
+                  className={styles.historyLink}
+                >
+                  Histórico
+                </Link>{" "}
+                <Link
+                  href={`/patient/upload-profile/${patient.id}`}
+                  className={styles.uploadLink}
+                >
+                  Upload Foto
                 </Link>
               </td>
             </tr>
           ))}
           {filteredPatients.length === 0 && (
             <tr>
-              <td colSpan={5} style={{ textAlign: "center", padding: "1rem" }}>
+              <td colSpan={6} style={{ textAlign: "center", padding: "1rem" }}>
                 Nenhum paciente encontrado.
               </td>
             </tr>

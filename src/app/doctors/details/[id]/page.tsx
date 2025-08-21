@@ -5,40 +5,9 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import styles from "../DoctorDetails.module.css";
+import { doctorsMock, Doctor } from "../../../mocks/doctors";
 
-export interface Doctor {
-  id: number;
-  name: string;
-  crm: string;
-  specialty: string;
-  email: string;
-  phone: string;
-  isActive: boolean;
-}
-
-// Mock de médicos
-const mockDoctors: Doctor[] = [
-  {
-    id: 1,
-    name: "Dr. João Silva",
-    crm: "12345",
-    specialty: "Cardiologia",
-    email: "joao@hospital.com",
-    phone: "9999-9999",
-    isActive: true,
-  },
-  {
-    id: 2,
-    name: "Dra. Maria Souza",
-    crm: "67890",
-    specialty: "Dermatologia",
-    email: "maria@hospital.com",
-    phone: "8888-8888",
-    isActive: true,
-  },
-];
-
-const DoctorDetailsPage: React.FC = () => {
+export default function DoctorDetailsPage() {
   const [doctor, setDoctor] = useState<Doctor | null>(null);
   const params = useParams();
   const router = useRouter();
@@ -46,7 +15,7 @@ const DoctorDetailsPage: React.FC = () => {
 
   useEffect(() => {
     if (idParam) {
-      const found = mockDoctors.find((d) => d.id === idParam) || null;
+      const found = doctorsMock.find((d) => d.id === idParam) || null;
       setDoctor(found);
     }
   }, [idParam]);
@@ -84,6 +53,4 @@ const DoctorDetailsPage: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default DoctorDetailsPage;
+}

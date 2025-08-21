@@ -30,3 +30,19 @@ export const doctorsMock: Doctor[] = [
     isActive: true,
   },
 ];
+
+// Mock de disponibilidades dos médicos
+export interface DoctorAvailability {
+  doctorId: number;
+  date: string; // formato ISO (ex: "2025-08-08")
+  startTime: string; // ex: "08:00"
+  endTime: string;   // ex: "12:00"
+  isAvailable: boolean;
+}
+
+export const doctorAvailabilitiesMock: DoctorAvailability[] = [
+  { doctorId: 1, date: "2025-08-20", startTime: "08:00", endTime: "12:00", isAvailable: true },
+  { doctorId: 1, date: "2025-08-21", startTime: "14:00", endTime: "18:00", isAvailable: false },
+  { doctorId: 2, date: "2025-08-20", startTime: "09:00", endTime: "13:00", isAvailable: true },
+  { doctorId: 2, date: "2025-08-21", startTime: "15:00", endTime: "19:00", isAvailable: true },
+];

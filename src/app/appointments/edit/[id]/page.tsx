@@ -2,38 +2,65 @@
 
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
 import styles from "../EditAppointment.module.css";
+import { appointmentsMock } from "../../../mocks/appointments";
+import { patientsMock } from "../../../mocks/patients";
+import { doctorsMock } from "../../../mocks/doctors";
+import { AppointmentStatus } from "../../../types/Appointment";
 
-interface AppointmentForm {
-  patientId: string;
-  doctorId: string;
-  appointmentDate: string;
-  status: string;
-  notes: string;
-}
+export default function EditAppointmentPage() {
+  const router = useRouter();
+  const params = useParams();
+  const appointmentId = params?.id ? Number(params.id) : undefined;
 
-export default function EditAppointment() {
-  const [formData, setFormData] = useState<AppointmentForm>({
+  const [formData, setFormData] = useState({
     patientId: "",
     doctorId: "",
     appointmentDate: "",
-    status: "Confirmada",
+    status: AppointmentStatus.Confirmed,
     notes: "",
   });
 
+  useEffect(() => {
+    if (appointmentId) {
+      const appointment = appointmentsMock.find(a => a.id === appointmentId);
+      if (appointment) {
+        setFormData({
+          patientId: appointment.patientId.toString(),
+          doctorId: appointment.doctorId.toString(),
+          appointmentDate: appointment.appointmentDate,
+          status: appointment.status,
+          notes: appointment.notes ?? "",
+        });
+      }
+    }
+  }, [appointmentId]);
+
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Salvando consulta:", formData);
+    if (!appointmentId) return;
+
+    const index = appointmentsMock.findIndex(a => a.id === appointmentId);
+    if (index !== -1) {
+      appointmentsMock[index] = {
+        ...appointmentsMock[index],
+        patientId: parseInt(formData.patientId),
+        doctorId: parseInt(formData.doctorId),
+        appointmentDate: formData.appointmentDate,
+        status: formData.status as AppointmentStatus,
+        notes: formData.notes,
+      };
+      console.log("Consulta atualizada:", appointmentsMock[index]);
+      router.push("/appointments");
+    }
   };
 
   return (
@@ -41,25 +68,19 @@ export default function EditAppointment() {
       <h1>Editar Consulta</h1>
       <form onSubmit={handleSubmit}>
         <label>Paciente</label>
-        <select
-          name="patientId"
-          value={formData.patientId}
-          onChange={handleChange}
-        >
+        <select name="patientId" value={formData.patientId} onChange={handleChange}>
           <option value="">-- Selecione o paciente --</option>
-          <option value="1">João da Silva</option>
-          <option value="2">Maria Oliveira</option>
+          {patientsMock.map(p => (
+            <option key={p.id} value={p.id}>{p.name}</option>
+          ))}
         </select>
 
         <label>Médico</label>
-        <select
-          name="doctorId"
-          value={formData.doctorId}
-          onChange={handleChange}
-        >
+        <select name="doctorId" value={formData.doctorId} onChange={handleChange}>
           <option value="">-- Selecione o médico --</option>
-          <option value="1">Dr. Pedro Souza</option>
-          <option value="2">Dra. Ana Costa</option>
+          {doctorsMock.map(d => (
+            <option key={d.id} value={d.id}>{d.name}</option>
+          ))}
         </select>
 
         <label>Data e Hora</label>
@@ -71,14 +92,10 @@ export default function EditAppointment() {
         />
 
         <label>Status</label>
-        <select
-          name="status"
-          value={formData.status}
-          onChange={handleChange}
-        >
-          <option value="Confirmada">Confirmada</option>
-          <option value="Cancelada">Cancelada</option>
-          <option value="Pendente">Pendente</option>
+        <select name="status" value={formData.status} onChange={handleChange}>
+          {Object.values(AppointmentStatus).map(s => (
+            <option key={s} value={s}>{s}</option>
+          ))}
         </select>
 
         <label>Observações</label>
@@ -90,9 +107,9 @@ export default function EditAppointment() {
         />
 
         <button type="submit">Salvar</button>
-        <Link className={styles.backLink} href="/appointments">
+        <button type="button" className={styles.backLink} onClick={() => router.push("/appointments")}>
           Cancelar
-        </Link>
+        </button>
       </form>
     </div>
   );

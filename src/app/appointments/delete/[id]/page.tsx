@@ -2,14 +2,10 @@
 
 "use client";
 
-import { useRouter } from "next/navigation";
-import styles from "../DeleteAppointment.module.css"; // CSS na mesma pasta [id]
-import { Appointment, AppointmentStatus } from "../../../types/Appointment";
-
-interface DeleteAppointmentProps {
-  appointment: Appointment;
-  onDelete: (id: number) => void;
-}
+import { useRouter, useParams } from "next/navigation";
+import styles from "../DeleteAppointment.module.css";
+import { appointmentsMock } from "../../../mocks/appointments";
+import { AppointmentStatus } from "../../../types/Appointment";
 
 const getStatusLabel = (status: AppointmentStatus): string => {
   switch (status) {
@@ -26,15 +22,23 @@ const getStatusLabel = (status: AppointmentStatus): string => {
   }
 };
 
-export default function DeleteAppointment({
-  appointment,
-  onDelete,
-}: DeleteAppointmentProps) {
+export default function DeleteAppointmentPage() {
   const router = useRouter();
+  const params = useParams();
+  const appointmentId = Number(params.id);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onDelete(appointment.id);
+  const appointment = appointmentsMock.find((a) => a.id === appointmentId);
+
+  if (!appointment) {
+    return <p>Consulta não encontrada.</p>;
+  }
+
+  const handleDelete = () => {
+    const index = appointmentsMock.findIndex((a) => a.id === appointmentId);
+    if (index > -1) {
+      appointmentsMock.splice(index, 1);
+      console.log("Consulta deletada:", appointmentId);
+    }
     router.push("/appointments");
   };
 
@@ -45,19 +49,30 @@ export default function DeleteAppointment({
 
       <dl className={styles.detailsList}>
         <dt className={styles.detailsTerm}>Paciente</dt>
-        <dd className={styles.detailsDesc}>{appointment.patientName ?? `ID ${appointment.patientId}`}</dd>
+        <dd className={styles.detailsDesc}>
+          {appointment.patientName ?? `ID ${appointment.patientId}`}
+        </dd>
 
         <dt className={styles.detailsTerm}>Médico</dt>
-        <dd className={styles.detailsDesc}>{appointment.doctorName ?? `ID ${appointment.doctorId}`}</dd>
+        <dd className={styles.detailsDesc}>
+          {appointment.doctorName ?? `ID ${appointment.doctorId}`}
+        </dd>
 
         <dt className={styles.detailsTerm}>Data e Hora</dt>
-        <dd className={styles.detailsDesc}>{new Date(appointment.appointmentDate).toLocaleString("pt-BR")}</dd>
+        <dd className={styles.detailsDesc}>
+          {new Date(appointment.appointmentDate).toLocaleString("pt-BR")}
+        </dd>
 
         <dt className={styles.detailsTerm}>Status</dt>
         <dd className={styles.detailsDesc}>{getStatusLabel(appointment.status)}</dd>
       </dl>
 
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleDelete();
+        }}
+      >
         <button type="submit" className={styles.btnDanger}>
           Excluir
         </button>
