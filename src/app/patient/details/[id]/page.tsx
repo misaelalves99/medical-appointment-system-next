@@ -3,7 +3,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import styles from "./DetailsPatient.module.css";
+import styles from "../DetailsPatient.module.css";
 
 interface PatientDetailsProps {
   patient: {

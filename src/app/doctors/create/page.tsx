@@ -4,7 +4,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import styles from "./CreateDoctor.module.css";
+import styles from "../CreateDoctor.module.css";
 import { Doctor, doctorsMock } from "../../mocks/doctors";
 
 export default function CreateDoctor() {

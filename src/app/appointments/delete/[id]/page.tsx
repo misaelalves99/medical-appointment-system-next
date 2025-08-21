@@ -3,7 +3,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import styles from "./DeleteAppointment.module.css"; // CSS na mesma pasta [id]
+import styles from "../DeleteAppointment.module.css"; // CSS na mesma pasta [id]
 import { Appointment, AppointmentStatus } from "../../../types/Appointment";
 
 interface DeleteAppointmentProps {

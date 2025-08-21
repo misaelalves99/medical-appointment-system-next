@@ -4,7 +4,7 @@
 
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import styles from "./DetailsAppointment.module.css";
+import styles from "../DetailsAppointment.module.css";
 
 export interface Appointment {
   id: number;

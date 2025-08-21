@@ -4,7 +4,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import styles from "./EditAppointment.module.css";
+import styles from "../EditAppointment.module.css";
 
 interface AppointmentForm {
   patientId: string;

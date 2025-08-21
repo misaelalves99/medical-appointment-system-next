@@ -3,7 +3,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import styles from "./SpecialtyDetails.module.css";
+import styles from "../SpecialtyDetails.module.css";
 
 interface DetailsSpecialtyProps {
   id: number;

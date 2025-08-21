@@ -4,7 +4,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import styles from "./EditSpecialty.module.css";
+import styles from "../EditSpecialty.module.css";
 
 interface EditSpecialtyProps {
   id: number;

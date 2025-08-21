@@ -2,7 +2,7 @@
 
 "use client";
 
-import styles from "./DeletePatient.module.css";
+import styles from "../DeletePatient.module.css";
 
 interface PatientDeleteProps {
   id: number;

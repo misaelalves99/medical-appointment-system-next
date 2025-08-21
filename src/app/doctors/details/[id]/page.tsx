@@ -4,7 +4,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import styles from "./DoctorDetails.module.css";
+import styles from "../DoctorDetails.module.css";
 
 export interface Doctor {
   id: number;

@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import styles from "./DoctorEdit.module.css";
+import styles from "../DoctorEdit.module.css";
 
 export interface Doctor {
   id: number;

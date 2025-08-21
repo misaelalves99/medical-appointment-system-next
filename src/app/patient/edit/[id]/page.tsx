@@ -4,7 +4,7 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import styles from "./EditPatient.module.css";
+import styles from "../EditPatient.module.css";
 
 interface PatientEditForm {
   id: number;
