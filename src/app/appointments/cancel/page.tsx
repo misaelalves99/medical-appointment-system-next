@@ -4,7 +4,7 @@
 
 import { useRouter } from "next/navigation";
 import styles from "./CancelAppointment.module.css";
-import { appointmentsMock } from "../../mocks/appointments"; // importa o mock
+import { appointmentsMock } from "../../mocks/appointments";
 import { Appointment } from "../../types/Appointment";
 
 export default function CancelAppointmentPage() {

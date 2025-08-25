@@ -1,4 +1,4 @@
-// src/components/Layout/Footer.tsx
+// src/components/Footer.tsx
 
 import styles from "./Footer.module.css";
 
