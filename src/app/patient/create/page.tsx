@@ -4,7 +4,7 @@
 
 import { useState, FormEvent } from "react";
 import styles from "./CreatePatient.module.css";
-import { patientsMock, Patient } from "../../mocks/patients"; // importando mock centralizado
+import { patientsMock, Patient } from "../../mocks/patients";
 import { useRouter } from "next/navigation";
 
 interface PatientCreateForm {
@@ -13,6 +13,7 @@ interface PatientCreateForm {
   gender: string;
   phone: string;
   email: string;
+  cpf: string;
 }
 
 export default function CreatePatientPage() {
@@ -24,6 +25,7 @@ export default function CreatePatientPage() {
     gender: "",
     phone: "",
     email: "",
+    cpf: "",
   });
 
   const handleChange = (
@@ -42,7 +44,7 @@ export default function CreatePatientPage() {
       gender: formData.gender,
       phone: formData.phone,
       email: formData.email,
-      cpf: "", // você pode adicionar campo CPF futuramente
+      cpf: formData.cpf,
       address: "", // endereço opcional
     };
 
@@ -115,6 +117,18 @@ export default function CreatePatientPage() {
             type="email"
             value={formData.email}
             onChange={handleChange}
+          />
+        </div>
+
+        <div>
+          <label htmlFor="cpf">CPF:</label>
+          <input
+            id="cpf"
+            name="cpf"
+            type="text"
+            value={formData.cpf}
+            onChange={handleChange}
+            required
           />
         </div>
 
