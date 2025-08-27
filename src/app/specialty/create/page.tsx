@@ -5,9 +5,11 @@
 import { useState } from "react";
 import styles from "./CreateSpecialty.module.css";
 import { specialtiesMock, Specialty } from "../../mocks/specialties";
+import { useRouter } from "next/navigation";
 
 const CreateSpecialtyPage: React.FC = () => {
   const [name, setName] = useState("");
+  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,26 +25,29 @@ const CreateSpecialtyPage: React.FC = () => {
     specialtiesMock.push(newSpecialty);
 
     console.log("Especialidade adicionada:", newSpecialty);
-    console.log("Lista atualizada:", specialtiesMock);
 
     setName("");
+    router.push("/specialty"); // redireciona após salvar
   };
 
   return (
     <div className={styles.createSpecialtyContainer}>
       <h1>Cadastrar Nova Especialidade</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="specialtyName">Nome da Especialidade:</label>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.formGroup}>
+          <label htmlFor="specialtyName">Nome da Especialidade</label>
           <input
             id="specialtyName"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            placeholder="Digite o nome da especialidade"
           />
         </div>
-        <button type="submit">Salvar</button>
+        <button type="submit" className={styles.submitButton}>
+          Salvar
+        </button>
       </form>
     </div>
   );
