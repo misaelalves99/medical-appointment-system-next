@@ -1,89 +1,142 @@
-/* src/app/specialty/SpecialtyList.module.css */
+/* src/pages/Specialty/SpecialtyList.module.css */
 
 .specialtyIndexContainer {
-  width: 100%;
-  min-height: 100vh;
+  max-width: 900px;
   margin: 2rem auto;
-  padding: 1rem;
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.06);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #333333;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #2c3e50;
 }
 
 .specialtyIndexContainer h1 {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: #17a2b8;
+  font-size: 2rem;
   font-weight: 700;
+  text-align: center;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
 }
 
 .createLink {
   display: inline-block;
-  background-color: #17a2b8;
+  background-color: #2563eb;
   color: #ffffff;
-  padding: 0.6rem 1rem;
-  border-radius: 6px;
-  text-decoration: none;
+  padding: 0.6rem 1.4rem;
+  border-radius: 8px;
   font-weight: 600;
-  transition: background-color 0.2s ease;
+  text-decoration: none;
+  transition: background 0.2s ease-in-out;
   margin-bottom: 1rem;
 }
 
 .createLink:hover {
-  background-color: #117a8b;
+  background-color: #1d4ed8;
 }
 
 .searchInput {
-  padding: 0.5rem;
   width: 100%;
   max-width: 300px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
   margin-bottom: 1rem;
-  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
 .specialtyTable {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
+  background-color: #f9fafb;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.03);
 }
 
 .specialtyTable th,
 .specialtyTable td {
-  border: 1px solid #dee2e6;
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
   text-align: left;
-  font-size: 0.95rem;
 }
 
 .specialtyTable th {
-  background-color: #383838;
-  color: white;
+  background-color: #f3f4f6;
+  font-weight: 600;
+  color: #374151;
 }
 
 .specialtyTable tr:nth-child(even) {
-  background-color: #f8f9fa;
+  background-color: #ffffff;
 }
 
-.specialtyTable tr:hover {
-  background-color: #f1f1f1;
+.specialtyTable tr:nth-child(odd) {
+  background-color: #f9fafb;
 }
 
-.detailsLink {
+.actions button {
   display: inline-block;
-  background-color: #28a745;
-  color: #ffffff;
   padding: 0.4rem 0.8rem;
-  border-radius: 4px;
-  text-decoration: none;
+  margin-right: 0.25rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
   font-weight: 500;
-  transition: background-color 0.2s ease;
-  margin-right: 0.3rem;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
 }
 
-.detailsLink:hover {
-  background-color: #218838;
+.detailsButton {
+  background-color: #3b82f6;
+}
+
+.detailsButton:hover {
+  background-color: #2563eb;
+}
+
+.editButton {
+  background-color: #f59e0b;
+}
+
+.editButton:hover {
+  background-color: #d97706;
+}
+
+.deleteButton {
+  background-color: #ef4444;
+}
+
+.deleteButton:hover {
+  background-color: #dc2626;
+}
+
+.noResults {
+  text-align: center;
+  padding: 1rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .specialtyIndexContainer {
+    padding: 1rem;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
+
+  .actions button {
+    display: block;
+    margin-bottom: 0.25rem;
+    width: 100%;
+  }
 }

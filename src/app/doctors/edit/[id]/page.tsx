@@ -2,111 +2,132 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useState, useEffect, FormEvent } from "react";
+import { useRouter, useParams } from "next/navigation";
 import styles from "../DoctorEdit.module.css";
-import { doctorsMock, Doctor } from "../../../mocks/doctors";
+import type { Doctor } from "../../../types/Doctor";
+import { useDoctor } from "../../../hooks/useDoctor";
+import { useSpecialty } from "../../../hooks/useSpecialty";
 
-export default function DoctorEditPage() {
-  const params = useParams();
+export default function EditDoctorPage() {
   const router = useRouter();
-  const idParam = params?.id ? Number(params.id) : undefined;
+  const params = useParams();
+  const { id } = params as { id: string };
 
-  const [form, setForm] = useState<Doctor | null>(null);
+  const { doctors, updateDoctor } = useDoctor();
+  const { specialties } = useSpecialty();
+
+  const doctorId = Number(id);
+
+  const [form, setForm] = useState<Doctor>({
+    id: doctorId,
+    name: "",
+    crm: "",
+    specialty: "",
+    email: "",
+    phone: "",
+    isActive: true,
+  });
 
   useEffect(() => {
-    if (idParam) {
-      const found = doctorsMock.find((d) => d.id === idParam) || null;
-      setForm(found);
+    const foundDoctor = doctors.find(d => d.id === doctorId);
+    if (foundDoctor) {
+      setForm(foundDoctor);
     }
-  }, [idParam]);
+  }, [doctorId, doctors]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!form) return;
-    const { name, value, type, checked } = e.target;
-    setForm({
-      ...form,
-      [name]: type === "checkbox" ? checked : value,
-    });
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    let newValue: string | boolean = value;
+
+    if (e.target instanceof HTMLInputElement && e.target.type === "checkbox") {
+      newValue = e.target.checked;
+    }
+
+    setForm(prev => ({
+      ...prev,
+      [name]: newValue,
+    }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (!form || !idParam) return;
-
-    const idx = doctorsMock.findIndex((d) => d.id === idParam);
-    if (idx !== -1) doctorsMock[idx] = form;
-
+    updateDoctor(form);
     router.push("/doctors");
   };
-
-  const handleCancel = () => {
-    router.push("/doctors");
-  };
-
-  if (!form) return <p>Carregando médico...</p>;
 
   return (
     <div className={styles.container}>
-      <h1>Editar Médico</h1>
+      <h1 className={styles.title}>Editar Médico</h1>
+
       <form className={styles.form} onSubmit={handleSubmit}>
-        <label className={styles.label}>
-          Nome:
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Nome:</label>
           <input
-            className={styles.inputText}
+            className={styles.formInput}
             type="text"
             name="name"
             value={form.name}
             onChange={handleChange}
+            required
           />
-        </label>
+        </div>
 
-        <label className={styles.label}>
-          CRM:
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>CRM:</label>
           <input
-            className={styles.inputText}
+            className={styles.formInput}
             type="text"
             name="crm"
             value={form.crm}
             onChange={handleChange}
+            required
           />
-        </label>
+        </div>
 
-        <label className={styles.label}>
-          Especialidade:
-          <input
-            className={styles.inputText}
-            type="text"
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Especialidade:</label>
+          <select
+            className={styles.formSelect}
             name="specialty"
             value={form.specialty}
             onChange={handleChange}
-          />
-        </label>
+            required
+          >
+            <option value="">Selecione uma especialidade</option>
+            {specialties.map(s => (
+              <option key={s.id} value={s.name}>{s.name}</option>
+            ))}
+          </select>
+        </div>
 
-        <label className={styles.label}>
-          Email:
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Email:</label>
           <input
-            className={styles.inputEmail}
+            className={styles.formInput}
             type="email"
             name="email"
             value={form.email}
             onChange={handleChange}
+            required
           />
-        </label>
+        </div>
 
-        <label className={styles.label}>
-          Telefone:
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Telefone:</label>
           <input
-            className={styles.inputTel}
+            className={styles.formInput}
             type="tel"
             name="phone"
             value={form.phone}
             onChange={handleChange}
+            required
           />
-        </label>
+        </div>
 
-        <label className={`${styles.label} ${styles.checkboxLabel}`}>
-          Ativo:
+        <label className={styles.checkboxLabel}>
           <input
             className={styles.checkboxInput}
             type="checkbox"
@@ -114,18 +135,21 @@ export default function DoctorEditPage() {
             checked={form.isActive}
             onChange={handleChange}
           />
+          Ativo
         </label>
 
-        <button className={styles.submitButton} type="submit">
-          Salvar Alterações
-        </button>
-        <button
-          className={styles.cancelButton}
-          type="button"
-          onClick={handleCancel}
-        >
-          Cancelar
-        </button>
+        <div className={styles.buttonGroup}>
+          <button type="submit" className={styles.buttonSubmit}>
+            Salvar Alterações
+          </button>
+          <button
+            type="button"
+            className={styles.buttonCancel}
+            onClick={() => router.push("/doctors")}
+          >
+            Cancelar
+          </button>
+        </div>
       </form>
     </div>
   );

@@ -3,23 +3,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import styles from "../SpecialtyDetails.module.css";
-import { specialtiesMock, Specialty } from "../../../mocks/specialties";
+import { useSpecialty } from "../../../hooks/useSpecialty";
+import { Specialty } from "../../../types/Specialty";
 
-const DetailsSpecialtyPage: React.FC = () => {
+export default function DetailsSpecialtyPage() {
   const router = useRouter();
   const params = useParams();
   const idParam = params?.id ? Number(params.id) : undefined;
 
+  const { specialties } = useSpecialty();
   const [specialty, setSpecialty] = useState<Specialty | null>(null);
 
   useEffect(() => {
     if (idParam) {
-      const found = specialtiesMock.find((s) => s.id === idParam) || null;
+      const found = specialties.find((s) => s.id === idParam) || null;
       setSpecialty(found);
     }
-  }, [idParam]);
+  }, [idParam, specialties]);
 
   const handleEdit = () => {
     if (specialty) router.push(`/specialty/edit/${specialty.id}`);
@@ -30,7 +32,15 @@ const DetailsSpecialtyPage: React.FC = () => {
   };
 
   if (!specialty) {
-    return <p>Carregando especialidade...</p>;
+    return (
+      <div className={styles.specialtyDetailsContainer}>
+        <h1>Detalhes da Especialidade</h1>
+        <p>Especialidade não encontrada.</p>
+        <button className={styles.back} onClick={handleBack}>
+          Voltar para a Lista
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -54,6 +64,4 @@ const DetailsSpecialtyPage: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default DetailsSpecialtyPage;
+}

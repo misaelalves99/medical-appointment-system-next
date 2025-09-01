@@ -2,55 +2,57 @@
 
 "use client";
 
-import { useState } from "react";
-import styles from "./CreateSpecialty.module.css";
-import { specialtiesMock, Specialty } from "../../mocks/specialties";
+import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import styles from "./CreateSpecialty.module.css";
+import { useSpecialty } from "../../hooks/useSpecialty";
 
-const CreateSpecialtyPage: React.FC = () => {
+export default function CreateSpecialtyPage() {
+  const { addSpecialty } = useSpecialty();
   const [name, setName] = useState("");
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return;
-
-    // Simula adicionar ao mock
-    const newSpecialty: Specialty = {
-      id: specialtiesMock.length
-        ? specialtiesMock[specialtiesMock.length - 1].id + 1
-        : 1,
-      name: name.trim(),
-    };
-    specialtiesMock.push(newSpecialty);
-
-    console.log("Especialidade adicionada:", newSpecialty);
-
-    setName("");
-    router.push("/specialty"); // redireciona após salvar
+    if (name.trim()) {
+      addSpecialty(name.trim());
+      setName("");
+      router.push("/specialty");
+    }
   };
 
   return (
-    <div className={styles.createSpecialtyContainer}>
-      <h1>Cadastrar Nova Especialidade</h1>
-      <form onSubmit={handleSubmit} className={styles.form}>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Cadastrar Nova Especialidade</h1>
+
+      <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.formGroup}>
-          <label htmlFor="specialtyName">Nome da Especialidade</label>
+          <label className={styles.formLabel} htmlFor="specialtyName">
+            Nome da Especialidade:
+          </label>
           <input
+            className={styles.formInput}
             id="specialtyName"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            placeholder="Digite o nome da especialidade"
           />
         </div>
-        <button type="submit" className={styles.submitButton}>
-          Salvar
-        </button>
+
+        <div className={styles.actions}>
+          <button type="submit" className={styles.buttonSave}>
+            Salvar
+          </button>
+          <button
+            type="button"
+            className={styles.buttonBack}
+            onClick={() => router.push("/specialty")}
+          >
+            Voltar
+          </button>
+        </div>
       </form>
     </div>
   );
-};
-
-export default CreateSpecialtyPage;
+}

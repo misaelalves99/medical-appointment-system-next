@@ -3,10 +3,10 @@
 export interface Specialty {
   id: number;
   name: string;
-  // add other properties if needed
+  isActive: boolean;
 }
 
 export const specialtiesMock: Specialty[] = [
-  { id: 1, name: "Cardiologia" },
-  { id: 2, name: "Dermatologia" },
+  { id: 1, name: "Cardiologia", isActive: true },
+  { id: 2, name: "Dermatologia", isActive: true },
 ];

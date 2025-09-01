@@ -2,79 +2,72 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useState, useEffect, FormEvent } from "react";
+import { useRouter, useParams } from "next/navigation";
 import styles from "../EditSpecialty.module.css";
-import { specialtiesMock, Specialty } from "../../../mocks/specialties";
+import { useSpecialty } from "../../../hooks/useSpecialty";
 
-const EditSpecialtyPage: React.FC = () => {
+export default function EditSpecialtyPage() {
   const router = useRouter();
   const params = useParams();
-  const idParam = params?.id ? Number(params.id) : undefined;
+  const { id } = params as { id: string };
+  const { specialties, updateSpecialty } = useSpecialty();
 
-  const [name, setName] = useState("");
+  const specialty = specialties.find((s) => s.id === Number(id));
+
+  const [name, setName] = useState(specialty?.name || "");
   const [error, setError] = useState<string | null>(null);
-  const [specialty, setSpecialty] = useState<Specialty | null>(null);
 
   useEffect(() => {
-    if (idParam) {
-      const found = specialtiesMock.find((s) => s.id === idParam) || null;
-      if (found) setName(found.name);
-      setSpecialty(found);
-    }
-  }, [idParam]);
+    if (specialty) setName(specialty.name);
+  }, [specialty]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  if (!specialty) return <p>Especialidade não encontrada.</p>;
+
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (!specialty) return;
-
     if (name.trim() === "") {
       setError("O nome da especialidade é obrigatório.");
       return;
     }
-
     setError(null);
-
-    // Atualiza mock
-    const idx = specialtiesMock.findIndex((s) => s.id === specialty.id);
-    if (idx !== -1) specialtiesMock[idx].name = name.trim();
-
+    updateSpecialty(specialty.id, name.trim());
     router.push("/specialty");
   };
-
-  const handleBack = () => {
-    router.push("/specialty");
-  };
-
-  if (!specialty) return <p>Carregando especialidade...</p>;
 
   return (
-    <div className={styles.editSpecialtyContainer}>
-      <h1>Editar Especialidade</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Editar Especialidade</h1>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="specialtyName">Nome da Especialidade:</label>
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel} htmlFor="specialtyName">
+            Nome da Especialidade:
+          </label>
           <input
             id="specialtyName"
             type="text"
-            className="form-control"
+            className={styles.formInput}
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
           />
           {error && <span className={styles.textDanger}>{error}</span>}
         </div>
-        <button type="submit" className="btn btn-primary mt-2">
-          Salvar Alterações
-        </button>
-      </form>
 
-      <button className="btn btn-secondary mt-3" onClick={handleBack}>
-        Voltar
-      </button>
+        <div className={styles.actions}>
+          <button type="submit" className={styles.buttonSave}>
+            Salvar Alterações
+          </button>
+          <button
+            type="button"
+            className={styles.buttonBack}
+            onClick={() => router.push("/specialty")}
+          >
+            Voltar
+          </button>
+        </div>
+      </form>
     </div>
   );
-};
-
-export default EditSpecialtyPage;
+}

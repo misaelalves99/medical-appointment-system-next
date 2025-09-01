@@ -2,97 +2,105 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./CreateAppointment.module.css";
-import { patientsMock } from "../../mocks/patients";
-import { doctorsMock } from "../../mocks/doctors";
-import { appointmentsMock } from "../../mocks/appointments";
-import { Appointment as AppointmentType, AppointmentStatus } from "../../types/Appointment";
+import { useAppointments } from "../../hooks/useAppointments";
+import { usePatient } from "../../hooks/usePatient";
+import { useDoctor } from "../../hooks/useDoctor";
+import type { AppointmentForm, Option } from "../../types/AppointmentForm";
+import { AppointmentStatus } from "../../types/Appointment";
 
-interface Option {
-  value: string;
-  label: string;
+interface Params {
+  params: { id: string };
 }
 
-export default function CreateAppointmentPage() {
+export default function EditAppointmentPage({ params }: Params) {
   const router = useRouter();
+  const appointmentId = Number(params.id);
 
-  // Preparar options a partir do mock
-  const patients: Option[] = patientsMock.map((p) => ({
-    value: p.id.toString(),
-    label: p.name, // corrigido de fullName para name
-  }));
+  const { appointments, updateAppointment } = useAppointments();
+  const { patients } = usePatient();
+  const { doctors } = useDoctor();
 
-  const doctors: Option[] = doctorsMock.map((d) => ({
-    value: d.id.toString(),
-    label: d.name, // corrigido de fullName para name
-  }));
-
-  const statusOptions: { value: AppointmentStatus; label: string }[] = [
-    { value: AppointmentStatus.Scheduled, label: "Agendada" },
-    { value: AppointmentStatus.Confirmed, label: "Confirmada" },
-    { value: AppointmentStatus.Cancelled, label: "Cancelada" },
-    { value: AppointmentStatus.Completed, label: "Concluída" },
-  ];
-
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<AppointmentForm>({
     patientId: "",
     doctorId: "",
     appointmentDate: "",
-    status: AppointmentStatus.Scheduled,
+    status: "",
     notes: "",
   });
+
+  // Map para Option[]
+  const patientOptions: Option[] = patients.map((p) => ({
+    value: p.id.toString(),
+    label: p.name,
+  }));
+
+  const doctorOptions: Option[] = doctors.map((d) => ({
+    value: d.id.toString(),
+    label: d.name,
+  }));
+
+  const statusOptions: Option[] = [
+    { value: AppointmentStatus.Scheduled.toString(), label: "Agendada" },
+    { value: AppointmentStatus.Confirmed.toString(), label: "Confirmada" },
+    { value: AppointmentStatus.Cancelled.toString(), label: "Cancelada" },
+    { value: AppointmentStatus.Completed.toString(), label: "Concluída" },
+  ];
+
+  useEffect(() => {
+    const appointment = appointments.find((a) => a.id === appointmentId);
+    if (appointment) {
+      setFormData({
+        patientId: appointment.patientId.toString(),
+        doctorId: appointment.doctorId.toString(),
+        appointmentDate: appointment.appointmentDate.slice(0, 16),
+        status: appointment.status.toString(),
+        notes: appointment.notes || "",
+      });
+    }
+  }, [appointmentId, appointments]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev: AppointmentForm) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    const patientId = parseInt(formData.patientId);
-    const doctorId = parseInt(formData.doctorId);
-
-    const patient = patientsMock.find((p) => p.id === patientId);
-    const doctor = doctorsMock.find((d) => d.id === doctorId);
-
-    if (!patient || !doctor) return;
-
-    const newAppointment: AppointmentType = {
-      id: appointmentsMock.length + 1,
-      patientId,
-      patientName: patient.name,
-      doctorId,
-      doctorName: doctor.name,
-      appointmentDate: formData.appointmentDate,
-      status: formData.status as AppointmentStatus,
+    updateAppointment({
+      id: appointmentId,
+      patientId: Number(formData.patientId),
+      doctorId: Number(formData.doctorId),
+      appointmentDate: new Date(formData.appointmentDate).toISOString(),
+      status: Number(formData.status),
       notes: formData.notes,
-    };
+    });
 
-    appointmentsMock.push(newAppointment);
-    console.log("Nova consulta criada:", newAppointment);
     router.push("/appointments");
   };
 
   return (
     <div className={styles.createAppointmentContainer}>
-      <h1>Nova Consulta</h1>
-      <form onSubmit={handleSubmit}>
+      <h1 className={styles.title}>Editar Consulta</h1>
+      <form onSubmit={handleSubmit} className={styles.form}>
         {/* Paciente */}
-        <div className="form-group">
-          <label htmlFor="patientId">Paciente</label>
+        <div className={styles.formGroup}>
+          <label htmlFor="patientId" className={styles.formLabel}>Paciente</label>
           <select
             id="patientId"
             name="patientId"
             value={formData.patientId}
             onChange={handleChange}
+            required
+            className={styles.formSelect}
           >
             <option value="">-- Selecione o paciente --</option>
-            {patients.map((p) => (
+            {patientOptions.map((p) => (
               <option key={p.value} value={p.value}>
                 {p.label}
               </option>
@@ -101,16 +109,18 @@ export default function CreateAppointmentPage() {
         </div>
 
         {/* Médico */}
-        <div className="form-group">
-          <label htmlFor="doctorId">Médico</label>
+        <div className={styles.formGroup}>
+          <label htmlFor="doctorId" className={styles.formLabel}>Médico</label>
           <select
             id="doctorId"
             name="doctorId"
             value={formData.doctorId}
             onChange={handleChange}
+            required
+            className={styles.formSelect}
           >
             <option value="">-- Selecione o médico --</option>
-            {doctors.map((d) => (
+            {doctorOptions.map((d) => (
               <option key={d.value} value={d.value}>
                 {d.label}
               </option>
@@ -118,27 +128,32 @@ export default function CreateAppointmentPage() {
           </select>
         </div>
 
-        {/* Data */}
-        <div className="form-group">
-          <label htmlFor="appointmentDate">Data da Consulta</label>
+        {/* Data e hora */}
+        <div className={styles.formGroup}>
+          <label htmlFor="appointmentDate" className={styles.formLabel}>Data da Consulta</label>
           <input
             type="datetime-local"
             id="appointmentDate"
             name="appointmentDate"
             value={formData.appointmentDate}
             onChange={handleChange}
+            required
+            className={styles.formInput}
           />
         </div>
 
         {/* Status */}
-        <div className="form-group">
-          <label htmlFor="status">Status</label>
+        <div className={styles.formGroup}>
+          <label htmlFor="status" className={styles.formLabel}>Status</label>
           <select
             id="status"
             name="status"
             value={formData.status}
             onChange={handleChange}
+            required
+            className={styles.formSelect}
           >
+            <option value="">-- Selecione o status --</option>
             {statusOptions.map((s) => (
               <option key={s.value} value={s.value}>
                 {s.label}
@@ -148,22 +163,28 @@ export default function CreateAppointmentPage() {
         </div>
 
         {/* Observações */}
-        <div className="form-group">
-          <label htmlFor="notes">Observações</label>
+        <div className={styles.formGroup}>
+          <label htmlFor="notes" className={styles.formLabel}>Observações</label>
           <textarea
             id="notes"
             name="notes"
             rows={4}
             value={formData.notes}
             onChange={handleChange}
+            className={styles.formTextarea}
           />
         </div>
 
-        {/* Botões */}
-        <button type="submit">Salvar</button>
-        <button type="button" onClick={() => router.push("/appointments")} className="btn-secondary">
-          Cancelar
-        </button>
+        <div className={styles.formActions}>
+          <button type="submit" className={`${styles.formButton} ${styles.formSubmit}`}>Salvar</button>
+          <button
+            type="button"
+            className={`${styles.formButton} ${styles.formCancel}`}
+            onClick={() => router.push("/appointments")}
+          >
+            Cancelar
+          </button>
+        </div>
       </form>
     </div>
   );

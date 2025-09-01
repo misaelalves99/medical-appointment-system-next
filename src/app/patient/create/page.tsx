@@ -3,64 +3,50 @@
 "use client";
 
 import { useState, FormEvent } from "react";
-import styles from "./CreatePatient.module.css";
-import { patientsMock, Patient } from "../../mocks/patients";
 import { useRouter } from "next/navigation";
-
-interface PatientCreateForm {
-  name: string;
-  dateOfBirth: string; // ISO date string
-  gender: string;
-  phone: string;
-  email: string;
-  cpf: string;
-}
+import styles from "./CreatePatient.module.css";
+import { PatientForm } from "../../types/PatientForm";
+import { Patient } from "../../types/Patient";
+import { usePatient } from "../../hooks/usePatient";
 
 export default function CreatePatientPage() {
+  const { patients, addPatient } = usePatient();
   const router = useRouter();
 
-  const [formData, setFormData] = useState<PatientCreateForm>({
+  const [formData, setFormData] = useState<PatientForm>({
     name: "",
-    dateOfBirth: "",
-    gender: "",
-    phone: "",
-    email: "",
     cpf: "",
+    dateOfBirth: "",
+    email: "",
+    phone: "",
+    address: "",
+    gender: "",
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData((old) => ({ ...old, [name]: value }));
   };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    const newPatient: Patient = {
-      id: patientsMock.length + 1,
-      name: formData.name,
-      dateOfBirth: formData.dateOfBirth,
-      gender: formData.gender,
-      phone: formData.phone,
-      email: formData.email,
-      cpf: formData.cpf,
-      address: "", // endereço opcional
-    };
+    const newId = patients.length > 0 ? Math.max(...patients.map(p => p.id)) + 1 : 1;
+    const newPatient: Patient = { ...formData, id: newId };
 
-    patientsMock.push(newPatient); // adiciona ao mock
-    console.log("Novo paciente cadastrado:", newPatient);
-    router.push("/patient"); // redireciona para listagem
+    addPatient(newPatient);
+    router.push("/patient");
   };
 
   return (
     <div className={styles.createPatientContainer}>
-      <h1>Cadastrar Paciente</h1>
+      <h1 className={styles.title}>Cadastrar Paciente</h1>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="name">Nome:</label>
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel} htmlFor="name">Nome:</label>
           <input
+            className={styles.formInput}
             id="name"
             name="name"
             type="text"
@@ -70,9 +56,23 @@ export default function CreatePatientPage() {
           />
         </div>
 
-        <div>
-          <label htmlFor="dateOfBirth">Data de Nascimento:</label>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel} htmlFor="cpf">CPF:</label>
           <input
+            className={styles.formInput}
+            id="cpf"
+            name="cpf"
+            type="text"
+            value={formData.cpf}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel} htmlFor="dateOfBirth">Data de Nascimento:</label>
+          <input
+            className={styles.formInput}
             id="dateOfBirth"
             name="dateOfBirth"
             type="date"
@@ -82,9 +82,10 @@ export default function CreatePatientPage() {
           />
         </div>
 
-        <div>
-          <label htmlFor="gender">Sexo:</label>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel} htmlFor="gender">Sexo:</label>
           <select
+            className={styles.formSelect}
             id="gender"
             name="gender"
             value={formData.gender}
@@ -98,9 +99,10 @@ export default function CreatePatientPage() {
           </select>
         </div>
 
-        <div>
-          <label htmlFor="phone">Telefone:</label>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel} htmlFor="phone">Telefone:</label>
           <input
+            className={styles.formInput}
             id="phone"
             name="phone"
             type="tel"
@@ -109,9 +111,10 @@ export default function CreatePatientPage() {
           />
         </div>
 
-        <div>
-          <label htmlFor="email">Email:</label>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel} htmlFor="email">Email:</label>
           <input
+            className={styles.formInput}
             id="email"
             name="email"
             type="email"
@@ -120,19 +123,25 @@ export default function CreatePatientPage() {
           />
         </div>
 
-        <div>
-          <label htmlFor="cpf">CPF:</label>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel} htmlFor="address">Endereço:</label>
           <input
-            id="cpf"
-            name="cpf"
+            className={styles.formInput}
+            id="address"
+            name="address"
             type="text"
-            value={formData.cpf}
+            value={formData.address}
             onChange={handleChange}
             required
           />
         </div>
 
-        <button type="submit">Salvar</button>
+        <div className={styles.buttonGroup}>
+          <button type="submit" className={styles.buttonSubmit}>Salvar</button>
+          <button type="button" className={styles.buttonCancel} onClick={() => router.push("/patient")}>
+            Cancelar
+          </button>
+        </div>
       </form>
     </div>
   );

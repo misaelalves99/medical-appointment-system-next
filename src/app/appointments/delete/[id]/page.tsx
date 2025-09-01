@@ -1,89 +1,63 @@
 // src/app/appointments/delete/[id]/page.tsx
 
+// src/app/appointments/delete/[id]/page.tsx
+
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import styles from "../DeleteAppointment.module.css";
-import { appointmentsMock } from "../../../mocks/appointments";
-import { AppointmentStatus } from "../../../types/Appointment";
-
-const getStatusLabel = (status: AppointmentStatus): string => {
-  switch (status) {
-    case AppointmentStatus.Scheduled:
-      return "Agendada";
-    case AppointmentStatus.Confirmed:
-      return "Confirmada";
-    case AppointmentStatus.Cancelled:
-      return "Cancelada";
-    case AppointmentStatus.Completed:
-      return "Concluída";
-    default:
-      return "Desconhecido";
-  }
-};
+import { useAppointments } from "../../../hooks/useAppointments";
+import { Appointment } from "../../../types/Appointment";
 
 export default function DeleteAppointmentPage() {
   const router = useRouter();
   const params = useParams();
-  const appointmentId = Number(params.id);
+  const idParam = params?.id ? Number(params.id) : undefined;
 
-  const appointment = appointmentsMock.find((a) => a.id === appointmentId);
+  const { appointments, deleteAppointment } = useAppointments();
+  const [appointment, setAppointment] = useState<Appointment | null>(null);
 
-  if (!appointment) {
-    return <p>Consulta não encontrada.</p>;
-  }
+  useEffect(() => {
+    if (idParam) {
+      const found = appointments.find(a => a.id === idParam) || null;
+      setAppointment(found);
+    }
+  }, [idParam, appointments]);
 
   const handleDelete = () => {
-    const index = appointmentsMock.findIndex((a) => a.id === appointmentId);
-    if (index > -1) {
-      appointmentsMock.splice(index, 1);
-      console.log("Consulta deletada:", appointmentId);
+    if (appointment) {
+      deleteAppointment(appointment.id);
+      router.push("/appointments");
     }
-    router.push("/appointments");
   };
 
+  const handleCancel = () => router.push("/appointments");
+
+  if (!appointment) return <p>Agendamento não encontrado.</p>;
+
+  const dt = new Date(appointment.appointmentDate);
+  const formattedDate = dt.toLocaleDateString();
+  const formattedTime = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
   return (
-    <div className={styles.deleteContainer}>
-      <h1 className={styles.title}>Excluir Consulta</h1>
-      <h3 className={styles.subtitle}>Tem certeza que deseja excluir esta consulta?</h3>
+    <div className={styles.container}>
+      <h1>Confirmar Exclusão</h1>
+      <p>
+        Tem certeza de que deseja excluir o agendamento de{" "}
+        <strong>{appointment.patientName}</strong> com{" "}
+        <strong>{appointment.doctorName}</strong> no dia{" "}
+        <strong>{formattedDate}</strong> às <strong>{formattedTime}</strong>?
+      </p>
 
-      <dl className={styles.detailsList}>
-        <dt className={styles.detailsTerm}>Paciente</dt>
-        <dd className={styles.detailsDesc}>
-          {appointment.patientName ?? `ID ${appointment.patientId}`}
-        </dd>
-
-        <dt className={styles.detailsTerm}>Médico</dt>
-        <dd className={styles.detailsDesc}>
-          {appointment.doctorName ?? `ID ${appointment.doctorId}`}
-        </dd>
-
-        <dt className={styles.detailsTerm}>Data e Hora</dt>
-        <dd className={styles.detailsDesc}>
-          {new Date(appointment.appointmentDate).toLocaleString("pt-BR")}
-        </dd>
-
-        <dt className={styles.detailsTerm}>Status</dt>
-        <dd className={styles.detailsDesc}>{getStatusLabel(appointment.status)}</dd>
-      </dl>
-
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleDelete();
-        }}
-      >
-        <button type="submit" className={styles.btnDanger}>
+      <div className={styles.actions}>
+        <button onClick={handleDelete} className={styles.deleteButton}>
           Excluir
         </button>
-        <button
-          type="button"
-          className={styles.btnSecondary}
-          onClick={() => router.push("/appointments")}
-        >
+        <button onClick={handleCancel} className={styles.cancelButton}>
           Cancelar
         </button>
-      </form>
+      </div>
     </div>
   );
 }

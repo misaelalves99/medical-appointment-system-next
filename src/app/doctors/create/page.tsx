@@ -2,13 +2,17 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./CreateDoctor.module.css";
-import { Doctor, doctorsMock } from "../../mocks/doctors";
+import { Doctor } from "../../types/Doctor";
+import { useDoctor } from "../../hooks/useDoctor";
+import { useSpecialty } from "../../hooks/useSpecialty";
 
-export default function CreateDoctor() {
+export default function CreateDoctorPage() {
   const router = useRouter();
+  const { doctors, addDoctor } = useDoctor();
+  const { specialties } = useSpecialty();
 
   const [form, setForm] = useState<Doctor>({
     id: 0,
@@ -30,35 +34,29 @@ export default function CreateDoctor() {
       newValue = e.target.checked;
     }
 
-    setForm((prev) => ({
+    setForm(prev => ({
       ...prev,
       [name]: newValue,
     }));
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: FormEvent) {
     e.preventDefault();
-
-    const newId =
-      doctorsMock.length > 0
-        ? Math.max(...doctorsMock.map((d) => d.id)) + 1
-        : 1;
-
-    doctorsMock.push({ ...form, id: newId });
-
-    console.log("Novo médico adicionado:", { ...form, id: newId });
-    console.log("Lista atualizada de médicos:", doctorsMock);
-
+    const newId = doctors.length > 0 ? Math.max(...doctors.map(d => d.id)) + 1 : 1;
+    const newDoctor: Doctor = { ...form, id: newId };
+    addDoctor(newDoctor);
     router.push("/doctors");
   }
 
   return (
     <div className={styles.container}>
-      <h1>Cadastrar Médico</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="name">Nome</label>
+      <h1 className={styles.title}>Cadastrar Médico</h1>
+      <form className={styles.form} onSubmit={handleSubmit}>
+
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel} htmlFor="name">Nome</label>
           <input
+            className={styles.formInput}
             id="name"
             name="name"
             value={form.name}
@@ -68,9 +66,10 @@ export default function CreateDoctor() {
           />
         </div>
 
-        <div>
-          <label htmlFor="crm">CRM</label>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel} htmlFor="crm">CRM</label>
           <input
+            className={styles.formInput}
             id="crm"
             name="crm"
             value={form.crm}
@@ -80,21 +79,27 @@ export default function CreateDoctor() {
           />
         </div>
 
-        <div>
-          <label htmlFor="specialty">Especialidade</label>
-          <input
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel} htmlFor="specialty">Especialidade</label>
+          <select
+            className={styles.formSelect}
             id="specialty"
             name="specialty"
             value={form.specialty}
             onChange={handleChange}
-            type="text"
             required
-          />
+          >
+            <option value="">Selecione uma especialidade</option>
+            {specialties.map(s => (
+              <option key={s.id} value={s.name}>{s.name}</option>
+            ))}
+          </select>
         </div>
 
-        <div>
-          <label htmlFor="email">Email</label>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel} htmlFor="email">Email</label>
           <input
+            className={styles.formInput}
             id="email"
             name="email"
             value={form.email}
@@ -104,9 +109,10 @@ export default function CreateDoctor() {
           />
         </div>
 
-        <div>
-          <label htmlFor="phone">Telefone</label>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel} htmlFor="phone">Telefone</label>
           <input
+            className={styles.formInput}
             id="phone"
             name="phone"
             value={form.phone}
@@ -116,21 +122,27 @@ export default function CreateDoctor() {
           />
         </div>
 
-        <div>
-          <label htmlFor="isActive">Ativo</label>
+        <label className={styles.checkboxLabel}>
           <input
-            id="isActive"
+            className={styles.checkboxInput}
+            type="checkbox"
             name="isActive"
             checked={form.isActive}
             onChange={handleChange}
-            type="checkbox"
           />
-        </div>
+          Ativo
+        </label>
 
-        <button type="submit">Salvar</button>
-        <button type="button" onClick={() => router.push("/doctors")}>
-          Cancelar
-        </button>
+        <div className={styles.buttonGroup}>
+          <button type="submit" className={styles.buttonSubmit}>Salvar</button>
+          <button
+            type="button"
+            className={styles.buttonCancel}
+            onClick={() => router.push("/doctors")}
+          >
+            Cancelar
+          </button>
+        </div>
       </form>
     </div>
   );

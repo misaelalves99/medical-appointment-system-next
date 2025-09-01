@@ -1,69 +1,109 @@
 /* src/app/specialty/create/CreateSpecialty.module.css */
 
-.createSpecialtyContainer {
-  max-width: 500px;
-  margin: 3rem auto;
-  padding: 2rem;
-  background: #ffffff;
+.container {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 1.75rem 1.5rem;
+  background-color: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #1f2937;
 }
 
-.createSpecialtyContainer h1 {
+.title {
+  font-size: 1.6rem;
+  font-weight: 700;
   text-align: center;
-  margin-bottom: 2rem;
-  font-size: 1.8rem;
-  color: #333;
+  margin-bottom: 1.25rem;
+  color: #111827;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0.85rem;
 }
 
 .formGroup {
   display: flex;
   flex-direction: column;
+  gap: 0.25rem;
 }
 
-.formGroup label {
-  margin-bottom: 0.5rem;
+.formLabel {
   font-weight: 600;
-  color: #444;
+  font-size: 0.925rem;
+  color: #374151;
 }
 
-.formGroup input {
-  padding: 0.75rem 1rem;
-  border: 1px solid #ccc;
+.formInput {
+  padding: 0.5rem 0.65rem;
+  font-size: 0.925rem;
+  border: 1px solid #d1d5db;
   border-radius: 8px;
-  font-size: 1rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: all 0.15s ease;
 }
 
-.formGroup input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+.formInput:focus {
   outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
 }
 
-.submitButton {
-  padding: 0.9rem 1.5rem;
-  background: #2563eb;
-  color: #fff;
-  font-size: 1rem;
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.buttonSave {
+  padding: 0.5rem 1.15rem;
+  font-size: 0.925rem;
   font-weight: 600;
-  border: none;
   border-radius: 8px;
+  border: none;
   cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
+  transition: all 0.15s ease-in-out;
+  background-color: #22c55e; /* verde */
+  color: #ffffff;
 }
 
-.submitButton:hover {
-  background: #1e4ed8;
+.buttonSave:hover {
+  background-color: #16a34a;
+  transform: translateY(-1px);
 }
 
-.submitButton:active {
-  transform: scale(0.98);
+.buttonBack {
+  padding: 0.5rem 1.15rem;
+  font-size: 0.925rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  background-color: #6b7280; /* cinza */
+  color: #ffffff;
+}
+
+.buttonBack:hover {
+  background-color: #4b5563;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 480px) {
+  .container {
+    width: 90%;
+    padding: 1.25rem;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .buttonSave,
+  .buttonBack {
+    width: 100%;
+  }
 }

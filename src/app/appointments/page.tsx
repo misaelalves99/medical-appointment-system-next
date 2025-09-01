@@ -1,53 +1,31 @@
-// src/app/appointments/page.tsx
-
+// app/appointments/page.tsx
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { appointmentsMock } from "../mocks/appointments";
-import { getAppointmentStatusLabel } from "../utils/enumHelpers";
-import styles from "./AppointmentList.module.css";
-import Link from "next/link";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import styles from "./AppointmentList.module.css";
+import { useAppointments } from "../hooks/useAppointments";
+import { getAppointmentStatusLabel } from "../utils/enumHelpers";
 
-const AppointmentList: React.FC = () => {
-  const [appointments, setAppointments] = useState(appointmentsMock);
-  const [loading, setLoading] = useState(true);
+export default function AppointmentList() {
+  const { appointments } = useAppointments();
   const [search, setSearch] = useState("");
   const router = useRouter();
 
-  useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      setAppointments(appointmentsMock);
-      setLoading(false);
-    }, 300);
-  }, []);
-
-  const handleDelete = (id: number) => {
-    if (!confirm("Confirma exclusão da consulta?")) return;
-    const index = appointmentsMock.findIndex((a) => a.id === id);
-    if (index !== -1) {
-      appointmentsMock.splice(index, 1);
-      setAppointments((prev) => prev.filter((a) => a.id !== id));
-    }
-  };
-
-  const filteredAppointments = appointments.filter((a) => {
+  const filteredAppointments = appointments.filter(a => {
     const searchLower = search.toLowerCase();
-    const dateStr = new Date(a.appointmentDate).toLocaleDateString().toLowerCase();
-    const timeStr = new Date(a.appointmentDate)
-      .toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-      .toLowerCase();
-    const patientStr = a.patientId ? `paciente id: ${a.patientId}` : "";
-    const doctorStr = a.doctorId ? `médico id: ${a.doctorId}` : "";
+    const dt = new Date(a.appointmentDate);
+    const dateStr = dt.toLocaleDateString().toLowerCase();
+    const timeStr = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toLowerCase();
+    const patientStr = a.patientName ? a.patientName.toLowerCase() : '';
     const statusStr = getAppointmentStatusLabel(a.status).toLowerCase();
 
     return (
       dateStr.includes(searchLower) ||
       timeStr.includes(searchLower) ||
       patientStr.includes(searchLower) ||
-      doctorStr.includes(searchLower) ||
-      statusStr.includes(searchLower)
+      statusStr.includes(searchLower) ||
+      String(a.id).includes(searchLower)
     );
   });
 
@@ -65,60 +43,53 @@ const AppointmentList: React.FC = () => {
 
         <input
           type="text"
-          placeholder="Pesquisar por data, hora, paciente, médico ou status..."
+          placeholder="Pesquisar por ID, data, hora, paciente ou status..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={e => setSearch(e.target.value)}
           className={styles.searchInput}
         />
       </div>
 
-      {loading ? (
-        <p>Carregando...</p>
+      {appointments.length === 0 ? (
+        <p>Nenhuma consulta cadastrada.</p>
       ) : (
         <table className={styles.table}>
           <thead>
             <tr>
+              <th>ID</th>
               <th>Data</th>
               <th>Hora</th>
               <th>Paciente</th>
-              <th>Médico</th>
               <th>Status</th>
               <th>Ações</th>
             </tr>
           </thead>
           <tbody>
-            {filteredAppointments.map((a) => {
+            {filteredAppointments.map(a => {
               const dt = new Date(a.appointmentDate);
               return (
                 <tr key={a.id}>
+                  <td>{a.id}</td>
                   <td>{dt.toLocaleDateString()}</td>
-                  <td>
-                    {dt.toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </td>
-                  <td>{a.patientId ? `Paciente ID: ${a.patientId}` : "—"}</td>
-                  <td>{a.doctorId ? `Médico ID: ${a.doctorId}` : "—"}</td>
+                  <td>{dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
+                  <td>{a.patientName || '—'}</td>
                   <td>{getAppointmentStatusLabel(a.status)}</td>
-                  <td>
-                    <Link
-                      className={styles.link}
-                      href={`/appointments/details/${a.id}`} // 🔹 link corrigido
+                  <td className={styles.actionButtons}>
+                    <button
+                      className={styles.detailsBtn}
+                      onClick={() => router.push(`/appointments/details/${a.id}`)}
                     >
                       Detalhes
-                    </Link>
-                    <span className={styles.sep}>|</span>
-                    <Link
-                      className={styles.link}
-                      href={`/appointments/edit/${a.id}`}
+                    </button>
+                    <button
+                      className={styles.editBtn}
+                      onClick={() => router.push(`/appointments/edit/${a.id}`)}
                     >
                       Editar
-                    </Link>
-                    <span className={styles.sep}>|</span>
+                    </button>
                     <button
                       className={styles.deleteBtn}
-                      onClick={() => handleDelete(a.id)}
+                      onClick={() => router.push(`/appointments/delete/${a.id}`)}
                     >
                       Excluir
                     </button>
@@ -131,6 +102,4 @@ const AppointmentList: React.FC = () => {
       )}
     </div>
   );
-};
-
-export default AppointmentList;
+}

@@ -1,63 +1,88 @@
 /* src/app/appointments/delete/[id]/DeleteAppointment.module.css */
 
-.deleteContainer {
-  max-width: 600px;
+/* Container principal */
+.container {
+  max-width: 450px;
   margin: 3rem auto;
   padding: 2rem;
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #1f2937;
+  text-align: center;
 }
 
-.title {
-  color: #dc3545;
-  text-align: center;
+/* Título */
+.container h1 {
+  font-size: 1.8rem;
   font-weight: 700;
   margin-bottom: 1rem;
+  color: #b91c1c;
 }
 
-.subtitle {
-  text-align: center;
+/* Mensagem de confirmação */
+.container p {
+  font-size: 1rem;
   margin-bottom: 2rem;
 }
 
-.detailsList {
-  margin-bottom: 2rem;
+.container strong {
+  color: #b91c1c;
 }
 
-.detailsTerm {
+/* Área dos botões */
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Botão de exclusão */
+.deleteButton {
+  padding: 0.55rem 1.5rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  color: #555;
-}
-
-.detailsDesc {
-  margin-bottom: 1rem;
-}
-
-.btnDanger {
-  background-color: #dc3545;
-  color: #fff;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  margin-right: 0.5rem;
-}
-
-.btnDanger:hover {
-  background-color: #a71d2a;
-}
-
-.btnSecondary {
-  background-color: #6c757d;
+  transition: all 0.2s ease-in-out;
   color: #fff;
+  background-color: #b91c1c;
   border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
-  cursor: pointer;
 }
 
-.btnSecondary:hover {
-  background-color: #565e64;
+.deleteButton:hover {
+  background-color: #991b1b;
+  transform: translateY(-1px);
+}
+
+/* Botão de cancelamento */
+.cancelButton {
+  padding: 0.55rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  color: #374151;
+  background-color: #e5e7eb;
+  border: none;
+}
+
+.cancelButton:hover {
+  background-color: #d1d5db;
+  transform: translateY(-1px);
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+  .container {
+    padding: 1.5rem;
+  }
+
+  .deleteButton,
+  .cancelButton {
+    width: 100%;
+  }
 }

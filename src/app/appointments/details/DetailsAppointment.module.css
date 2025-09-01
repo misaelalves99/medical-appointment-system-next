@@ -1,77 +1,114 @@
 /* src/pages/Appointment/Details/DetailsAppointment.module.css */
 
+/* Container principal */
 .appointmentDetailsContainer {
-  max-width: 700px;
-  margin: 3rem auto;
-  padding: 2rem 2.5rem;
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
   background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #1f2937;
 }
 
+/* Título */
 .appointmentDetailsContainer h1 {
-  color: #007bff;
+  font-size: 1.8rem;
+  font-weight: 700;
   margin-bottom: 1.5rem;
   text-align: center;
-  font-weight: 700;
+  color: #111827;
 }
 
+/* Linhas de informação */
 .infoRow {
   display: flex;
   justify-content: space-between;
-  padding: 0.7rem 0;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .infoLabel {
   font-weight: 600;
-  color: #555555;
+  color: #374151;
 }
 
 .infoValue {
-  color: #212529;
+  color: #1f2937;
 }
 
+/* Observações */
 .notes {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background-color: #f8f9fa;
-  border-left: 4px solid #007bff;
-  border-radius: 6px;
-  font-style: italic;
-  color: #555555;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #f9fafb;
+  border-left: 4px solid #2563eb;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  color: #1f2937;
 }
 
+/* Botões */
 .actions {
-  margin-top: 2rem;
-  text-align: center;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
 }
 
+/* Botões e links dentro de actions */
+.actions button,
 .actions a {
-  background-color: #007bff;
-  color: #ffffff;
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
-  text-decoration: none;
+  padding: 0.55rem 1.25rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  margin: 0 0.4rem;
-  display: inline-block;
-  transition: background-color 0.2s ease-in-out;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease-in-out;
 }
 
-.actions a:hover {
-  background-color: #0056b3;
+/* Botão de edição */
+.actions button.edit,
+.actions a.edit {
+  background-color: #2563eb;
+  color: #fff;
 }
 
-@media (max-width: 600px) {
-  .infoRow {
-    flex-direction: column;
-    align-items: flex-start;
+.actions button.edit:hover,
+.actions a.edit:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+/* Botão de voltar */
+.actions button.back,
+.actions a.back {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+.actions button.back:hover,
+.actions a.back:hover {
+  background-color: #d1d5db;
+  transform: translateY(-1px);
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+  .appointmentDetailsContainer {
+    padding: 1.5rem;
   }
 
-  .infoLabel,
-  .infoValue {
+  .actions {
+    flex-direction: column;
+  }
+
+  .actions button,
+  .actions a {
     width: 100%;
-    padding: 0.25rem 0;
   }
 }

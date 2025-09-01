@@ -1,90 +1,88 @@
 /* src/pages/HomePage/HomePage.module.css */
 
 .homeContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem 1rem;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f0f4ff, #e6ecff);
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 40px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .homeContainer h1 {
-  font-size: 2rem;
+  font-size: 2.2rem;
   color: #2c3e50;
-  margin-bottom: 0.5rem;
-  text-align: center;
+  margin-bottom: 20px;
 }
 
 .homeContainer p {
   font-size: 1.1rem;
-  color: #555;
-  margin-bottom: 2rem;
-  text-align: center;
+  color: #555555;
+  margin-bottom: 30px;
 }
 
 .homeButtons {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
-  width: 100%;
-  max-width: 900px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
 }
 
 .homeButtons a {
   display: inline-block;
-  padding: 1rem 1.5rem;
-  text-align: center;
+  padding: 15px 30px;
+  border-radius: 8px;
   font-size: 1rem;
   font-weight: 600;
-  color: #fff;
-  border-radius: 8px;
   text-decoration: none;
+  color: #fff;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
+/* Botões individuais com cores diferentes */
 .patientBtn {
-  background-color: #4cafef;
+  background-color: #3498db;
 }
 
 .patientBtn:hover {
-  background-color: #3b9ede;
+  background-color: #2980b9;
 }
 
 .doctorBtn {
-  background-color: #4caf50;
+  background-color: #2ecc71;
 }
 
 .doctorBtn:hover {
-  background-color: #3f9443;
+  background-color: #27ae60;
 }
 
 .specialtyBtn {
-  background-color: #ff9800;
+  background-color: #e67e22;
 }
 
 .specialtyBtn:hover {
-  background-color: #e08600;
+  background-color: #d35400;
 }
 
 .appointmentBtn {
-  background-color: #9c27b0;
+  background-color: #9b59b6;
 }
 
 .appointmentBtn:hover {
-  background-color: #852196;
+  background-color: #8e44ad;
 }
 
 /* Responsividade */
 @media (max-width: 600px) {
-  .homeContainer h1 {
-    font-size: 1.5rem;
+  .homeButtons {
+    flex-direction: column;
   }
 
-  .homeButtons {
-    grid-template-columns: 1fr;
+  .homeButtons a {
+    width: 100%;
+    text-align: center;
   }
 }

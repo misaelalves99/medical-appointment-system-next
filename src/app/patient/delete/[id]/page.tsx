@@ -3,63 +3,57 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import styles from "../DeletePatient.module.css";
-import { patientsMock, Patient } from "../../../mocks/patients";
+import { usePatient } from "../../../hooks/usePatient";
+import { Patient } from "../../../types/Patient";
 
 export default function DeletePatientPage() {
   const router = useRouter();
   const params = useParams();
   const idParam = params?.id ? Number(params.id) : undefined;
 
+  const { patients, deletePatient } = usePatient();
   const [patient, setPatient] = useState<Patient | null>(null);
 
+  // Busca o paciente ao carregar ou quando a lista mudar
   useEffect(() => {
     if (idParam) {
-      const found = patientsMock.find((p) => p.id === idParam) || null;
-      setPatient(found);
+      const foundPatient = patients.find(p => p.id === idParam) || null;
+      setPatient(foundPatient);
     }
-  }, [idParam]);
+  }, [idParam, patients]);
 
   const handleDelete = () => {
-    if (!patient) return;
-
-    const index = patientsMock.findIndex((p) => p.id === patient.id);
-    if (index !== -1) {
-      patientsMock.splice(index, 1); // remove do mock
+    if (patient) {
+      deletePatient(patient.id);
       console.log("Paciente excluído:", patient);
-      console.log("Lista atualizada:", patientsMock);
+      router.push("/patient");
     }
-
-    router.push("/patient"); // redireciona para listagem
   };
 
-  const handleCancel = () => {
-    router.push("/patient");
-  };
+  const handleCancel = () => router.push("/patient");
 
-  if (!patient) return <p>Carregando paciente...</p>;
+  if (!patient) {
+    return <p>Carregando...</p>;
+  }
 
   return (
-    <div className={styles.deletePatientContainer}>
+    <div className={styles.container}>
       <h1>Confirmar Exclusão</h1>
       <p>
-        Tem certeza de que deseja excluir o paciente <strong>{patient.name}</strong>?
+        Tem certeza de que deseja excluir o paciente{" "}
+        <strong>{patient.name}</strong>?
       </p>
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleDelete();
-        }}
-      >
-        <button type="submit" className={styles.btnDelete}>
+      <div className={styles.actions}>
+        <button onClick={handleDelete} className={styles.deleteButton}>
           Excluir
         </button>
-        <button type="button" className={styles.btnCancel} onClick={handleCancel}>
+        <button onClick={handleCancel} className={styles.cancelButton}>
           Cancelar
         </button>
-      </form>
+      </div>
     </div>
   );
 }

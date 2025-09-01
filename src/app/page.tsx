@@ -1,4 +1,4 @@
-// src/app/page.tsx
+// app/home/page.tsx
 
 import Link from "next/link";
 import styles from "./HomePage.module.css";
@@ -14,13 +14,13 @@ export default function HomePage() {
         <Link href="/patient" className={styles.patientBtn}>
           Gerenciar Pacientes
         </Link>
-        <Link href="/doctors" className={styles.doctorBtn}>
+        <Link href="/doctor" className={styles.doctorBtn}>
           Gerenciar Médicos
         </Link>
         <Link href="/specialty" className={styles.specialtyBtn}>
           Gerenciar Especialidades
         </Link>
-        <Link href="/appointments" className={styles.appointmentBtn}>
+        <Link href="/appointment" className={styles.appointmentBtn}>
           Gerenciar Consultas
         </Link>
       </div>

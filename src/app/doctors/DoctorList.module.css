@@ -1,123 +1,199 @@
 /* src/pages/Doctors/DoctorList.module.css */
 
+/* Container principal */
 .container {
-  width: 100%;
-  min-height: 100vh;
+  max-width: 1000px;
   margin: 2rem auto;
-  padding: 1rem;
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.06);
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #2c3e50;
 }
 
+/* Título */
 .container h1 {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: #007bff;
+  font-size: 2rem;
   font-weight: 700;
+  text-align: center;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
 }
 
+/* Ações do topo */
 .actionsContainer {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start; /* alinhado à esquerda */
-  gap: 0.5rem; /* espaçamento entre botão e input */
-  margin-bottom: 1rem;
+  flex-direction: column; /* Botão acima da pesquisa */
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-.searchInput {
-  padding: 0.5rem;
-  width: 100%;
-  max-width: 300px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  margin-bottom: 1rem;
-  font-size: 1rem;
-}
-
+/* Botão de criar novo */
 .createButton {
-  display: inline-block;
-  background-color: #007bff;
+  background-color: #2563eb;
   color: #ffffff;
-  padding: 0.6rem 1rem;
-  border-radius: 6px;
-  text-decoration: none;
+  padding: 0.6rem 1.4rem;
+  border-radius: 8px;
   font-weight: 600;
   border: none;
   cursor: pointer;
-  margin-bottom: 1rem;
+  transition: background 0.2s ease-in-out, transform 0.1s ease;
 }
 
 .createButton:hover {
-  background-color: #0056b3;
+  background-color: #1d4ed8;
+  transform: translateY(-2px);
 }
 
+/* Input de busca */
+.searchInput {
+  width: 100%;
+  max-width: 300px; /* Limita o tamanho máximo */
+  padding: 0.4rem 0.65rem; /* Um pouco mais compacto */
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* Tabela */
 .table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
+  background-color: #f9fafb;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.03);
 }
 
 .table th,
 .table td {
-  border: 1px solid #dee2e6;
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
   text-align: left;
-  font-size: 0.95rem;
-  vertical-align: middle;
 }
 
 .table th {
-  background-color: #383838;
-  color: white;
+  background-color: #f3f4f6;
   font-weight: 600;
+  color: #374151;
 }
 
 .table tr:nth-child(even) {
-  background-color: #f8f9fa;
+  background-color: #ffffff;
 }
 
-.table tr:hover {
-  background-color: #f1f1f1;
+.table tr:nth-child(odd) {
+  background-color: #f9fafb;
 }
 
-.detailsButton {
-  background-color: #28a745;
-  color: #fff;
+/* Coluna de ações */
+.actionsColumn {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Botões na coluna de ações */
+.detailsButton,
+.editButton,
+.deleteButton {
   padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
-  margin-right: 0.3rem;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Cores dos botões */
+.detailsButton {
+  background-color: #3b82f6;
+  color: #fff;
 }
 
 .detailsButton:hover {
-  background-color: #218838;
+  background-color: #2563eb;
 }
 
 .editButton {
-  background-color: #ffc107;
-  color: #000;
-  padding: 0.4rem 0.8rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-right: 0.3rem;
+  background-color: #f59e0b;
+  color: #fff;
 }
 
 .editButton:hover {
-  background-color: #e0a800;
+  background-color: #d97706;
 }
 
 .deleteButton {
-  background-color: #dc3545;
+  background-color: #ef4444;
   color: #fff;
-  padding: 0.4rem 0.8rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
 }
 
 .deleteButton:hover {
-  background-color: #c82333;
+  background-color: #dc2626;
+}
+
+/* Mensagem quando não há resultados */
+.table td[colspan="7"] {
+  text-align: center;
+  padding: 1rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+  .table th,
+  .table td {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .detailsButton,
+  .editButton,
+  .deleteButton {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .actionsContainer {
+    align-items: stretch;
+  }
+
+  .actionsColumn {
+    flex-wrap: wrap;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
+
+  .detailsButton,
+  .editButton,
+  .deleteButton {
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .table th,
+  .table td {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.5rem;
+  }
+
+  .actionsColumn {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
 }

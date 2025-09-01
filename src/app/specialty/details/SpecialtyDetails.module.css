@@ -1,52 +1,94 @@
 /* src/pages/Specialty/Details/DetailsSpecialty.module.css */
 
+/* Container principal */
 .specialtyDetailsContainer {
-  max-width: 600px;
+  max-width: 500px;
   margin: 2rem auto;
-  padding: 1rem;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
-  text-align: center;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #1f2937;
 }
 
+/* Título */
 .specialtyDetailsContainer h1 {
-  color: #17a2b8;
-  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #111827;
 }
 
+/* Campos de informação */
 .specialtyDetailsContainer p {
-  font-size: 1.2rem;
-  color: #343a40;
-  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
 }
 
+.specialtyDetailsContainer strong {
+  color: #374151;
+}
+
+/* Botões */
 .actions {
   display: flex;
-  justify-content: center;
-  gap: 1rem;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
 }
 
+/* Botões e links dentro de actions */
+.actions button,
 .actions a {
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
+  padding: 0.55rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  border: none;
   text-decoration: none;
-  color: #fff;
-  transition: background 0.2s;
+  transition: all 0.2s ease-in-out;
 }
 
+/* Botão de edição */
 .actions .edit {
-  background-color: #17a2b8;
+  background-color: #2563eb;
+  color: #fff;
 }
 
 .actions .edit:hover {
-  background-color: #138496;
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
 }
 
+/* Botão de voltar */
 .actions .back {
-  background-color: #6c757d;
+  background-color: #e5e7eb;
+  color: #374151;
 }
 
 .actions .back:hover {
-  background-color: #5a6268;
+  background-color: #d1d5db;
+  transform: translateY(-1px);
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+  .specialtyDetailsContainer {
+    padding: 1.5rem;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .actions button,
+  .actions a {
+    width: 100%;
+  }
 }

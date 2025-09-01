@@ -1,71 +1,121 @@
-/* src/pages/Appointments/Create/CreateAppointment.module.css */
+/* src/Appointments/Create/CreateAppointment.module.css */
 
+/* Container principal */
 .createAppointmentContainer {
-  max-width: 600px;
-  margin: 3rem auto;
-  padding: 2rem 2.5rem;
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #343a40;
+  max-width: 550px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #1f2937;
+  transition: all 0.3s ease-in-out;
 }
 
-.createAppointmentContainer h1 {
-  text-align: center;
-  color: #007bff;
+/* Título */
+.createAppointmentContainer .title {
+  font-size: 2rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
+  color: #111827;
+  text-align: center;
 }
 
-.createAppointmentContainer form {
+/* Formulário */
+.createAppointmentContainer .form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.createAppointmentContainer label {
+/* Grupos de campos */
+.createAppointmentContainer .formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+/* Labels */
+.createAppointmentContainer .formLabel {
   font-weight: 600;
-  margin-bottom: 0.3rem;
+  color: #374151;
+  font-size: 0.95rem;
 }
 
-.createAppointmentContainer input,
-.createAppointmentContainer select,
-.createAppointmentContainer textarea {
-  padding: 0.55rem 0.8rem;
-  border: 1px solid #ced4da;
-  border-radius: 6px;
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
+/* Inputs, Selects e Textarea */
+.createAppointmentContainer .formInput,
+.createAppointmentContainer .formSelect,
+.createAppointmentContainer .formTextarea {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.95rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
 }
 
-.createAppointmentContainer input:focus,
-.createAppointmentContainer select:focus,
-.createAppointmentContainer textarea:focus {
-  border-color: #007bff;
+.createAppointmentContainer .formInput:focus,
+.createAppointmentContainer .formSelect:focus,
+.createAppointmentContainer .formTextarea:focus {
   outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
-.createAppointmentContainer button {
-  background: #007bff;
-  color: #ffffff;
-  border: none;
-  padding: 0.7rem;
-  border-radius: 6px;
+/* Área de botões */
+.createAppointmentContainer .formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+/* Botões */
+.createAppointmentContainer .formButton {
+  padding: 0.6rem 1.5rem;
+  font-size: 0.95rem;
   font-weight: 600;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s ease;
-  font-size: 1rem;
+  border: none;
+  transition: all 0.2s ease-in-out;
 }
 
-.createAppointmentContainer button:hover {
-  background: #0056b3;
+/* Botão salvar */
+.createAppointmentContainer .formSubmit {
+  background-color: #2563eb;
+  color: #ffffff;
 }
 
-.createAppointmentContainer .btn-secondary {
-  background: #6c757d;
+.createAppointmentContainer .formSubmit:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
 }
 
-.createAppointmentContainer .btn-secondary:hover {
-  background: #5a6268;
+/* Botão cancelar */
+.createAppointmentContainer .formCancel {
+  background-color: #6b7280;
+  color: #ffffff;
+}
+
+.createAppointmentContainer .formCancel:hover {
+  background-color: #4b5563;
+  transform: translateY(-1px);
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+  .createAppointmentContainer {
+    padding: 1.25rem;
+  }
+
+  .createAppointmentContainer .formActions {
+    flex-direction: column;
+  }
+
+  .createAppointmentContainer .formButton {
+    width: 100%;
+  }
 }

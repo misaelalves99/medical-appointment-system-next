@@ -1,58 +1,113 @@
 /* src/pages/Patient/Create/CreatePatient.module.css */
 
+/* Container principal */
 .createPatientContainer {
-  max-width: 600px;
+  max-width: 500px;
   margin: 2rem auto;
-  padding: 1rem;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.05);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #1f2937;
+  transition: all 0.3s ease-in-out;
 }
 
-.createPatientContainer h1 {
+/* Título */
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #111827;
   text-align: center;
-  margin-bottom: 1rem;
-  color: #007bff;
 }
 
-.createPatientContainer form {
+/* Formulário */
+.form {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
-.createPatientContainer input,
-.createPatientContainer select,
-.createPatientContainer textarea {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
+/* Grupos de campos */
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* Labels */
+.formLabel {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.95rem;
+}
+
+/* Inputs e Selects */
+.formInput,
+.formSelect,
+.formTextarea {
   width: 100%;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.95rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   box-sizing: border-box;
 }
 
-.createPatientContainer label {
-  display: block;
-  margin-bottom: 0.25rem;
-  font-weight: 600;
-  color: #333;
+.formInput:focus,
+.formSelect:focus,
+.formTextarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
-.createPatientContainer button {
-  background: #007bff;
-  color: #fff;
-  border: none;
-  padding: 0.6rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s;
-  font-weight: 600;
-  font-size: 1rem;
+/* Botões */
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
   margin-top: 1rem;
 }
 
-.createPatientContainer button:hover {
-  background: #0056b3;
+.buttonSubmit {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.buttonSubmit:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.buttonCancel {
+  background-color: #e5e7eb;
+  color: #111827;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.buttonCancel:hover {
+  background-color: #d1d5db;
+  transform: translateY(-1px);
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+  .createPatientContainer {
+    padding: 1.25rem;
+  }
 }

@@ -1,16 +1,16 @@
-// src/app/specialty/page.tsx
+// app/specialty/page.tsx
 
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./SpecialtyList.module.css";
-import { specialtiesMock, Specialty } from "../mocks/specialties";
+import { useSpecialty } from "../hooks/useSpecialty";
 
-const SpecialtyIndex: React.FC = () => {
-  const router = useRouter();
-  const [specialties, setSpecialties] = useState<Specialty[]>(specialtiesMock);
+export default function SpecialtyList() {
+  const { specialties } = useSpecialty();
   const [filter, setFilter] = useState("");
+  const router = useRouter();
 
   const filteredSpecialties = specialties
     .filter(
@@ -19,17 +19,6 @@ const SpecialtyIndex: React.FC = () => {
         s.id.toString().includes(filter)
     )
     .sort((a, b) => a.name.localeCompare(b.name));
-
-  const handleDelete = (id: number) => {
-    const confirmed = confirm("Tem certeza que deseja excluir esta especialidade?");
-    if (confirmed) {
-      const updated = specialties.filter((s) => s.id !== id);
-      setSpecialties(updated);
-      // Atualiza o mock centralizado
-      const idx = specialtiesMock.findIndex((s) => s.id === id);
-      if (idx !== -1) specialtiesMock.splice(idx, 1);
-    }
-  };
 
   return (
     <div className={styles.specialtyIndexContainer}>
@@ -42,7 +31,7 @@ const SpecialtyIndex: React.FC = () => {
         Cadastrar Nova Especialidade
       </button>
 
-      <div style={{ marginTop: "1rem" }}>
+      <div>
         <input
           type="text"
           placeholder="Pesquisar por Nome ou ID..."
@@ -61,42 +50,35 @@ const SpecialtyIndex: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredSpecialties.length > 0 ? (
-              filteredSpecialties.map((specialty) => (
-                <tr key={specialty.id}>
-                  <td>{specialty.id}</td>
-                  <td>{specialty.name}</td>
-                  <td>
-                    <button
-                      className={styles.detailsLink}
-                      onClick={() =>
-                        router.push(`/specialty/details/${specialty.id}`)
-                      }
-                    >
-                      Detalhes
-                    </button>
-                    <button
-                      className={styles.detailsLink}
-                      style={{ backgroundColor: "#ffc107" }}
-                      onClick={() =>
-                        router.push(`/specialty/edit/${specialty.id}`)
-                      }
-                    >
-                      Editar
-                    </button>
-                    <button
-                      className={styles.detailsLink}
-                      style={{ backgroundColor: "#dc3545" }}
-                      onClick={() => handleDelete(specialty.id)}
-                    >
-                      Excluir
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
+            {filteredSpecialties.map((specialty) => (
+              <tr key={specialty.id}>
+                <td>{specialty.id}</td>
+                <td>{specialty.name}</td>
+                <td className={styles.actions}>
+                  <button
+                    className={styles.detailsButton}
+                    onClick={() => router.push(`/specialty/details/${specialty.id}`)}
+                  >
+                    Detalhes
+                  </button>
+                  <button
+                    className={styles.editButton}
+                    onClick={() => router.push(`/specialty/edit/${specialty.id}`)}
+                  >
+                    Editar
+                  </button>
+                  <button
+                    className={styles.deleteButton}
+                    onClick={() => router.push(`/specialty/delete/${specialty.id}`)}
+                  >
+                    Excluir
+                  </button>
+                </td>
+              </tr>
+            ))}
+            {filteredSpecialties.length === 0 && (
               <tr>
-                <td colSpan={3} style={{ textAlign: "center", padding: "1rem" }}>
+                <td colSpan={3} className={styles.noResults}>
                   Nenhuma especialidade encontrada.
                 </td>
               </tr>
@@ -106,6 +88,4 @@ const SpecialtyIndex: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default SpecialtyIndex;
+}

@@ -1,23 +1,21 @@
-// src/app/patient/page.tsx
+// app/patient/page.tsx
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import styles from "./Patient.module.css";
-import { patientsMock, Patient } from "../mocks/patients"; // import do mock centralizado
+import { usePatient } from "../hooks/usePatient";
+import type { Patient } from "../types/Patient";
 
-const PatientIndex: React.FC = () => {
-  const [patients, setPatients] = useState<Patient[]>([]);
+export default function PatientIndex() {
+  const { patients } = usePatient();
   const [search, setSearch] = useState("");
+  const router = useRouter();
 
-  useEffect(() => {
-    // Simula fetch do mock
-    setPatients(patientsMock);
-  }, []);
-
-  const filteredPatients = patients.filter((p) =>
-    [p.name, p.cpf, p.email, p.phone].some((field) =>
+  const filteredPatients: Patient[] = patients.filter((p: Patient) =>
+    [String(p.id), p.name ?? "", p.cpf ?? "", p.phone ?? ""].some((field) =>
       field.toLowerCase().includes(search.toLowerCase())
     )
   );
@@ -33,75 +31,58 @@ const PatientIndex: React.FC = () => {
 
         <input
           type="text"
-          placeholder="Pesquisar por Nome, CPF, Email ou Telefone..."
+          placeholder="Pesquisar por ID, Nome, CPF ou Telefone..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className={styles.searchInput}
         />
       </div>
 
-      <table className={styles.patientTable}>
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>CPF</th>
-            <th>Email</th>
-            <th>Telefone</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredPatients.map((patient) => (
-            <tr key={patient.id}>
-              <td>{patient.name}</td>
-              <td>{patient.cpf}</td>
-              <td>{patient.email}</td>
-              <td>{patient.phone}</td>
-              <td>
-                <Link
-                  href={`/patient/details/${patient.id}`}
-                  className={styles.detailsLink}
-                >
-                  Detalhes
-                </Link>{" "}
-                <Link
-                  href={`/patient/edit/${patient.id}`}
-                  className={styles.editLink}
-                >
-                  Editar
-                </Link>{" "}
-                <Link
-                  href={`/patient/delete/${patient.id}`}
-                  className={styles.deleteLink}
-                >
-                  Excluir
-                </Link>{" "}
-                <Link
-                  href={`/patient/history/${patient.id}`}
-                  className={styles.historyLink}
-                >
-                  Histórico
-                </Link>{" "}
-                <Link
-                  href={`/patient/upload-profile/${patient.id}`}
-                  className={styles.uploadLink}
-                >
-                  Upload Foto
-                </Link>
-              </td>
-            </tr>
-          ))}
-          {filteredPatients.length === 0 && (
+      {filteredPatients.length === 0 ? (
+        <p className={styles.noResults}>Nenhum paciente encontrado.</p>
+      ) : (
+        <table className={styles.table}>
+          <thead>
             <tr>
-              <td colSpan={6} style={{ textAlign: "center", padding: "1rem" }}>
-                Nenhum paciente encontrado.
-              </td>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>CPF</th>
+              <th>Telefone</th>
+              <th>Ações</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredPatients.map((patient: Patient) => (
+              <tr key={patient.id}>
+                <td>{patient.id}</td>
+                <td>{patient.name}</td>
+                <td>{patient.cpf}</td>
+                <td>{patient.phone || "-"}</td>
+                <td className={styles.actionsColumn}>
+                  <button
+                    onClick={() => router.push(`/patient/details/${patient.id}`)}
+                    className={styles.detailsLink}
+                  >
+                    Detalhes
+                  </button>
+                  <button
+                    onClick={() => router.push(`/patient/edit/${patient.id}`)}
+                    className={styles.editLink}
+                  >
+                    Editar
+                  </button>
+                  <button
+                    onClick={() => router.push(`/patient/delete/${patient.id}`)}
+                    className={styles.deleteLink}
+                  >
+                    Excluir
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
-};
-
-export default PatientIndex;
+}

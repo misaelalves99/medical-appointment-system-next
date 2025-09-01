@@ -5,66 +5,46 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import styles from "../DeleteDoctor.module.css";
-import { doctorsMock, Doctor } from "../../../mocks/doctors";
+import { useDoctor } from "../../../hooks/useDoctor";
+import { Doctor } from "../../../types/Doctor";
 
 export default function DeleteDoctorPage() {
   const router = useRouter();
   const params = useParams();
   const idParam = params?.id ? Number(params.id) : undefined;
 
+  const { doctors, removeDoctor } = useDoctor();
   const [doctor, setDoctor] = useState<Doctor | null>(null);
 
+  // Busca o médico ao carregar ou quando a lista mudar
   useEffect(() => {
     if (idParam) {
-      const foundDoctor = doctorsMock.find((d) => d.id === idParam) || null;
+      const foundDoctor = doctors.find(d => d.id === idParam) || null;
       setDoctor(foundDoctor);
     }
-  }, [idParam]);
+  }, [idParam, doctors]);
 
   const handleDelete = () => {
     if (doctor) {
-      const index = doctorsMock.findIndex((d) => d.id === doctor.id);
-      if (index !== -1) {
-        doctorsMock.splice(index, 1);
-      }
+      removeDoctor(doctor.id);
       console.log("Médico excluído:", doctor);
-      console.log("Lista atualizada:", doctorsMock);
       router.push("/doctors");
     }
   };
 
-  const handleCancel = () => {
-    router.push("/doctors");
-  };
+  const handleCancel = () => router.push("/doctors");
 
   if (!doctor) {
-    return <p>Carregando médico...</p>;
+    return <p>Carregando...</p>;
   }
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Excluir Médico</h1>
-      <h3 className={styles.subtitle}>Tem certeza que deseja excluir o médico abaixo?</h3>
-
-      <dl className={styles.detailsList}>
-        <dt className={styles.dt}>Nome</dt>
-        <dd className={styles.dd}>{doctor.name}</dd>
-
-        <dt className={styles.dt}>CRM</dt>
-        <dd className={styles.dd}>{doctor.crm}</dd>
-
-        <dt className={styles.dt}>Especialidade</dt>
-        <dd className={styles.dd}>{doctor.specialty}</dd>
-
-        <dt className={styles.dt}>Email</dt>
-        <dd className={styles.dd}>{doctor.email}</dd>
-
-        <dt className={styles.dt}>Telefone</dt>
-        <dd className={styles.dd}>{doctor.phone}</dd>
-
-        <dt className={styles.dt}>Ativo</dt>
-        <dd className={styles.dd}>{doctor.isActive ? "Sim" : "Não"}</dd>
-      </dl>
+      <h1>Confirmar Exclusão</h1>
+      <p>
+        Tem certeza de que deseja excluir o doutor{" "}
+        <strong>{doctor.name}</strong>?
+      </p>
 
       <div className={styles.actions}>
         <button onClick={handleDelete} className={styles.deleteButton}>

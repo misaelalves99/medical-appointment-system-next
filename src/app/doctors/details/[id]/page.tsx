@@ -3,34 +3,45 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import styles from "../DoctorDetails.module.css";
-import { doctorsMock, Doctor } from "../../../mocks/doctors";
+import type { Doctor } from "../../../types/Doctor";
+import { useDoctor } from "../../../hooks/useDoctor";
 
 export default function DoctorDetailsPage() {
-  const [doctor, setDoctor] = useState<Doctor | null>(null);
-  const params = useParams();
   const router = useRouter();
+  const params = useParams();
   const idParam = params?.id ? Number(params.id) : undefined;
+
+  const { doctors } = useDoctor();
+  const [doctor, setDoctor] = useState<Doctor | null>(null);
 
   useEffect(() => {
     if (idParam) {
-      const found = doctorsMock.find((d) => d.id === idParam) || null;
-      setDoctor(found);
+      const foundDoctor = doctors.find((d) => d.id === idParam) || null;
+      setDoctor(foundDoctor);
     }
-  }, [idParam]);
+  }, [idParam, doctors]);
 
-  if (!doctor) {
-    return <p>Carregando ou médico não encontrado...</p>;
-  }
-
-  const handleEdit = (id: number) => {
-    router.push(`/doctors/edit/${id}`);
+  const handleEdit = () => {
+    if (doctor) router.push(`/doctors/edit/${doctor.id}`);
   };
 
   const handleBack = () => {
     router.push("/doctors");
   };
+
+  if (!doctor) {
+    return (
+      <div className={styles.container}>
+        <h1>Detalhes do Médico</h1>
+        <p>Médico não encontrado.</p>
+        <button className={styles.back} onClick={handleBack}>
+          Voltar
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
@@ -44,12 +55,8 @@ export default function DoctorDetailsPage() {
       <p><strong>Ativo:</strong> {doctor.isActive ? "Sim" : "Não"}</p>
 
       <div className={styles.actions}>
-        <button className={styles.edit} onClick={() => handleEdit(doctor.id)}>
-          Editar
-        </button>
-        <button className={styles.back} onClick={handleBack}>
-          Voltar
-        </button>
+        <button className={styles.edit} onClick={handleEdit}>Editar</button>
+        <button className={styles.back} onClick={handleBack}>Voltar</button>
       </div>
     </div>
   );

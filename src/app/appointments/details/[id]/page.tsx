@@ -2,33 +2,59 @@
 
 "use client";
 
-import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
 import styles from "../DetailsAppointment.module.css";
-import { appointmentsMock } from "../../../mocks/appointments";
-import { Appointment as AppointmentType } from "../../../types/Appointment";
+import { useAppointments } from "../../../hooks/useAppointments";
+import { Appointment, AppointmentStatus } from "../../../types/Appointment";
 
-export default function AppointmentDetailsPage() {
+export default function DetailsAppointmentPage() {
   const router = useRouter();
   const params = useParams();
-  const appointmentId = params?.id ? Number(params.id) : undefined;
+  const idParam = params?.id ? Number(params.id) : undefined;
 
-  const [appointment, setAppointment] = useState<AppointmentType | null>(null);
+  const { appointments } = useAppointments();
+  const [appointment, setAppointment] = useState<Appointment | null>(null);
 
+  // Busca a consulta ao carregar ou quando a lista mudar
   useEffect(() => {
-    if (appointmentId) {
-      const found = appointmentsMock.find((a) => a.id === appointmentId) || null;
+    if (idParam) {
+      const found = appointments.find((a) => a.id === idParam) || null;
       setAppointment(found);
     }
-  }, [appointmentId]);
+  }, [idParam, appointments]);
 
-  if (!appointment) return <p>Consulta não encontrada ou carregando...</p>;
+  // Funções de navegação
+  const handleEdit = () => appointment && router.push(`/appointments/edit/${appointment.id}`);
+  const handleBack = () => router.push("/appointments");
 
-  const dt = new Date(appointment.appointmentDate);
+  // Label amigável para o status
+  const getStatusLabel = (status: number) => {
+    switch (status) {
+      case AppointmentStatus.Scheduled: return "Agendada";
+      case AppointmentStatus.Confirmed: return "Confirmada";
+      case AppointmentStatus.Cancelled: return "Cancelada";
+      case AppointmentStatus.Completed: return "Concluída";
+      default: return "Desconhecido";
+    }
+  };
+
+  // Se não encontrar a consulta
+  if (!appointment) {
+    return (
+      <div className={styles.appointmentDetailsContainer}>
+        <h1>Detalhes da Consulta</h1>
+        <p>Consulta não encontrada.</p>
+        <button onClick={handleBack} className={styles.back}>
+          Voltar
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.appointmentDetailsContainer}>
-      <h1 className={styles.title}>Detalhes da Consulta</h1>
+      <h1>Detalhes da Consulta</h1>
 
       <div className={styles.infoRow}>
         <span className={styles.infoLabel}>Paciente</span>
@@ -46,12 +72,16 @@ export default function AppointmentDetailsPage() {
 
       <div className={styles.infoRow}>
         <span className={styles.infoLabel}>Data e Hora</span>
-        <span className={styles.infoValue}>{dt.toLocaleString("pt-BR")}</span>
+        <span className={styles.infoValue}>
+          {new Date(appointment.appointmentDate).toLocaleString("pt-BR")}
+        </span>
       </div>
 
       <div className={styles.infoRow}>
         <span className={styles.infoLabel}>Status</span>
-        <span className={styles.infoValue}>{appointment.status}</span>
+        <span className={styles.infoValue}>
+          {getStatusLabel(appointment.status)}
+        </span>
       </div>
 
       {appointment.notes && (
@@ -61,16 +91,10 @@ export default function AppointmentDetailsPage() {
       )}
 
       <div className={styles.actions}>
-        <button
-          onClick={() => router.push(`/appointments/edit/${appointment.id}`)}
-          className={styles.editBtn}
-        >
+        <button className={styles.edit} onClick={handleEdit}>
           Editar
         </button>
-        <button
-          onClick={() => router.push("/appointments")}
-          className={styles.backBtn}
-        >
+        <button className={styles.back} onClick={handleBack}>
           Voltar
         </button>
       </div>
