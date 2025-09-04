@@ -5,7 +5,6 @@ import { useRouter, useParams } from "next/navigation";
 import { appointmentsMock } from "../../../mocks/appointments";
 import { AppointmentStatus } from "../../../types/Appointment";
 
-// Mock do useRouter e useParams
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
   useParams: jest.fn(),
@@ -39,7 +38,7 @@ describe("EditAppointmentPage", () => {
     expect((screen.getByDisplayValue("10") as HTMLOptionElement).value).toBe("10");
     expect((screen.getByDisplayValue("20") as HTMLOptionElement).value).toBe("20");
     expect(screen.getByDisplayValue("2025-08-22T10:00")).toBeInTheDocument();
-    expect(screen.getByDisplayValue(AppointmentStatus.Confirmed)).toBeInTheDocument();
+    expect(screen.getByDisplayValue("1")).toBeInTheDocument(); // enum convertido para string
     expect(screen.getByDisplayValue("Observação inicial")).toBeInTheDocument();
   });
 
@@ -50,7 +49,7 @@ describe("EditAppointmentPage", () => {
 
     const patientSelect = screen.getByLabelText("Paciente") as HTMLSelectElement;
     const doctorSelect = screen.getByLabelText("Médico") as HTMLSelectElement;
-    const dateInput = screen.getByLabelText("Data e Hora") as HTMLInputElement;
+    const dateInput = screen.getByLabelText("Data da Consulta") as HTMLInputElement;
     const notesInput = screen.getByLabelText("Observações") as HTMLTextAreaElement;
 
     fireEvent.change(patientSelect, { target: { value: "11" } });
@@ -69,15 +68,10 @@ describe("EditAppointmentPage", () => {
 
     render(<EditAppointmentPage />);
 
-    const patientSelect = screen.getByLabelText("Paciente") as HTMLSelectElement;
-    const doctorSelect = screen.getByLabelText("Médico") as HTMLSelectElement;
-    const dateInput = screen.getByLabelText("Data e Hora") as HTMLInputElement;
-    const notesInput = screen.getByLabelText("Observações") as HTMLTextAreaElement;
-
-    fireEvent.change(patientSelect, { target: { value: "11" } });
-    fireEvent.change(doctorSelect, { target: { value: "21" } });
-    fireEvent.change(dateInput, { target: { value: "2025-08-23T14:00" } });
-    fireEvent.change(notesInput, { target: { value: "Nova observação" } });
+    fireEvent.change(screen.getByLabelText("Paciente"), { target: { value: "11" } });
+    fireEvent.change(screen.getByLabelText("Médico"), { target: { value: "21" } });
+    fireEvent.change(screen.getByLabelText("Data da Consulta"), { target: { value: "2025-08-23T14:00" } });
+    fireEvent.change(screen.getByLabelText("Observações"), { target: { value: "Nova observação" } });
 
     const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
 

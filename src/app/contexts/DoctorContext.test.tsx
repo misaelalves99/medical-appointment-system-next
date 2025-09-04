@@ -1,21 +1,28 @@
 // src/contexts/DoctorContext.test.tsx
 
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { useContext } from "react";
-import { DoctorContext, DoctorContextType } from "./DoctorContext";
+import { DoctorContext } from "./DoctorContext";
+// Corrigido de DoctorProvider para DoctorsProvider
+import { DoctorsProvider } from "./DoctorProvider";
 
 const TestComponent = () => {
-  const { doctors, addDoctor, updateDoctor, removeDoctor } = useContext<DoctorContextType>(DoctorContext);
+  const context = useContext(DoctorContext);
+  if (!context) throw new Error("DoctorContext must be used within a DoctorsProvider");
+
+  const { doctors, addDoctor, updateDoctor, removeDoctor } = context;
 
   return (
     <div>
       <span data-testid="doctors-count">{doctors.length}</span>
+      <span data-testid="first-doctor">{doctors[0]?.name ?? ""}</span>
+
       <button
         onClick={() =>
           addDoctor({
             id: 1,
             name: "Dr. Alice",
-            fullName: "Dra. Alice Silva",
             crm: "12345",
             specialty: "Cardiology",
             email: "alice@example.com",
@@ -26,12 +33,12 @@ const TestComponent = () => {
       >
         Add
       </button>
+
       <button
         onClick={() =>
           updateDoctor({
             id: 1,
             name: "Dr. Bob",
-            fullName: "Dr. Bob Souza",
             crm: "12345",
             specialty: "Cardiology",
             email: "bob@example.com",
@@ -42,31 +49,41 @@ const TestComponent = () => {
       >
         Update
       </button>
+
       <button onClick={() => removeDoctor(1)}>Remove</button>
     </div>
   );
 };
 
-describe("DoctorContext", () => {
-  it("inicializa com valores padrão e permite manipulação de estado (mocked)", () => {
+describe("DoctorsProvider", () => {
+  it("gerencia estado de médicos corretamente", async () => {
+    const user = userEvent.setup();
+
     render(
-      <DoctorContext.Provider
-        value={{
-          doctors: [],
-          addDoctor: jest.fn(),
-          updateDoctor: jest.fn(),
-          removeDoctor: jest.fn(),
-        }}
-      >
+      <DoctorsProvider>
         <TestComponent />
-      </DoctorContext.Provider>
+      </DoctorsProvider>
     );
 
     const count = screen.getByTestId("doctors-count");
-    expect(count.textContent).toBe("0");
+    const first = screen.getByTestId("first-doctor");
 
-    expect(screen.getByText("Add")).toBeInTheDocument();
-    expect(screen.getByText("Update")).toBeInTheDocument();
-    expect(screen.getByText("Remove")).toBeInTheDocument();
+    // Estado inicial
+    expect(count.textContent).toBe("0");
+    expect(first.textContent).toBe("");
+
+    // Adicionar médico
+    await user.click(screen.getByText("Add"));
+    expect(count.textContent).toBe("1");
+    expect(first.textContent).toBe("Dr. Alice");
+
+    // Atualizar médico
+    await user.click(screen.getByText("Update"));
+    expect(first.textContent).toBe("Dr. Bob");
+
+    // Remover médico
+    await user.click(screen.getByText("Remove"));
+    expect(count.textContent).toBe("0");
+    expect(first.textContent).toBe("");
   });
 });

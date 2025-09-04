@@ -25,6 +25,17 @@ describe("patientsMock", () => {
     expect(patientsMock[0].name).toBe("Carlos Oliveira");
     expect(patientsMock[1].gender).toBe("Feminino");
   });
+
+  it("todos os ids de pacientes são únicos", () => {
+    const ids = patientsMock.map(p => p.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("datas de nascimento são válidas ISO", () => {
+    patientsMock.forEach(p => {
+      expect(!isNaN(Date.parse(p.dateOfBirth))).toBe(true);
+    });
+  });
 });
 
 describe("patientsHistoryMock", () => {
@@ -48,5 +59,27 @@ describe("patientsHistoryMock", () => {
     const carlosHistory = patientsHistoryMock.filter(h => h.patientId === 1);
     expect(carlosHistory.length).toBeGreaterThanOrEqual(1);
     expect(carlosHistory[0].description).toBe("Consulta de rotina");
+  });
+
+  it("ids de paciente no histórico existem em patientsMock", () => {
+    const patientIds = patientsMock.map(p => p.id);
+    patientsHistoryMock.forEach(h => {
+      expect(patientIds).toContain(h.patientId);
+    });
+  });
+
+  it("datas de histórico são válidas ISO", () => {
+    patientsHistoryMock.forEach(h => {
+      expect(!isNaN(Date.parse(h.recordDate))).toBe(true);
+    });
+  });
+
+  it("não há múltiplos históricos com a mesma data para o mesmo paciente", () => {
+    const grouped: Record<string, string[]> = {};
+    patientsHistoryMock.forEach(h => {
+      grouped[h.patientId] = grouped[h.patientId] || [];
+      expect(grouped[h.patientId]).not.toContain(h.recordDate);
+      grouped[h.patientId].push(h.recordDate);
+    });
   });
 });

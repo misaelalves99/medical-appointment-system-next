@@ -1,22 +1,18 @@
 // src/app/doctors/delete/[id]/page.test.tsx
 
-import React from "react"; // ✅ necessário para usar React.useState no jest.spyOn
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import DeleteDoctorPage from "./page";
-import "@testing-library/jest-dom";
 import { doctorsMock, Doctor } from "./mocks/doctors";
-
-// Mock do router do Next.js
-const pushMock = jest.fn();
+import { useRouter, useParams } from "next/navigation";
 
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
   useParams: jest.fn(),
 }));
 
-import { useRouter, useParams } from "next/navigation";
-
 describe("DeleteDoctorPage", () => {
+  const pushMock = jest.fn();
+
   const mockDoctor: Doctor = {
     id: 1,
     name: "Dr. Teste",
@@ -31,14 +27,12 @@ describe("DeleteDoctorPage", () => {
     doctorsMock.length = 0;
     doctorsMock.push({ ...mockDoctor });
     pushMock.mockClear();
-
-    // mock router e params antes de cada teste
     (useRouter as jest.Mock).mockReturnValue({ push: pushMock });
     (useParams as jest.Mock).mockReturnValue({ id: "1" });
   });
 
-  it("exibe loading inicialmente se doctor ainda não carregou", () => {
-    jest.spyOn(React, "useState").mockReturnValueOnce([null, jest.fn()]);
+  it("exibe mensagem de carregamento quando médico não encontrado", () => {
+    (useParams as jest.Mock).mockReturnValue({ id: "999" });
     render(<DeleteDoctorPage />);
     expect(screen.getByText(/carregando médico/i)).toBeInTheDocument();
   });

@@ -24,6 +24,11 @@ describe("doctorsMock", () => {
     expect(doctorsMock[0].name).toBe("Dr. João Silva");
     expect(doctorsMock[1].specialty).toBe("Dermatologia");
   });
+
+  it("todos os ids de médicos são únicos", () => {
+    const ids = doctorsMock.map(d => d.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
 });
 
 describe("doctorAvailabilitiesMock", () => {
@@ -42,5 +47,35 @@ describe("doctorAvailabilitiesMock", () => {
     const avail = doctorAvailabilitiesMock.find(a => a.doctorId === 1 && a.date === "2025-08-20");
     expect(avail).toBeDefined();
     expect(avail?.isAvailable).toBe(true);
+  });
+
+  it("datas de disponibilidade são válidas ISO", () => {
+    doctorAvailabilitiesMock.forEach(a => {
+      expect(!isNaN(Date.parse(a.date))).toBe(true);
+    });
+  });
+
+  it("horários de disponibilidade são consistentes (startTime < endTime)", () => {
+    doctorAvailabilitiesMock.forEach(a => {
+      const [startHour, startMin] = a.startTime.split(":").map(Number);
+      const [endHour, endMin] = a.endTime.split(":").map(Number);
+      const startTotal = startHour * 60 + startMin;
+      const endTotal = endHour * 60 + endMin;
+      expect(endTotal).toBeGreaterThan(startTotal);
+    });
+  });
+
+  it("não há sobreposição de horários para o mesmo médico na mesma data", () => {
+    const grouped: Record<string, { start: number; end: number }[]> = {};
+    doctorAvailabilitiesMock.forEach(a => {
+      const key = `${a.doctorId}-${a.date}`;
+      const start = Number(a.startTime.split(":")[0]) * 60 + Number(a.startTime.split(":")[1]);
+      const end = Number(a.endTime.split(":")[0]) * 60 + Number(a.endTime.split(":")[1]);
+      grouped[key] = grouped[key] || [];
+      grouped[key].forEach(slot => {
+        expect(start >= slot.end || end <= slot.start).toBe(true); // sem sobreposição
+      });
+      grouped[key].push({ start, end });
+    });
   });
 });

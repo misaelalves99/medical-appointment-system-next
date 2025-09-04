@@ -1,5 +1,3 @@
-// src/contexts/DoctorProvider.test.tsx
-
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useContext } from "react";
@@ -7,12 +5,15 @@ import { DoctorsProvider } from "./DoctorProvider";
 import { DoctorContext } from "./DoctorContext";
 
 const TestComponent = () => {
-  const { doctors, addDoctor, updateDoctor, removeDoctor } = useContext(DoctorContext);
+  const context = useContext(DoctorContext);
+  if (!context) throw new Error("DoctorContext must be used within a DoctorsProvider");
+
+  const { doctors, addDoctor, updateDoctor, removeDoctor } = context;
 
   return (
     <div>
       <ul>
-        {doctors.map(d => (
+        {doctors.map((d) => (
           <li key={d.id} data-testid={`doctor-${d.id}`}>
             {d.name} - {d.specialty}
           </li>
@@ -24,7 +25,6 @@ const TestComponent = () => {
           addDoctor({
             id: 0,
             name: "Dr. Teste",
-            fullName: "Dr. Teste Completo",
             crm: "99999",
             specialty: "Teste",
             email: "teste@example.com",
@@ -38,7 +38,7 @@ const TestComponent = () => {
 
       <button
         onClick={() =>
-          updateDoctor({
+          doctors[0] && updateDoctor({
             ...doctors[0],
             name: "Dr. Updated",
           })
@@ -47,7 +47,11 @@ const TestComponent = () => {
         Update
       </button>
 
-      <button onClick={() => removeDoctor(doctors[0]?.id ?? 0)}>Remove</button>
+      <button
+        onClick={() => doctors[0] && removeDoctor(doctors[0].id)}
+      >
+        Remove
+      </button>
     </div>
   );
 };
@@ -61,7 +65,7 @@ describe("DoctorsProvider", () => {
     );
 
     const items = screen.getAllByRole("listitem");
-    expect(items.length).toBeGreaterThan(0); // deve vir do doctorsMock
+    expect(items.length).toBeGreaterThan(0);
   });
 
   it("adiciona, atualiza e remove médico corretamente", async () => {

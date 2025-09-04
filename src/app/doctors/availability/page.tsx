@@ -1,53 +1,61 @@
-// src/app/doctor/availability/page.tsx
+// src/app/doctor/availability/page.test.tsx
 
-"use client";
+import { render, screen } from "@testing-library/react";
+import DoctorAvailabilityPage from "./page";
+import "@testing-library/jest-dom";
+import { doctorsMock, doctorAvailabilitiesMock } from "../../mocks/doctors";
 
-import Link from "next/link";
-import styles from "./Availability.module.css";
-import { doctorsMock, doctorAvailabilitiesMock, DoctorAvailability } from "../../mocks/doctors";
-
-export default function DoctorAvailabilityPage() {
-  const sortedAvailabilities = [...doctorAvailabilitiesMock].sort((a, b) => {
-    const dateA = new Date(a.date + "T" + a.startTime).getTime();
-    const dateB = new Date(b.date + "T" + b.startTime).getTime();
-    return dateA - dateB;
+describe("DoctorAvailabilityPage", () => {
+  beforeEach(() => {
+    render(<DoctorAvailabilityPage />);
   });
 
-  const getDoctorName = (id: number) => {
-    const doctor = doctorsMock.find((d) => d.id === id);
-    return doctor ? doctor.name : `ID ${id}`;
-  };
+  it("renderiza o título da página", () => {
+    expect(screen.getByRole("heading", { name: /disponibilidade dos médicos/i })).toBeInTheDocument();
+  });
 
-  return (
-    <div className={styles.availabilityContainer}>
-      <h1>Disponibilidade dos Médicos</h1>
+  it("possui container principal com classe correta", () => {
+    const container = screen.getByText(/Disponibilidade dos Médicos/i).parentElement;
+    expect(container).toHaveClass("availabilityContainer");
+  });
 
-      <table>
-        <thead>
-          <tr>
-            <th>Médico</th>
-            <th>Data</th>
-            <th>Hora Início</th>
-            <th>Hora Fim</th>
-            <th>Disponível</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedAvailabilities.map((availability: DoctorAvailability, index: number) => (
-            <tr key={index}>
-              <td>{getDoctorName(availability.doctorId)}</td>
-              <td>{new Date(availability.date).toLocaleDateString("pt-BR")}</td>
-              <td>{availability.startTime}</td>
-              <td>{availability.endTime}</td>
-              <td>{availability.isAvailable ? "Sim" : "Não"}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+  it("renderiza a tabela com todas as disponibilidades", () => {
+    const rows = screen.getAllByRole("row");
+    // +1 para o header da tabela
+    expect(rows.length).toBe(doctorAvailabilitiesMock.length + 1);
+  });
 
-      <Link href="/doctor" className={styles.backLink}>
-        Voltar
-      </Link>
-    </div>
-  );
-}
+  it("exibe corretamente os nomes dos médicos e fallback para IDs desconhecidos", () => {
+    doctorAvailabilitiesMock.forEach((availability) => {
+      const doctor = doctorsMock.find(d => d.id === availability.doctorId);
+      const doctorName = doctor ? doctor.name : `ID ${availability.doctorId}`;
+      expect(screen.getByText(doctorName)).toBeInTheDocument();
+    });
+  });
+
+  it("exibe corretamente datas, horários e disponibilidade", () => {
+    doctorAvailabilitiesMock.forEach((availability) => {
+      expect(screen.getByText(new Date(availability.date).toLocaleDateString("pt-BR"))).toBeInTheDocument();
+      expect(screen.getByText(availability.startTime)).toBeInTheDocument();
+      expect(screen.getByText(availability.endTime)).toBeInTheDocument();
+      expect(screen.getByText(availability.isAvailable ? "Sim" : "Não")).toBeInTheDocument();
+    });
+  });
+
+  it("tabela está ordenada corretamente por data e hora", () => {
+    const rows = screen.getAllByRole("row").slice(1); // Ignora o header
+    const times = rows.map(row => {
+      const [ , dateCell, startCell ] = row.querySelectorAll("td");
+      return new Date(`${dateCell.textContent?.split("/").reverse().join("-")}T${startCell.textContent}`);
+    });
+    for (let i = 1; i < times.length; i++) {
+      expect(times[i].getTime()).toBeGreaterThanOrEqual(times[i-1].getTime());
+    }
+  });
+
+  it("possui link de voltar para /doctor com classe correta", () => {
+    const backLink = screen.getByRole("link", { name: /voltar/i });
+    expect(backLink).toHaveAttribute("href", "/doctor");
+    expect(backLink).toHaveClass("backLink");
+  });
+});

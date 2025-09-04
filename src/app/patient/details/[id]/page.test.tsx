@@ -1,4 +1,4 @@
-// src/app/patient/[id]/page.test.tsx
+// src/app/patient/details/[id]/page.test.tsx
 
 import { render, screen, fireEvent } from "@testing-library/react";
 import DetailsPatientPage from "./page";
@@ -20,30 +20,38 @@ describe("DetailsPatientPage", () => {
     (useParams as jest.Mock).mockReturnValue({ id: "1" });
   });
 
-  it("deve exibir mensagem de carregando/paciente não encontrado se paciente não existir", () => {
+  it("exibe mensagem de paciente não encontrado se ID não existir", () => {
     (useParams as jest.Mock).mockReturnValue({ id: "999" }); // id inexistente
     render(<DetailsPatientPage />);
-    expect(screen.getByText(/Paciente não encontrado ou carregando/i)).toBeInTheDocument();
+    expect(screen.getByText(/Paciente não encontrado/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Voltar para a Lista/i })).toBeInTheDocument();
   });
 
-  it("deve renderizar detalhes do paciente corretamente", () => {
+  it("renderiza detalhes completos do paciente existente", () => {
     render(<DetailsPatientPage />);
     const patient = patientsMock.find((p) => p.id === 1)!;
 
     expect(screen.getByText(/Detalhes do Paciente/i)).toBeInTheDocument();
     expect(screen.getByText(new RegExp(patient.name, "i"))).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(patient.cpf, "i"))).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(new Date(patient.dateOfBirth).toLocaleDateString("pt-BR")))).toBeInTheDocument();
     expect(screen.getByText(new RegExp(patient.gender, "i"))).toBeInTheDocument();
     expect(screen.getByText(new RegExp(patient.phone, "i"))).toBeInTheDocument();
     expect(screen.getByText(new RegExp(patient.email, "i"))).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(patient.address, "i"))).toBeInTheDocument();
+
+    // Botões de ação
+    expect(screen.getByRole("button", { name: /Editar/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Voltar para a Lista/i })).toBeInTheDocument();
   });
 
-  it("deve navegar para página de edição ao clicar em Editar", () => {
+  it("navega para edição ao clicar em Editar", () => {
     render(<DetailsPatientPage />);
     fireEvent.click(screen.getByRole("button", { name: /Editar/i }));
     expect(pushMock).toHaveBeenCalledWith("/patient/edit/1");
   });
 
-  it("deve navegar para listagem ao clicar em Voltar para a Lista", () => {
+  it("navega para listagem ao clicar em Voltar para a Lista", () => {
     render(<DetailsPatientPage />);
     fireEvent.click(screen.getByRole("button", { name: /Voltar para a Lista/i }));
     expect(pushMock).toHaveBeenCalledWith("/patient");

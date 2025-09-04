@@ -2,9 +2,21 @@
 
 import { render, screen, fireEvent } from "@testing-library/react";
 import EditSpecialtyPage from "./page";
-import { specialtiesMock } from "../../../mocks/specialties";
+import * as nextNavigation from "next/navigation";
 
 const pushMock = jest.fn();
+
+// Mock do hook useSpecialty
+const specialtiesMock = [{ id: 1, name: "Cardiologia" }];
+jest.mock("../../../hooks/useSpecialty", () => ({
+  useSpecialty: () => ({
+    specialties: specialtiesMock,
+    updateSpecialty: (id: number, name: string) => {
+      const s = specialtiesMock.find((sp) => sp.id === id);
+      if (s) s.name = name;
+    },
+  }),
+}));
 
 // Mock do Next.js router e params
 jest.mock("next/navigation", () => ({
@@ -14,8 +26,7 @@ jest.mock("next/navigation", () => ({
 
 describe("EditSpecialtyPage", () => {
   beforeEach(() => {
-    specialtiesMock.length = 0;
-    specialtiesMock.push({ id: 1, name: "Cardiologia" });
+    specialtiesMock[0].name = "Cardiologia"; // reset mock
     pushMock.mockClear();
   });
 
@@ -30,9 +41,8 @@ describe("EditSpecialtyPage", () => {
     const input = screen.getByLabelText(/nome da especialidade/i);
     fireEvent.change(input, { target: { value: "" } });
     fireEvent.submit(screen.getByRole("button", { name: /salvar alterações/i }));
-    expect(
-      screen.getByText(/o nome da especialidade é obrigatório/i)
-    ).toBeInTheDocument();
+
+    expect(screen.getByText(/o nome da especialidade é obrigatório/i)).toBeInTheDocument();
     expect(pushMock).not.toHaveBeenCalled();
   });
 
@@ -52,13 +62,13 @@ describe("EditSpecialtyPage", () => {
     expect(pushMock).toHaveBeenCalledWith("/specialty");
   });
 
-  it("deve exibir carregando quando a especialidade não existe", () => {
-    jest.mock("next/navigation", () => ({
-      useRouter: () => ({ push: pushMock }),
-      useParams: () => ({ id: "999" }),
-    }));
+  it("deve exibir mensagem quando a especialidade não existe", () => {
+    // Sobrescreve useParams apenas neste teste
+    jest.spyOn(nextNavigation, "useParams").mockReturnValue({ id: "999" });
 
     render(<EditSpecialtyPage />);
-    expect(screen.getByText(/carregando especialidade/i)).toBeInTheDocument();
+
+    expect(screen.getByText(/especialidade não encontrada/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /voltar/i })).toBeInTheDocument();
   });
 });

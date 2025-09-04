@@ -12,6 +12,7 @@ describe("specialtiesMock", () => {
     specialtiesMock.forEach((item) => {
       expect(typeof item.id).toBe("number");
       expect(typeof item.name).toBe("string");
+      expect(typeof item.isActive).toBe("boolean");
     });
   });
 
@@ -19,5 +20,16 @@ describe("specialtiesMock", () => {
     const names = specialtiesMock.map((s) => s.name);
     expect(names).toContain("Cardiologia");
     expect(names).toContain("Dermatologia");
+  });
+
+  it("todos os ids são únicos", () => {
+    const ids = specialtiesMock.map(s => s.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("todos os itens possuem isActive como boolean", () => {
+    specialtiesMock.forEach(s => {
+      expect(typeof s.isActive).toBe("boolean");
+    });
   });
 });

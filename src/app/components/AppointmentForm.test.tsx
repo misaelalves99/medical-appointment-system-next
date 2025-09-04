@@ -40,21 +40,27 @@ describe("AppointmentForm", () => {
     expect(screen.getByLabelText("Médico ID:")).toHaveValue(0);
   });
 
-  it("renderiza no modo edit com dados preenchidos", async () => {
+  it("renderiza no modo edit com dados preenchidos e mostra Carregando", async () => {
     render(<AppointmentForm mode="edit" />);
+    
+    // Loading aparece inicialmente
+    expect(screen.getByText("Carregando...")).toBeInTheDocument();
+
     await waitFor(() => screen.getByLabelText("Paciente ID:"));
+
     expect(screen.getByLabelText("Paciente ID:")).toHaveValue(10);
     expect(screen.getByLabelText("Médico ID:")).toHaveValue(20);
     expect(screen.getByLabelText("Notas:")).toHaveValue("Nota inicial");
   });
 
-  it("valida campos obrigatórios", () => {
+  it("valida campos obrigatórios no modo create", () => {
     render(<AppointmentForm mode="create" />);
     const submitBtn = screen.getByText("Criar");
+
     fireEvent.click(submitBtn);
 
     // Não deve adicionar no mock e não navega
-    expect(appointmentsMock.length).toBe(1); // nenhum novo
+    expect(appointmentsMock.length).toBe(1); 
     expect(pushMock).not.toHaveBeenCalled();
   });
 
@@ -84,5 +90,27 @@ describe("AppointmentForm", () => {
     const updated = appointmentsMock.find(a => a.id === 1);
     expect(updated?.notes).toBe("Atualizado");
     expect(pushMock).toHaveBeenCalledWith("/appointments");
+  });
+
+  it("altera status corretamente", async () => {
+    render(<AppointmentForm mode="edit" />);
+    await waitFor(() => screen.getByLabelText("Status:"));
+
+    fireEvent.change(screen.getByLabelText("Status:"), { target: { value: AppointmentStatus.Confirmed.toString() } });
+    
+    fireEvent.click(screen.getByText("Salvar"));
+    const updated = appointmentsMock.find(a => a.id === 1);
+    expect(updated?.status).toBe(AppointmentStatus.Confirmed);
+  });
+
+  it("altera data corretamente", async () => {
+    render(<AppointmentForm mode="edit" />);
+    await waitFor(() => screen.getByLabelText("Data e Hora:"));
+
+    fireEvent.change(screen.getByLabelText("Data e Hora:"), { target: { value: "2025-08-23T15:30" } });
+    fireEvent.click(screen.getByText("Salvar"));
+
+    const updated = appointmentsMock.find(a => a.id === 1);
+    expect(new Date(updated!.appointmentDate).toISOString()).toBe(new Date("2025-08-23T15:30").toISOString());
   });
 });

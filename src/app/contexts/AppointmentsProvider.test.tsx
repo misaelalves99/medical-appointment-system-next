@@ -8,25 +8,37 @@ import { AppointmentsProvider } from "./AppointmentsProvider";
 import { AppointmentStatus } from "../types/Appointment";
 
 const TestComponent = () => {
-  const { appointments, addAppointment, updateAppointment, deleteAppointment, confirmAppointment, cancelAppointment } =
-    useContext<AppointmentsContextType>(AppointmentsContext);
+  const {
+    appointments,
+    addAppointment,
+    updateAppointment,
+    deleteAppointment,
+    confirmAppointment,
+    cancelAppointment,
+  } = useContext<AppointmentsContextType>(AppointmentsContext);
 
   return (
     <div>
       <span data-testid="appointments-count">{appointments.length}</span>
+      {appointments[0] && (
+        <span data-testid="first-patient">{appointments[0].patientName}</span>
+      )}
+
       <button
         onClick={() =>
           addAppointment({
             patientId: 1,
             doctorId: 1,
             patientName: "Alice",
-            appointmentDate: "2025-08-21",
+            doctorName: "Dr. Smith",
+            appointmentDate: "2025-08-21T10:00",
             status: AppointmentStatus.Scheduled,
           })
         }
       >
         Add
       </button>
+
       {appointments[0] && (
         <>
           <button
@@ -50,6 +62,8 @@ const TestComponent = () => {
 
 describe("AppointmentsProvider", () => {
   it("manages appointments state correctly", async () => {
+    const user = userEvent.setup();
+
     render(
       <AppointmentsProvider>
         <TestComponent />
@@ -57,25 +71,30 @@ describe("AppointmentsProvider", () => {
     );
 
     const count = screen.getByTestId("appointments-count");
-    expect(Number(count.textContent)).toBeGreaterThanOrEqual(0);
 
-    const user = userEvent.setup();
+    // Estado inicial
+    const initialCount = Number(count.textContent);
+    expect(initialCount).toBeGreaterThanOrEqual(0);
 
     // Adicionar
     await user.click(screen.getByText("Add"));
-    expect(Number(count.textContent)).toBeGreaterThanOrEqual(1);
+    expect(Number(count.textContent)).toBe(initialCount + 1);
+    expect(screen.getByTestId("first-patient").textContent).toBe("Alice");
 
     // Atualizar
-    if (screen.queryByText("Update")) await user.click(screen.getByText("Update"));
+    await user.click(screen.getByText("Update"));
+    expect(screen.getByTestId("first-patient").textContent).toBe("Bob");
 
     // Confirmar
-    if (screen.queryByText("Confirm")) await user.click(screen.getByText("Confirm"));
+    await user.click(screen.getByText("Confirm"));
+    // status não é exibido, mas não quebra
 
     // Cancelar
-    if (screen.queryByText("Cancel")) await user.click(screen.getByText("Cancel"));
+    await user.click(screen.getByText("Cancel"));
+    // status atualizado para Cancelled
 
     // Excluir
-    if (screen.queryByText("Delete")) await user.click(screen.getByText("Delete"));
-    expect(Number(count.textContent)).toBeGreaterThanOrEqual(0);
+    await user.click(screen.getByText("Delete"));
+    expect(Number(count.textContent)).toBe(initialCount);
   });
 });

@@ -1,47 +1,98 @@
-// src/hooks/usePatient.test.tsx
+// src/hooks/useDoctor.test.tsx
 
 import { renderHook, act } from "@testing-library/react";
 import React from "react";
-import { PatientContext, PatientContextType } from "../contexts/PatientContext";
-import { usePatient } from "./usePatient";
-import type { Patient } from "../types/Patient";
+import { DoctorContext, DoctorContextType } from "../contexts/DoctorContext";
+import { useDoctor } from "./useDoctor";
 
-describe("usePatient hook", () => {
-  const mockContext: PatientContextType = {
-    patients: [],
-    addPatient: jest.fn(),
-    updatePatient: jest.fn(),
-    deletePatient: jest.fn(),
-    updatePatientProfilePicture: jest.fn(),
+describe("useDoctor hook", () => {
+  const mockContext: DoctorContextType = {
+    doctors: [],
+    addDoctor: jest.fn(),
+    updateDoctor: jest.fn(),
+    removeDoctor: jest.fn(),
   };
 
   const wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-    <PatientContext.Provider value={mockContext}>{children}</PatientContext.Provider>
+    <DoctorContext.Provider value={mockContext}>{children}</DoctorContext.Provider>
   );
 
-  it("deve retornar o contexto de pacientes quando usado dentro do provider", () => {
-    const { result } = renderHook(() => usePatient(), { wrapper });
+  it("deve retornar o contexto de doctors", () => {
+    const { result } = renderHook(() => useDoctor(), { wrapper });
     expect(result.current).toBe(mockContext);
-
-    act(() => {
-      const newPatient: Patient = {
-        id: 1,
-        name: "Paciente Teste",
-        cpf: "123.456.789-00",
-        dateOfBirth: "2000-01-01",
-        email: "teste@paciente.com",
-        phone: "11999999999",
-        address: "Rua Teste, 123",
-      };
-      result.current.addPatient(newPatient);
-    });
-
-    expect(mockContext.addPatient).toHaveBeenCalled();
   });
 
-  it("deve lançar erro se usado fora do PatientProvider", () => {
-    expect(() => usePatient()).toThrow(
-      new Error("usePatient deve ser usado dentro de um PatientProvider")
+  it("chama addDoctor corretamente", () => {
+    const { result } = renderHook(() => useDoctor(), { wrapper });
+
+    act(() => {
+      result.current.addDoctor({
+        id: 1,
+        name: "Dr. Teste",
+        fullName: "Dr. Teste Completo",
+        crm: "123456",
+        specialty: "Cardio",
+        email: "teste@doc.com",
+        phone: "11999999999",
+        isActive: true,
+      });
+    });
+
+    expect(mockContext.addDoctor).toHaveBeenCalledWith({
+      id: 1,
+      name: "Dr. Teste",
+      fullName: "Dr. Teste Completo",
+      crm: "123456",
+      specialty: "Cardio",
+      email: "teste@doc.com",
+      phone: "11999999999",
+      isActive: true,
+    });
+  });
+
+  it("chama updateDoctor corretamente", () => {
+    const { result } = renderHook(() => useDoctor(), { wrapper });
+
+    act(() => {
+      result.current.updateDoctor({
+        id: 1,
+        name: "Dr. Atualizado",
+        fullName: "Dr. Atualizado Completo",
+        crm: "654321",
+        specialty: "Neurologia",
+        email: "atualizado@doc.com",
+        phone: "11988888888",
+        isActive: false,
+      });
+    });
+
+    expect(mockContext.updateDoctor).toHaveBeenCalledWith({
+      id: 1,
+      name: "Dr. Atualizado",
+      fullName: "Dr. Atualizado Completo",
+      crm: "654321",
+      specialty: "Neurologia",
+      email: "atualizado@doc.com",
+      phone: "11988888888",
+      isActive: false,
+    });
+  });
+
+  it("chama removeDoctor corretamente", () => {
+    const { result } = renderHook(() => useDoctor(), { wrapper });
+
+    act(() => {
+      result.current.removeDoctor(1);
+    });
+
+    expect(mockContext.removeDoctor).toHaveBeenCalledWith(1);
+  });
+
+  it("lança erro se usado fora do provider", () => {
+    const consoleError = jest.spyOn(console, "error").mockImplementation(() => {}); // suprime erro React
+    expect(() => renderHook(() => useDoctor())).toThrow(
+      "useDoctor deve ser usado dentro de DoctorsProvider"
     );
+    consoleError.mockRestore();
   });
 });

@@ -1,9 +1,8 @@
 // src/app/doctors/create/page.test.tsx
 
 import { render, screen, fireEvent } from "@testing-library/react";
-import CreateDoctor from "./page";
+import CreateDoctorPage from "./page";
 import "@testing-library/jest-dom";
-import { doctorsMock } from "../../mocks/doctors";
 
 // Mock do router do Next.js
 const pushMock = jest.fn();
@@ -13,14 +12,34 @@ jest.mock("next/navigation", () => ({
   }),
 }));
 
-describe("CreateDoctor", () => {
+// Mock dos hooks
+const addDoctorMock = jest.fn();
+const specialtiesMock = [
+  { id: 1, name: "Cardiologia", isActive: true },
+  { id: 2, name: "Neurologia", isActive: true },
+];
+
+jest.mock("../../hooks/useDoctor", () => ({
+  useDoctor: () => ({
+    doctors: [],
+    addDoctor: addDoctorMock,
+  }),
+}));
+
+jest.mock("../../hooks/useSpecialty", () => ({
+  useSpecialty: () => ({
+    specialties: specialtiesMock,
+  }),
+}));
+
+describe("CreateDoctorPage", () => {
   beforeEach(() => {
-    doctorsMock.length = 0; // resetar mock antes de cada teste
     pushMock.mockClear();
+    addDoctorMock.mockClear();
   });
 
-  it("renderiza todos os campos do formulário", () => {
-    render(<CreateDoctor />);
+  it("renderiza todos os campos do formulário corretamente", () => {
+    render(<CreateDoctorPage />);
     expect(screen.getByLabelText(/nome/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/crm/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/especialidade/i)).toBeInTheDocument();
@@ -31,8 +50,8 @@ describe("CreateDoctor", () => {
     expect(screen.getByRole("button", { name: /cancelar/i })).toBeInTheDocument();
   });
 
-  it("permite preencher o formulário e atualizar o estado", () => {
-    render(<CreateDoctor />);
+  it("permite preencher o formulário e alterar o estado corretamente", () => {
+    render(<CreateDoctorPage />);
     fireEvent.change(screen.getByLabelText(/nome/i), { target: { value: "Dr. Teste" } });
     fireEvent.change(screen.getByLabelText(/crm/i), { target: { value: "12345" } });
     fireEvent.change(screen.getByLabelText(/especialidade/i), { target: { value: "Cardiologia" } });
@@ -42,14 +61,14 @@ describe("CreateDoctor", () => {
 
     expect((screen.getByLabelText(/nome/i) as HTMLInputElement).value).toBe("Dr. Teste");
     expect((screen.getByLabelText(/crm/i) as HTMLInputElement).value).toBe("12345");
-    expect((screen.getByLabelText(/especialidade/i) as HTMLInputElement).value).toBe("Cardiologia");
+    expect((screen.getByLabelText(/especialidade/i) as HTMLSelectElement).value).toBe("Cardiologia");
     expect((screen.getByLabelText(/email/i) as HTMLInputElement).value).toBe("teste@ex.com");
     expect((screen.getByLabelText(/telefone/i) as HTMLInputElement).value).toBe("999999999");
     expect((screen.getByLabelText(/ativo/i) as HTMLInputElement).checked).toBe(true);
   });
 
-  it("adiciona novo médico ao doctorsMock e chama router.push ao enviar o formulário", () => {
-    render(<CreateDoctor />);
+  it("chama addDoctor e router.push ao enviar o formulário", () => {
+    render(<CreateDoctorPage />);
     fireEvent.change(screen.getByLabelText(/nome/i), { target: { value: "Dr. Teste" } });
     fireEvent.change(screen.getByLabelText(/crm/i), { target: { value: "12345" } });
     fireEvent.change(screen.getByLabelText(/especialidade/i), { target: { value: "Cardiologia" } });
@@ -59,14 +78,27 @@ describe("CreateDoctor", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /salvar/i }));
 
-    expect(doctorsMock.length).toBe(1);
-    expect(doctorsMock[0].name).toBe("Dr. Teste");
+    expect(addDoctorMock).toHaveBeenCalledWith(expect.objectContaining({
+      name: "Dr. Teste",
+      crm: "12345",
+      specialty: "Cardiologia",
+      email: "teste@ex.com",
+      phone: "999999999",
+      isActive: true,
+    }));
     expect(pushMock).toHaveBeenCalledWith("/doctors");
   });
 
   it("botão cancelar chama router.push para /doctors", () => {
-    render(<CreateDoctor />);
+    render(<CreateDoctorPage />);
     fireEvent.click(screen.getByRole("button", { name: /cancelar/i }));
     expect(pushMock).toHaveBeenCalledWith("/doctors");
+  });
+
+  it("popula corretamente o select de especialidades", () => {
+    render(<CreateDoctorPage />);
+    specialtiesMock.forEach(s => {
+      expect(screen.getByRole("option", { name: s.name })).toBeInTheDocument();
+    });
   });
 });

@@ -9,8 +9,10 @@ import type { Patient } from "../types/Patient";
 
 describe("PatientProvider", () => {
   const TestComponent = () => {
-    const { patients, addPatient, updatePatient, deletePatient, updatePatientProfilePicture } =
-      useContext(PatientContext)!; // Garantimos que não é undefined
+    const context = useContext(PatientContext);
+    if (!context) throw new Error("PatientContext must be used within PatientProvider");
+
+    const { patients, addPatient, updatePatient, deletePatient, updatePatientProfilePicture } = context;
 
     return (
       <div>
@@ -29,6 +31,7 @@ describe("PatientProvider", () => {
               email: "",
               phone: "",
               address: "",
+              profilePicturePath: "", // Adicione se o tipo Patient aceitar
             })
           }
         >
@@ -44,6 +47,7 @@ describe("PatientProvider", () => {
               email: "",
               phone: "",
               address: "",
+              profilePicturePath: "",
             })
           }
         >
@@ -94,10 +98,10 @@ describe("PatientProvider", () => {
   });
 
   it("deve atualizar o path da foto do paciente", async () => {
-    let patientContext!: PatientContextType; // Tipagem correta e non-null assertion
+    let patientContext!: PatientContextType;
 
     const ContextConsumer = () => {
-      patientContext = useContext(PatientContext)!; // Garantimos que não é undefined
+      patientContext = useContext(PatientContext)!;
       return null;
     };
 
@@ -116,12 +120,14 @@ describe("PatientProvider", () => {
       email: "",
       phone: "",
       address: "",
+      profilePicturePath: "",
     });
 
     // Atualiza foto
     patientContext.updatePatientProfilePicture(999, "/foto.jpg");
 
-    const updated = patientContext.patients.find((p: Patient) => p.id === 999);
-    expect(updated?.profilePicturePath).toBe("/foto.jpg");
+    const updatedPatient = patientContext.patients.find((p): p is Patient => p.id === 999);
+    expect(updatedPatient).toBeDefined();
+    expect(updatedPatient?.profilePicturePath).toBe("/foto.jpg");
   });
 });

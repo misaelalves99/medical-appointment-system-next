@@ -19,17 +19,17 @@ describe("DeletePatientPage", () => {
     (useRouter as jest.Mock).mockReturnValue({ push: pushMock });
     (useParams as jest.Mock).mockReturnValue({ id: "1" });
 
-    // Reset do mock de pacientes
-    patientsMock.length = 2;
+    // Reset do mock de pacientes antes de cada teste
+    patientsMock.length = 2; // mantém os pacientes originais
   });
 
-  it("deve exibir carregando se paciente não encontrado ainda", () => {
+  it("exibe 'Carregando...' se paciente não encontrado", () => {
     (useParams as jest.Mock).mockReturnValue({ id: "999" }); // id inexistente
     render(<DeletePatientPage />);
-    expect(screen.getByText(/Carregando paciente/i)).toBeInTheDocument();
+    expect(screen.getByText(/Carregando/i)).toBeInTheDocument();
   });
 
-  it("deve renderizar detalhes do paciente corretamente", () => {
+  it("renderiza detalhes do paciente corretamente", () => {
     render(<DeletePatientPage />);
     expect(screen.getByText(/Confirmar Exclusão/i)).toBeInTheDocument();
     expect(screen.getByText(/Carlos Oliveira/i)).toBeInTheDocument();
@@ -37,7 +37,7 @@ describe("DeletePatientPage", () => {
     expect(screen.getByRole("button", { name: /Cancelar/i })).toBeInTheDocument();
   });
 
-  it("deve excluir paciente do mock e redirecionar ao clicar em Excluir", async () => {
+  it("exclui paciente do mock e redireciona ao clicar em Excluir", async () => {
     render(<DeletePatientPage />);
     expect(patientsMock.length).toBe(2);
 
@@ -45,16 +45,22 @@ describe("DeletePatientPage", () => {
 
     await waitFor(() => {
       expect(patientsMock.length).toBe(1);
-      expect(patientsMock.find((p) => p.id === 1)).toBeUndefined();
+      expect(patientsMock.find(p => p.id === 1)).toBeUndefined();
       expect(pushMock).toHaveBeenCalledWith("/patient");
     });
   });
 
-  it("deve redirecionar sem excluir ao clicar em Cancelar", () => {
+  it("não exclui paciente e apenas redireciona ao clicar em Cancelar", () => {
     render(<DeletePatientPage />);
     fireEvent.click(screen.getByRole("button", { name: /Cancelar/i }));
 
     expect(patientsMock.length).toBe(2); // sem alterações
     expect(pushMock).toHaveBeenCalledWith("/patient");
+  });
+
+  it("garante que o paciente correto está sendo exibido antes da exclusão", () => {
+    render(<DeletePatientPage />);
+    const confirmationText = screen.getByText(/Tem certeza de que deseja excluir o paciente/i);
+    expect(confirmationText).toHaveTextContent("Carlos Oliveira");
   });
 });

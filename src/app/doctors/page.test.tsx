@@ -4,11 +4,16 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import DoctorList from "./page";
 import { doctorsMock } from "../mocks/doctors";
 
-// mocks controláveis
+// Mock do router do Next.js
 const mockPush = jest.fn();
 
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: mockPush }),
+}));
+
+// Mock do hook useDoctor
+jest.mock("../hooks/useDoctor", () => ({
+  useDoctor: () => ({ doctors: doctorsMock }),
 }));
 
 describe("DoctorList Page", () => {
@@ -20,44 +25,36 @@ describe("DoctorList Page", () => {
     render(<DoctorList />);
 
     expect(screen.getByText("Lista de Médicos")).toBeInTheDocument();
+
+    // checa se pelo menos um médico está visível
     expect(await screen.findByText(doctorsMock[0].name)).toBeInTheDocument();
 
-    const headers = [
-      "Nome",
-      "CRM",
-      "Especialidade",
-      "Email",
-      "Telefone",
-      "Ativo",
-      "Ações",
-    ];
+    const headers = ["ID", "Nome", "CRM", "Especialidade", "Ativo", "Ações"];
     headers.forEach((header) => {
       expect(screen.getByText(header)).toBeInTheDocument();
     });
   });
 
-  it("permite pesquisar médicos", async () => {
+  it("permite pesquisar médicos por qualquer campo", async () => {
     render(<DoctorList />);
 
-    const searchInput = screen.getByPlaceholderText(/Pesquisar médicos/i);
+    const searchInput = screen.getByPlaceholderText(
+      /Pesquisar por ID, Nome, CRM, Especialidade ou Status/i
+    );
 
     // garante que todos estão visíveis no início
     expect(await screen.findByText(doctorsMock[0].name)).toBeInTheDocument();
 
-    // digita um valor que só deve encontrar um médico
+    // pesquisa por nome
     fireEvent.change(searchInput, { target: { value: doctorsMock[0].name } });
-
     await waitFor(() => {
       expect(screen.getByText(doctorsMock[0].name)).toBeInTheDocument();
     });
 
-    // valor inexistente
+    // pesquisa por valor inexistente
     fireEvent.change(searchInput, { target: { value: "Inexistente" } });
-
     await waitFor(() => {
-      doctorsMock.forEach((doctor) => {
-        expect(screen.queryByText(doctor.name)).not.toBeInTheDocument();
-      });
+      expect(screen.getByText(/Nenhum médico encontrado/i)).toBeInTheDocument();
     });
   });
 
@@ -75,17 +72,14 @@ describe("DoctorList Page", () => {
 
     const doctor = doctorsMock[0];
 
-    // detalhes
     const detailsButton = await screen.findByRole("button", { name: /Detalhes/i });
     fireEvent.click(detailsButton);
     expect(mockPush).toHaveBeenCalledWith(`/doctors/details/${doctor.id}`);
 
-    // edição
     const editButton = screen.getByRole("button", { name: /Editar/i });
     fireEvent.click(editButton);
     expect(mockPush).toHaveBeenCalledWith(`/doctors/edit/${doctor.id}`);
 
-    // exclusão
     const deleteButton = screen.getByRole("button", { name: /Excluir/i });
     fireEvent.click(deleteButton);
     expect(mockPush).toHaveBeenCalledWith(`/doctors/delete/${doctor.id}`);

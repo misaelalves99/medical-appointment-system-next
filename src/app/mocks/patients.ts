@@ -10,6 +10,7 @@ export interface Patient {
   phone: string;
   address: string;
   gender: string;
+  profilePicturePath?: string; 
 }
 
 export const patientsMock: Patient[] = [

@@ -2,11 +2,23 @@
 
 import { render, screen, fireEvent } from "@testing-library/react";
 import CreateSpecialtyPage from "../page";
-import { specialtiesMock } from "../../mocks/specialties";
+
+// Mock do useSpecialty
+const addSpecialtyMock = jest.fn();
+jest.mock("../../hooks/useSpecialty", () => ({
+  useSpecialty: () => ({ addSpecialty: addSpecialtyMock }),
+}));
+
+// Mock do router do Next.js
+const pushMock = jest.fn();
+jest.mock("next/navigation", () => ({
+  useRouter: () => ({ push: pushMock }),
+}));
 
 describe("CreateSpecialtyPage", () => {
   beforeEach(() => {
-    specialtiesMock.length = 0; // limpar mock antes de cada teste
+    addSpecialtyMock.mockClear();
+    pushMock.mockClear();
   });
 
   it("deve renderizar título e formulário", () => {
@@ -18,6 +30,7 @@ describe("CreateSpecialtyPage", () => {
       screen.getByLabelText(/nome da especialidade/i)
     ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /salvar/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /voltar/i })).toBeInTheDocument();
   });
 
   it("deve permitir digitar e submeter uma nova especialidade", () => {
@@ -31,11 +44,13 @@ describe("CreateSpecialtyPage", () => {
 
     fireEvent.click(button);
 
-    // Verifica se adicionou ao mock
-    expect(specialtiesMock).toHaveLength(1);
-    expect(specialtiesMock[0]).toMatchObject({ id: 1, name: "Neurologia" });
+    // Verifica se addSpecialty foi chamado
+    expect(addSpecialtyMock).toHaveBeenCalledWith("Neurologia");
 
-    // Verifica se resetou o campo
+    // Verifica se redirecionou
+    expect(pushMock).toHaveBeenCalledWith("/specialty");
+
+    // Input deve ser resetado após envio
     expect(input).toHaveValue("");
   });
 
@@ -45,6 +60,16 @@ describe("CreateSpecialtyPage", () => {
 
     fireEvent.click(button);
 
-    expect(specialtiesMock).toHaveLength(0);
+    expect(addSpecialtyMock).not.toHaveBeenCalled();
+    expect(pushMock).not.toHaveBeenCalled();
+  });
+
+  it("deve voltar para listagem ao clicar em Voltar", () => {
+    render(<CreateSpecialtyPage />);
+    const buttonBack = screen.getByRole("button", { name: /voltar/i });
+
+    fireEvent.click(buttonBack);
+
+    expect(pushMock).toHaveBeenCalledWith("/specialty");
   });
 });

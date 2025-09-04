@@ -2,11 +2,18 @@
 
 import { render, screen, fireEvent } from "@testing-library/react";
 import DetailsSpecialtyPage from "./page";
-import { specialtiesMock } from "../../../mocks/specialties";
+import * as nextNavigation from "next/navigation"; // Importa tudo para spyOn
 
+// Mock do hook useSpecialty
+const specialtiesMock = [{ id: 1, name: "Cardiologia" }];
+jest.mock("../../../hooks/useSpecialty", () => ({
+  useSpecialty: () => ({
+    specialties: specialtiesMock,
+  }),
+}));
+
+// Mock do Next.js
 const pushMock = jest.fn();
-
-// Mock do Next.js router e params
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: pushMock }),
   useParams: () => ({ id: "1" }),
@@ -14,8 +21,6 @@ jest.mock("next/navigation", () => ({
 
 describe("DetailsSpecialtyPage", () => {
   beforeEach(() => {
-    specialtiesMock.length = 0;
-    specialtiesMock.push({ id: 1, name: "Cardiologia" });
     pushMock.mockClear();
   });
 
@@ -38,13 +43,13 @@ describe("DetailsSpecialtyPage", () => {
     expect(pushMock).toHaveBeenCalledWith("/specialty");
   });
 
-  it("deve exibir carregando quando a especialidade não existe", () => {
-    jest.mocked(pushMock).mockClear();
-    jest.mock("next/navigation", () => ({
-      useRouter: () => ({ push: pushMock }),
-      useParams: () => ({ id: "999" }),
-    }));
+  it("deve exibir mensagem de não encontrado quando a especialidade não existe", () => {
+    // Sobrescreve useParams apenas neste teste
+    jest.spyOn(nextNavigation, "useParams").mockReturnValue({ id: "999" });
+
     render(<DetailsSpecialtyPage />);
-    expect(screen.getByText(/carregando especialidade/i)).toBeInTheDocument();
+
+    expect(screen.getByText(/especialidade não encontrada/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /voltar para a lista/i })).toBeInTheDocument();
   });
 });

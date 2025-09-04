@@ -11,32 +11,48 @@ jest.mock("next/navigation", () => ({
 }));
 
 describe("HistoryPatientPage", () => {
-  it("deve exibir mensagem quando não houver histórico para o paciente", () => {
-    (useParams as jest.Mock).mockReturnValue({ id: "999" });
+
+  it("exibe mensagem quando não houver histórico para o paciente", () => {
+    (useParams as jest.Mock).mockReturnValue({ id: "999" }); // id inexistente
     render(<HistoryPatientPage />);
     expect(screen.getByText(/Nenhum registro encontrado/i)).toBeInTheDocument();
   });
 
-  it("deve exibir histórico do paciente corretamente", () => {
+  it("exibe histórico do paciente corretamente, ordenado por data decrescente", () => {
     (useParams as jest.Mock).mockReturnValue({ id: "1" });
     render(<HistoryPatientPage />);
+
     const patientHistory = patientsHistoryMock
-      .filter((h) => h.patientId === 1)
+      .filter(h => h.patientId === 1)
       .sort((a, b) => new Date(b.recordDate).getTime() - new Date(a.recordDate).getTime());
 
-    // Verifica se todas as linhas do histórico estão na tela
-    patientHistory.forEach((item) => {
+    // Verifica se todas as linhas estão na tela
+    patientHistory.forEach(item => {
       expect(screen.getByText(new Date(item.recordDate).toLocaleDateString("pt-BR"))).toBeInTheDocument();
       expect(screen.getByText(item.description)).toBeInTheDocument();
       expect(screen.getByText(item.notes || "-")).toBeInTheDocument();
     });
+
+    // Verifica a ordem: primeira linha deve ser a mais recente
+    const firstRowDate = screen.getAllByRole("cell")[0].textContent;
+    expect(firstRowDate).toBe(new Date(patientHistory[0].recordDate).toLocaleDateString("pt-BR"));
   });
 
-  it("deve exibir link de voltar", () => {
+  it("mostra '-' quando notas estiverem vazias ou nulas", () => {
+    (useParams as jest.Mock).mockReturnValue({ id: "2" }); // paciente com notas possivelmente nulas
+    render(<HistoryPatientPage />);
+    const patientHistory = patientsHistoryMock.filter(h => h.patientId === 2);
+    patientHistory.forEach(item => {
+      expect(screen.getByText(item.notes || "-")).toBeInTheDocument();
+    });
+  });
+
+  it("exibe link de voltar corretamente", () => {
     (useParams as jest.Mock).mockReturnValue({ id: "1" });
     render(<HistoryPatientPage />);
     const backLink = screen.getByRole("link", { name: /Voltar/i });
     expect(backLink).toBeInTheDocument();
     expect(backLink).toHaveAttribute("href", "/patient");
   });
+
 });

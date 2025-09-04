@@ -1,10 +1,11 @@
 // src/app/doctors/edit/[id]/page.test.tsx
 
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import DoctorEditPage from "./page";
+import EditDoctorPage from "./page";
 
-// mock de navegação do Next.js
 const mockPush = jest.fn();
+const mockUpdateDoctor = jest.fn();
+
 let mockParams: Record<string, string> = {};
 
 jest.mock("next/navigation", () => ({
@@ -12,83 +13,85 @@ jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: mockPush }),
 }));
 
-// mock local dos doctors
-import {
-  doctorsMock as originalDoctorsMock,
-  Doctor,
-} from "../../../mocks/doctors";
+jest.mock("../../../hooks/useDoctor", () => ({
+  useDoctor: () => ({
+    doctors: [
+      {
+        id: 1,
+        name: "Dr. Teste",
+        crm: "12345",
+        specialty: "Cardiologia",
+        email: "teste@ex.com",
+        phone: "999999999",
+        isActive: true,
+      },
+    ],
+    updateDoctor: mockUpdateDoctor,
+  }),
+}));
 
-describe("DoctorEditPage", () => {
-  let doctorsMock: Doctor[];
+jest.mock("../../../hooks/useSpecialty", () => ({
+  useSpecialty: () => ({
+    specialties: [
+      { id: 1, name: "Cardiologia" },
+      { id: 2, name: "Neurologia" },
+    ],
+  }),
+}));
 
+describe("EditDoctorPage", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockParams = {}; // reseta params
-    // cria uma cópia isolada do mock para não mutar o original
-    doctorsMock = JSON.parse(JSON.stringify(originalDoctorsMock));
   });
 
-  it("exibe 'Carregando médico...' se não encontrar o médico", () => {
-    mockParams = { id: "999" }; // id inexistente
+  it("renderiza campos preenchidos com os dados do doctor", async () => {
+    mockParams = { id: "1" };
 
-    render(<DoctorEditPage />);
+    render(<EditDoctorPage />);
 
-    expect(screen.getByText(/Carregando médico/i)).toBeInTheDocument();
-  });
-
-  it("carrega e exibe os dados do médico para edição", async () => {
-    const doctor = doctorsMock[0];
-    mockParams = { id: doctor.id.toString() };
-
-    render(<DoctorEditPage />);
-
-    expect(await screen.findByDisplayValue(doctor.name)).toBeInTheDocument();
-    expect(screen.getByDisplayValue(doctor.crm)).toBeInTheDocument();
-    expect(screen.getByDisplayValue(doctor.specialty)).toBeInTheDocument();
-    expect(screen.getByDisplayValue(doctor.email)).toBeInTheDocument();
-    expect(screen.getByDisplayValue(doctor.phone)).toBeInTheDocument();
+    expect(await screen.findByDisplayValue("Dr. Teste")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("12345")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("Cardiologia")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("teste@ex.com")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("999999999")).toBeInTheDocument();
+    expect((screen.getByLabelText(/Ativo/i) as HTMLInputElement).checked).toBe(true);
   });
 
   it("permite editar campos do formulário", async () => {
-    const doctor = doctorsMock[0];
-    mockParams = { id: doctor.id.toString() };
+    mockParams = { id: "1" };
 
-    render(<DoctorEditPage />);
+    render(<EditDoctorPage />);
 
-    const nameInput = await screen.findByDisplayValue(doctor.name);
+    const nameInput = await screen.findByDisplayValue("Dr. Teste");
     fireEvent.change(nameInput, { target: { value: "Novo Nome" } });
 
     expect((nameInput as HTMLInputElement).value).toBe("Novo Nome");
   });
 
-  it("salva alterações e redireciona ao clicar em 'Salvar Alterações'", async () => {
-    const doctor = { ...doctorsMock[0] };
-    mockParams = { id: doctor.id.toString() };
+  it("chama updateDoctor e navega ao salvar alterações", async () => {
+    mockParams = { id: "1" };
 
-    render(<DoctorEditPage />);
+    render(<EditDoctorPage />);
 
-    const nameInput = await screen.findByDisplayValue(doctor.name);
+    const nameInput = await screen.findByDisplayValue("Dr. Teste");
     fireEvent.change(nameInput, { target: { value: "Nome Atualizado" } });
 
-    const submitButton = screen.getByRole("button", {
-      name: /Salvar Alterações/i,
-    });
-    fireEvent.click(submitButton);
+    fireEvent.click(screen.getByRole("button", { name: /Salvar Alterações/i }));
 
     await waitFor(() => {
+      expect(mockUpdateDoctor).toHaveBeenCalledWith(
+        expect.objectContaining({ name: "Nome Atualizado" })
+      );
       expect(mockPush).toHaveBeenCalledWith("/doctors");
     });
   });
 
-  it("cancela edição e redireciona ao clicar em 'Cancelar'", async () => {
-    const doctor = doctorsMock[0];
-    mockParams = { id: doctor.id.toString() };
+  it("navega para /doctors ao clicar em Cancelar", async () => {
+    mockParams = { id: "1" };
 
-    render(<DoctorEditPage />);
+    render(<EditDoctorPage />);
 
-    const cancelButton = await screen.findByRole("button", { name: /Cancelar/i });
-    fireEvent.click(cancelButton);
-
+    fireEvent.click(screen.getByRole("button", { name: /Cancelar/i }));
     expect(mockPush).toHaveBeenCalledWith("/doctors");
   });
 });

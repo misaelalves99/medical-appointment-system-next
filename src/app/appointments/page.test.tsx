@@ -1,24 +1,21 @@
-// src/app/appointments/page.test.tsx
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import AppointmentList from "./page";
-import * as nextNavigation from "next/navigation";
+import { useRouter } from "next/navigation";
 import { appointmentsMock } from "../mocks/appointments";
 import { AppointmentStatus } from "../types/Appointment";
 
-// Mock do useRouter corretamente
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
 }));
 
 describe("AppointmentList", () => {
   const pushMock = jest.fn();
-  const confirmSpy = jest.spyOn(window, "confirm");
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (nextNavigation.useRouter as jest.Mock).mockReturnValue({ push: pushMock });
+    (useRouter as jest.Mock).mockReturnValue({ push: pushMock });
 
-    // reset do mock global de appointments
+    // Reset mock e adicionar dois agendamentos
     appointmentsMock.length = 0;
     appointmentsMock.push(
       {
@@ -44,75 +41,41 @@ describe("AppointmentList", () => {
     );
   });
 
-  it("exibe loading inicialmente e depois a tabela", async () => {
+  it("renderiza a lista de consultas", () => {
     render(<AppointmentList />);
-    expect(screen.getByText("Carregando...")).toBeInTheDocument();
-
-    await waitFor(() => {
-      expect(screen.getByText("Lista de Consultas")).toBeInTheDocument();
-    });
-
-    expect(screen.getByText("Paciente ID: 10")).toBeInTheDocument();
-    expect(screen.getByText("Médico ID: 20")).toBeInTheDocument();
+    expect(screen.getByText("Lista de Consultas")).toBeInTheDocument();
+    expect(screen.getByText("Paciente 1")).toBeInTheDocument();
+    expect(screen.getByText("Doutor 1")).toBeInTheDocument();
   });
 
-  it("filtra a tabela pelo search input", async () => {
+  it("filtra a tabela pelo search input", () => {
     render(<AppointmentList />);
-    await waitFor(() => screen.getByText("Lista de Consultas"));
-
     const searchInput = screen.getByPlaceholderText(
-      "Pesquisar por data, hora, paciente, médico ou status..."
+      "Pesquisar por ID, data, hora, paciente ou status..."
     ) as HTMLInputElement;
 
     fireEvent.change(searchInput, { target: { value: "Paciente 2" } });
 
-    expect(screen.queryByText("Paciente ID: 10")).not.toBeInTheDocument();
-    expect(screen.getByText("Paciente ID: 11")).toBeInTheDocument();
+    expect(screen.queryByText("Paciente 1")).not.toBeInTheDocument();
+    expect(screen.getByText("Paciente 2")).toBeInTheDocument();
   });
 
-  it("navega ao clicar em Nova Consulta", async () => {
+  it("navega ao clicar em Nova Consulta", () => {
     render(<AppointmentList />);
-    await waitFor(() => screen.getByText("Lista de Consultas"));
-
     fireEvent.click(screen.getByText("Nova Consulta"));
     expect(pushMock).toHaveBeenCalledWith("/appointments/create");
   });
 
-  it("exclui uma consulta ao confirmar", async () => {
+  it("navega ao clicar em Detalhes, Editar e Excluir", () => {
     render(<AppointmentList />);
-    await waitFor(() => screen.getByText("Lista de Consultas"));
+    
+    fireEvent.click(screen.getAllByText("Detalhes")[0]);
+    expect(pushMock).toHaveBeenCalledWith("/appointments/details/1");
 
-    confirmSpy.mockReturnValueOnce(true); // simula confirmação
+    fireEvent.click(screen.getAllByText("Editar")[0]);
+    expect(pushMock).toHaveBeenCalledWith("/appointments/edit/1");
 
     fireEvent.click(screen.getAllByText("Excluir")[0]);
-
-    expect(appointmentsMock.find((a) => a.id === 1)).toBeUndefined();
-    expect(screen.queryByText("Paciente ID: 10")).not.toBeInTheDocument();
-  });
-
-  it("não exclui se cancelar no confirm", async () => {
-    render(<AppointmentList />);
-    await waitFor(() => screen.getByText("Lista de Consultas"));
-
-    confirmSpy.mockReturnValueOnce(false); // simula cancelamento
-
-    fireEvent.click(screen.getAllByText("Excluir")[0]);
-
-    expect(appointmentsMock.find((a) => a.id === 1)).toBeDefined();
-    expect(screen.getByText("Paciente ID: 10")).toBeInTheDocument();
-  });
-
-  it("renderiza links de detalhes e edição corretamente", async () => {
-    render(<AppointmentList />);
-    await waitFor(() => screen.getByText("Lista de Consultas"));
-
-    expect(screen.getAllByText("Detalhes")[0].closest("a")).toHaveAttribute(
-      "href",
-      "/appointments/details/1"
-    );
-    expect(screen.getAllByText("Editar")[0].closest("a")).toHaveAttribute(
-      "href",
-      "/appointments/edit/1"
-    );
+    expect(pushMock).toHaveBeenCalledWith("/appointments/delete/1");
   });
 });

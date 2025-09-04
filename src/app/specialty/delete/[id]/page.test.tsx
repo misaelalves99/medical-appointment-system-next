@@ -2,9 +2,23 @@
 
 import { render, screen, fireEvent } from "@testing-library/react";
 import DeleteSpecialtyPage from "./page";
-import { specialtiesMock } from "../../../mocks/specialties";
+import * as nextNavigation from "next/navigation";
 
-// Mock do Next.js router e params
+// Mock do hook useSpecialty
+const removeSpecialtyMock = jest.fn();
+const specialtiesMock = [
+  { id: 1, name: "Cardiologia" },
+  { id: 2, name: "Dermatologia" },
+];
+
+jest.mock("../../../hooks/useSpecialty", () => ({
+  useSpecialty: () => ({
+    specialties: specialtiesMock,
+    removeSpecialty: removeSpecialtyMock,
+  }),
+}));
+
+// Mock do Next.js
 const pushMock = jest.fn();
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: pushMock }),
@@ -13,21 +27,17 @@ jest.mock("next/navigation", () => ({
 
 describe("DeleteSpecialtyPage", () => {
   beforeEach(() => {
-    specialtiesMock.length = 0;
-    specialtiesMock.push(
-      { id: 1, name: "Cardiologia" },
-      { id: 2, name: "Dermatologia" }
-    );
+    removeSpecialtyMock.mockClear();
     pushMock.mockClear();
   });
 
   it("deve renderizar informações da especialidade", () => {
     render(<DeleteSpecialtyPage />);
     expect(
-      screen.getByRole("heading", { name: /excluir especialidade/i })
+      screen.getByRole("heading", { name: /confirmar exclusão/i })
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/tem certeza que deseja excluir/i)
+      screen.getByText(/tem certeza de que deseja excluir/i)
     ).toBeInTheDocument();
     expect(screen.getByText("Cardiologia")).toBeInTheDocument();
   });
@@ -36,8 +46,7 @@ describe("DeleteSpecialtyPage", () => {
     render(<DeleteSpecialtyPage />);
     fireEvent.click(screen.getByRole("button", { name: /excluir/i }));
 
-    expect(specialtiesMock).toHaveLength(1);
-    expect(specialtiesMock.find((s) => s.id === 1)).toBeUndefined();
+    expect(removeSpecialtyMock).toHaveBeenCalledWith(1);
     expect(pushMock).toHaveBeenCalledWith("/specialty");
   });
 
@@ -45,7 +54,14 @@ describe("DeleteSpecialtyPage", () => {
     render(<DeleteSpecialtyPage />);
     fireEvent.click(screen.getByRole("button", { name: /cancelar/i }));
 
-    expect(specialtiesMock).toHaveLength(2);
+    expect(removeSpecialtyMock).not.toHaveBeenCalled();
     expect(pushMock).toHaveBeenCalledWith("/specialty");
+  });
+
+  it("deve exibir mensagem de carregando se id inválido", () => {
+    jest.spyOn(nextNavigation, "useParams").mockReturnValue({ id: "999" });
+
+    render(<DeleteSpecialtyPage />);
+    expect(screen.getByText(/Carregando/i)).toBeInTheDocument();
   });
 });
