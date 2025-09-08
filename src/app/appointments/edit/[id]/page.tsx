@@ -3,19 +3,18 @@
 "use client";
 
 import { useEffect, useState, FormEvent } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import styles from "../EditAppointment.module.css";
 import { useAppointments } from "../../../hooks/useAppointments";
 import { usePatient } from "../../../hooks/usePatient";
 import { useDoctor } from "../../../hooks/useDoctor";
-import { AppointmentForm, Option } from "../../../types/AppointmentForm";
+import type { AppointmentForm, Option } from "../../../types/AppointmentForm";
 import { AppointmentStatus } from "../../../types/Appointment";
 
 export default function EditAppointmentPage() {
   const router = useRouter();
-  const pathname = usePathname();
-  const idFromPath = pathname.split("/")[2]; // /appointments/[id]/edit
-  const appointmentId = Number(idFromPath);
+  const params = useParams();
+  const appointmentId = params?.id ? Number(params.id) : undefined;
 
   const { appointments, updateAppointment } = useAppointments();
   const { patients } = usePatient();
@@ -47,15 +46,17 @@ export default function EditAppointmentPage() {
   ];
 
   useEffect(() => {
-    const appointment = appointments.find((a) => a.id === appointmentId);
-    if (appointment) {
-      setFormData({
-        patientId: appointment.patientId.toString(),
-        doctorId: appointment.doctorId.toString(),
-        appointmentDate: appointment.appointmentDate.slice(0, 16),
-        status: appointment.status.toString(),
-        notes: appointment.notes || "",
-      });
+    if (appointmentId) {
+      const appointment = appointments.find((a) => a.id === appointmentId);
+      if (appointment) {
+        setFormData({
+          patientId: appointment.patientId.toString(),
+          doctorId: appointment.doctorId.toString(),
+          appointmentDate: appointment.appointmentDate.slice(0, 16),
+          status: appointment.status.toString(),
+          notes: appointment.notes || "",
+        });
+      }
     }
   }, [appointmentId, appointments]);
 
@@ -63,11 +64,13 @@ export default function EditAppointmentPage() {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev: AppointmentForm) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    if (!appointmentId) return;
+
     updateAppointment({
       id: appointmentId,
       patientId: Number(formData.patientId),
@@ -76,6 +79,7 @@ export default function EditAppointmentPage() {
       status: Number(formData.status),
       notes: formData.notes,
     });
+
     router.push("/appointments");
   };
 
@@ -144,7 +148,6 @@ export default function EditAppointmentPage() {
             required
             className={styles.formSelect}
           >
-            <option value="">-- Selecione o status --</option>
             {statusOptions.map((s) => (
               <option key={s.value} value={s.value}>{s.label}</option>
             ))}
@@ -164,7 +167,6 @@ export default function EditAppointmentPage() {
           />
         </div>
 
-        {/* Botões */}
         <div className={styles.formActions}>
           <button type="submit" className={`${styles.formButton} ${styles.formSubmit}`}>Salvar</button>
           <button

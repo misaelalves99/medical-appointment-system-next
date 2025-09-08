@@ -78,7 +78,6 @@ describe("ConfirmAppointmentPage", () => {
       },
     ];
 
-    // ✅ spyOn usando import do módulo, sem require nem any
     jest
       .spyOn(appointmentsModule, "appointmentsMock", "get")
       .mockReturnValue(mockAppointments);

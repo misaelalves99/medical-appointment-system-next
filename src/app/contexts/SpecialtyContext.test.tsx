@@ -4,15 +4,17 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React, { useContext, useState, ReactNode } from "react";
 import { SpecialtyContext, SpecialtyContextType } from "./SpecialtyContext";
+import type { Specialty } from "../types/Specialty";
 
 describe("SpecialtyContext", () => {
   // Provider de teste com tipagem correta
   const TestProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [specialties, setSpecialties] = useState<{ id: number; name: string }[]>([]);
+    const [specialties, setSpecialties] = useState<Specialty[]>([]);
 
     const addSpecialty = (name: string) => {
       const newId = specialties.length > 0 ? Math.max(...specialties.map(s => s.id)) + 1 : 1;
-      setSpecialties([...specialties, { id: newId, name }]);
+      const newSpecialty: Specialty = { id: newId, name, isActive: true };
+      setSpecialties([...specialties, newSpecialty]);
     };
 
     const updateSpecialty = (id: number, name: string) => {
@@ -23,15 +25,14 @@ describe("SpecialtyContext", () => {
       setSpecialties(specialties.filter(s => s.id !== id));
     };
 
-    // Forçando tipagem do contexto para SpecialtyContextType
     const contextValue: SpecialtyContextType = { specialties, addSpecialty, updateSpecialty, removeSpecialty };
 
     return <SpecialtyContext.Provider value={contextValue}>{children}</SpecialtyContext.Provider>;
   };
 
+  // Componente de teste
   const TestComponent = () => {
-    const { specialties, addSpecialty, updateSpecialty, removeSpecialty } =
-      useContext<SpecialtyContextType>(SpecialtyContext)!;
+    const { specialties, addSpecialty, updateSpecialty, removeSpecialty } = useContext(SpecialtyContext)!;
 
     return (
       <div>
@@ -83,5 +84,24 @@ describe("SpecialtyContext", () => {
     expect(screen.getByText("Cardiologia")).toBeInTheDocument();
     await userEvent.click(screen.getByText("Remove"));
     expect(screen.queryByText("Cardiologia")).not.toBeInTheDocument();
+  });
+
+  it("deve garantir que isActive é sempre true ao adicionar", async () => {
+    let contextValue: SpecialtyContextType | undefined;
+    const Consumer = () => {
+      contextValue = useContext(SpecialtyContext);
+      return null;
+    };
+
+    render(
+      <TestProvider>
+        <Consumer />
+      </TestProvider>
+    );
+
+    contextValue!.addSpecialty("Dermatologia");
+    const added = contextValue!.specialties.find(s => s.name === "Dermatologia");
+    expect(added).toBeDefined();
+    expect(added!.isActive).toBe(true);
   });
 });

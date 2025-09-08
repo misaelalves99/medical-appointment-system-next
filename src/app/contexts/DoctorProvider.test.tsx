@@ -1,3 +1,5 @@
+// src/contexts/DoctorProvider.test.tsx
+
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useContext } from "react";
@@ -13,7 +15,7 @@ const TestComponent = () => {
   return (
     <div>
       <ul>
-        {doctors.map((d) => (
+        {doctors.map(d => (
           <li key={d.id} data-testid={`doctor-${d.id}`}>
             {d.name} - {d.specialty}
           </li>
@@ -38,25 +40,18 @@ const TestComponent = () => {
 
       <button
         onClick={() =>
-          doctors[0] && updateDoctor({
-            ...doctors[0],
-            name: "Dr. Updated",
-          })
+          doctors[0] && updateDoctor({ ...doctors[0], name: "Dr. Updated" })
         }
       >
         Update
       </button>
 
-      <button
-        onClick={() => doctors[0] && removeDoctor(doctors[0].id)}
-      >
-        Remove
-      </button>
+      <button onClick={() => doctors[0] && removeDoctor(doctors[0].id)}>Remove</button>
     </div>
   );
 };
 
-describe("DoctorsProvider", () => {
+describe("DoctorsProvider - Provider", () => {
   it("renderiza médicos iniciais do mock", () => {
     render(
       <DoctorsProvider>
@@ -79,15 +74,12 @@ describe("DoctorsProvider", () => {
     const updateBtn = screen.getByText("Update");
     const removeBtn = screen.getByText("Remove");
 
-    // Adicionar
     await userEvent.click(addBtn);
     expect(screen.getByText("Dr. Teste - Teste")).toBeInTheDocument();
 
-    // Atualizar
     await userEvent.click(updateBtn);
     expect(screen.getByText("Dr. Updated - Teste")).toBeInTheDocument();
 
-    // Remover
     await userEvent.click(removeBtn);
     expect(screen.queryByText("Dr. Updated - Teste")).not.toBeInTheDocument();
   });

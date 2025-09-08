@@ -1,46 +1,62 @@
 // app/appointments/page.tsx
+
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./AppointmentList.module.css";
 import { useAppointments } from "../hooks/useAppointments";
+import { usePatient } from "../hooks/usePatient";
+import { useDoctor } from "../hooks/useDoctor";
 import { getAppointmentStatusLabel } from "../utils/enumHelpers";
 
 export default function AppointmentList() {
   const { appointments } = useAppointments();
+  const { patients } = usePatient();
+  const { doctors } = useDoctor();
   const [search, setSearch] = useState("");
   const router = useRouter();
 
-  const filteredAppointments = appointments.filter(a => {
-    const searchLower = search.toLowerCase();
-    const dt = new Date(a.appointmentDate);
-    const dateStr = dt.toLocaleDateString().toLowerCase();
-    const timeStr = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toLowerCase();
-    const patientStr = a.patientName ? a.patientName.toLowerCase() : '';
-    const statusStr = getAppointmentStatusLabel(a.status).toLowerCase();
+  const appointmentsWithNames = useMemo(() => {
+    if (!patients.length || !doctors.length) return [];
+    return appointments.map(a => {
+      const patient = patients.find(p => p.id === a.patientId);
+      const doctor = doctors.find(d => d.id === a.doctorId);
+      const dt = new Date(a.appointmentDate);
+      return {
+        ...a,
+        patientName: patient?.name ?? `Paciente #${a.patientId}`,
+        doctorName: doctor?.name ?? `Médico #${a.doctorId}`,
+        dateStr: dt.toLocaleDateString("pt-BR"),
+        timeStr: dt.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+      };
+    });
+  }, [appointments, patients, doctors]);
 
-    return (
-      dateStr.includes(searchLower) ||
-      timeStr.includes(searchLower) ||
-      patientStr.includes(searchLower) ||
-      statusStr.includes(searchLower) ||
-      String(a.id).includes(searchLower)
-    );
-  });
+  const filteredAppointments = useMemo(() => {
+    const searchLower = search.toLowerCase();
+    return appointmentsWithNames.filter(a => {
+      const statusStr = getAppointmentStatusLabel(a.status).toLowerCase();
+      return (
+        a.dateStr.includes(searchLower) ||
+        a.timeStr.includes(searchLower) ||
+        a.patientName.toLowerCase().includes(searchLower) ||
+        statusStr.includes(searchLower) ||
+        String(a.id).includes(searchLower)
+      );
+    });
+  }, [appointmentsWithNames, search]);
+
+  if (!patients.length || !doctors.length) return <p>Carregando...</p>;
 
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Lista de Consultas</h1>
 
       <div className={styles.actions}>
-        <button
-          className={styles.createBtn}
-          onClick={() => router.push("/appointments/create")}
-        >
+        <button className={styles.createBtn} onClick={() => router.push("/appointments/create")}>
           Nova Consulta
         </button>
-
         <input
           type="text"
           placeholder="Pesquisar por ID, data, hora, paciente ou status..."
@@ -50,7 +66,7 @@ export default function AppointmentList() {
         />
       </div>
 
-      {appointments.length === 0 ? (
+      {appointmentsWithNames.length === 0 ? (
         <p>Nenhuma consulta cadastrada.</p>
       ) : (
         <table className={styles.table}>
@@ -65,38 +81,20 @@ export default function AppointmentList() {
             </tr>
           </thead>
           <tbody>
-            {filteredAppointments.map(a => {
-              const dt = new Date(a.appointmentDate);
-              return (
-                <tr key={a.id}>
-                  <td>{a.id}</td>
-                  <td>{dt.toLocaleDateString()}</td>
-                  <td>{dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
-                  <td>{a.patientName || '—'}</td>
-                  <td>{getAppointmentStatusLabel(a.status)}</td>
-                  <td className={styles.actionButtons}>
-                    <button
-                      className={styles.detailsBtn}
-                      onClick={() => router.push(`/appointments/details/${a.id}`)}
-                    >
-                      Detalhes
-                    </button>
-                    <button
-                      className={styles.editBtn}
-                      onClick={() => router.push(`/appointments/edit/${a.id}`)}
-                    >
-                      Editar
-                    </button>
-                    <button
-                      className={styles.deleteBtn}
-                      onClick={() => router.push(`/appointments/delete/${a.id}`)}
-                    >
-                      Excluir
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
+            {filteredAppointments.map(a => (
+              <tr key={a.id}>
+                <td>{a.id}</td>
+                <td>{a.dateStr}</td>
+                <td>{a.timeStr}</td>
+                <td>{a.patientName}</td>
+                <td>{getAppointmentStatusLabel(a.status)}</td>
+                <td className={styles.actionButtons}>
+                  <button className={styles.detailsBtn} onClick={() => router.push(`/appointments/details/${a.id}`)}>Detalhes</button>
+                  <button className={styles.editBtn} onClick={() => router.push(`/appointments/edit/${a.id}`)}>Editar</button>
+                  <button className={styles.deleteBtn} onClick={() => router.push(`/appointments/delete/${a.id}`)}>Excluir</button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       )}

@@ -78,4 +78,15 @@ describe("doctorAvailabilitiesMock", () => {
       grouped[key].push({ start, end });
     });
   });
+
+  it("datas e horários seguem formato correto (ISO e 24h HH:mm)", () => {
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD
+    const timeRegex = /^\d{2}:\d{2}$/;       // HH:mm
+
+    doctorAvailabilitiesMock.forEach(a => {
+      expect(a.date).toMatch(dateRegex);
+      expect(a.startTime).toMatch(timeRegex);
+      expect(a.endTime).toMatch(timeRegex);
+    });
+  });
 });

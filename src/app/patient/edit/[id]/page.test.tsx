@@ -2,13 +2,45 @@
 
 import { render, screen, fireEvent } from "@testing-library/react";
 import EditPatientPage from "./page";
-import { patientsMock } from "../../../mocks/patients";
 import { useRouter, useParams } from "next/navigation";
 
 // Mock do Next.js
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
   useParams: jest.fn(),
+}));
+
+// Mock do hook usePatient
+const mockPatients = [
+  {
+    id: 1,
+    name: "Carlos Oliveira",
+    cpf: "123.456.789-00",
+    dateOfBirth: "1990-05-15",
+    gender: "Masculino",
+    phone: "3333-3333",
+    email: "carlos@email.com",
+    address: "Rua A, 123",
+  },
+  {
+    id: 2,
+    name: "Maria Lima",
+    cpf: "987.654.321-00",
+    dateOfBirth: "1985-10-20",
+    gender: "Feminino",
+    phone: "4444-4444",
+    email: "maria@email.com",
+    address: "Rua B, 456",
+  },
+];
+
+const updatePatientMock = jest.fn();
+
+jest.mock("../../../hooks/usePatient", () => ({
+  usePatient: jest.fn(() => ({
+    patients: mockPatients,
+    updatePatient: updatePatientMock,
+  })),
 }));
 
 describe("EditPatientPage", () => {
@@ -18,10 +50,11 @@ describe("EditPatientPage", () => {
     pushMock = jest.fn();
     (useRouter as jest.Mock).mockReturnValue({ push: pushMock });
     (useParams as jest.Mock).mockReturnValue({ id: "1" });
+    updatePatientMock.mockClear();
   });
 
   it("exibe mensagem de paciente não encontrado se ID não existir", () => {
-    (useParams as jest.Mock).mockReturnValue({ id: "999" }); // id inexistente
+    (useParams as jest.Mock).mockReturnValue({ id: "999" });
     render(<EditPatientPage />);
     expect(screen.getByText(/Paciente não encontrado/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Voltar/i })).toBeInTheDocument();
@@ -29,7 +62,7 @@ describe("EditPatientPage", () => {
 
   it("renderiza formulário preenchido com dados do paciente existente", () => {
     render(<EditPatientPage />);
-    const patient = patientsMock.find((p) => p.id === 1)!;
+    const patient = mockPatients.find((p) => p.id === 1)!;
 
     expect(screen.getByDisplayValue(patient.name)).toBeInTheDocument();
     expect(screen.getByDisplayValue(patient.cpf || "")).toBeInTheDocument();
@@ -56,6 +89,13 @@ describe("EditPatientPage", () => {
     render(<EditPatientPage />);
     const form = screen.getByText(/Salvar Alterações/i).closest("form")!;
     fireEvent.submit(form);
+
+    // Verifica se updatePatient foi chamado com os dados corretos
+    expect(updatePatientMock).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 1 })
+    );
+
+    // Verifica redirecionamento
     expect(pushMock).toHaveBeenCalledWith("/patient");
   });
 

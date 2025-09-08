@@ -2,12 +2,33 @@
 
 import { render, screen, fireEvent } from "@testing-library/react";
 import PatientIndex from "./page";
-import { patientsMock } from "../mocks/patients";
 import { useRouter } from "next/navigation";
 
 // Mock do Next.js router
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
+}));
+
+// Mock do hook usePatient
+const mockPatients = [
+  {
+    id: 1,
+    name: "Carlos Oliveira",
+    cpf: "123.456.789-00",
+    phone: "3333-3333",
+  },
+  {
+    id: 2,
+    name: "Maria Lima",
+    cpf: "987.654.321-00",
+    phone: "4444-4444",
+  },
+];
+
+jest.mock("../hooks/usePatient", () => ({
+  usePatient: jest.fn(() => ({
+    patients: mockPatients,
+  })),
 }));
 
 describe("PatientIndex Page", () => {
@@ -28,7 +49,7 @@ describe("PatientIndex Page", () => {
 
   it("renderiza pacientes do mock", () => {
     render(<PatientIndex />);
-    patientsMock.forEach((p) => {
+    mockPatients.forEach((p) => {
       expect(screen.getByText(p.name)).toBeInTheDocument();
       expect(screen.getByText(p.cpf)).toBeInTheDocument();
       expect(screen.getByText(p.phone || "-")).toBeInTheDocument();
@@ -40,11 +61,11 @@ describe("PatientIndex Page", () => {
     const searchInput = screen.getByPlaceholderText(
       /Pesquisar por ID, Nome, CPF ou Telefone/i
     );
-    fireEvent.change(searchInput, { target: { value: patientsMock[0].name } });
+    fireEvent.change(searchInput, { target: { value: mockPatients[0].name } });
 
-    expect(screen.getByText(patientsMock[0].name)).toBeInTheDocument();
+    expect(screen.getByText(mockPatients[0].name)).toBeInTheDocument();
     // Outros pacientes não aparecem
-    patientsMock.slice(1).forEach((p) => {
+    mockPatients.slice(1).forEach((p) => {
       expect(screen.queryByText(p.name)).not.toBeInTheDocument();
     });
   });
@@ -60,7 +81,7 @@ describe("PatientIndex Page", () => {
 
   it("executa router.push ao clicar nos botões de ação", () => {
     render(<PatientIndex />);
-    const firstPatient = patientsMock[0];
+    const firstPatient = mockPatients[0];
 
     fireEvent.click(screen.getAllByText("Detalhes")[0]);
     expect(pushMock).toHaveBeenCalledWith(`/patient/details/${firstPatient.id}`);

@@ -38,6 +38,7 @@ describe("DetailsAppointmentPage", () => {
     render(<DetailsAppointmentPage />);
 
     const appointment = appointmentsMock[0];
+    const formattedDateTime = new Date(appointment.appointmentDate).toLocaleString("pt-BR");
 
     expect(screen.getByText("Detalhes da Consulta")).toBeInTheDocument();
     expect(screen.getByText("Paciente")).toBeInTheDocument();
@@ -45,7 +46,7 @@ describe("DetailsAppointmentPage", () => {
     expect(screen.getByText("Médico")).toBeInTheDocument();
     expect(screen.getByText(appointment.doctorName!)).toBeInTheDocument();
     expect(screen.getByText("Data e Hora")).toBeInTheDocument();
-    expect(screen.getByText(new Date(appointment.appointmentDate).toLocaleString("pt-BR"))).toBeInTheDocument();
+    expect(screen.getByText(formattedDateTime)).toBeInTheDocument();
     expect(screen.getByText("Status")).toBeInTheDocument();
     expect(screen.getByText("Agendada")).toBeInTheDocument(); // label traduzido
     expect(screen.getByText(/Observações:/)).toBeInTheDocument();
@@ -73,5 +74,18 @@ describe("DetailsAppointmentPage", () => {
     render(<DetailsAppointmentPage />);
     fireEvent.click(screen.getByText("Voltar"));
     expect(pushMock).toHaveBeenCalledWith("/appointments");
+  });
+
+  it("exibe fallback de ID se paciente ou médico não existirem nos mocks", () => {
+    (useParams as jest.Mock).mockReturnValue({ id: "1" });
+
+    // Substitui pacienteName e doctorName para simular ausência nos mocks
+    appointmentsMock[0].patientName = "";
+    appointmentsMock[0].doctorName = "";
+
+    render(<DetailsAppointmentPage />);
+
+    expect(screen.getByText(`ID ${appointmentsMock[0].patientId}`)).toBeInTheDocument();
+    expect(screen.getByText(`ID ${appointmentsMock[0].doctorId}`)).toBeInTheDocument();
   });
 });

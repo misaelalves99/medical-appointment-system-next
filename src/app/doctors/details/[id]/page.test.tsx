@@ -18,13 +18,14 @@ describe("DoctorDetailsPage", () => {
     (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
   });
 
-  it("deve exibir mensagem quando o médico não for encontrado", () => {
+  it("exibe mensagem quando o médico não for encontrado", () => {
     (useParams as jest.Mock).mockReturnValue({ id: "999" });
     render(<DoctorDetailsPage />);
     expect(screen.getByText(/médico não encontrado/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /voltar/i })).toBeInTheDocument();
   });
 
-  it("deve renderizar os detalhes do médico quando encontrado", () => {
+  it("renderiza corretamente os detalhes do médico encontrado", () => {
     const doctor = doctorsMock[0];
     (useParams as jest.Mock).mockReturnValue({ id: String(doctor.id) });
 
@@ -39,6 +40,8 @@ describe("DoctorDetailsPage", () => {
     expect(
       screen.getByText(doctor.isActive ? /Sim/i : /Não/i)
     ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /editar/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /voltar/i })).toBeInTheDocument();
   });
 
   it("navega para a edição ao clicar em Editar", () => {

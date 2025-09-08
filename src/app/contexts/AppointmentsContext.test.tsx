@@ -5,12 +5,13 @@ import { useContext, useState, ReactNode } from "react";
 import { AppointmentsContext, AppointmentsContextType } from "./AppointmentsContext";
 import { Appointment, AppointmentStatus } from "../types/Appointment";
 
+// Provider de teste que usa state interno
 const TestProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
 
-  const addAppointment = (appointment: Omit<Appointment, "id">) => {
+  const addAppointment = (appointment: Omit<Appointment, "id" | "patientName" | "doctorName">) => {
     const id = appointments.length > 0 ? Math.max(...appointments.map(a => a.id)) + 1 : 1;
-    setAppointments([...appointments, { id, ...appointment }]);
+    setAppointments([...appointments, { id, ...appointment, patientName: `Paciente #${appointment.patientId}`, doctorName: `Médico #${appointment.doctorId}` }]);
   };
 
   const updateAppointment = (updated: Appointment) => {
@@ -38,6 +39,7 @@ const TestProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   );
 };
 
+// Componente de teste que manipula o contexto
 const TestComponent = () => {
   const { appointments, addAppointment, updateAppointment, deleteAppointment, confirmAppointment, cancelAppointment } =
     useContext<AppointmentsContextType>(AppointmentsContext);
@@ -45,13 +47,12 @@ const TestComponent = () => {
   return (
     <div>
       <span data-testid="appointments-count">{appointments.length}</span>
+
       <button
         onClick={() =>
           addAppointment({
             patientId: 1,
             doctorId: 1,
-            patientName: "John",
-            doctorName: "Dr. Smith",
             appointmentDate: "2025-08-21T10:00",
             status: AppointmentStatus.Scheduled,
           })
@@ -62,16 +63,7 @@ const TestComponent = () => {
 
       {appointments[0] && (
         <>
-          <button
-            onClick={() =>
-              updateAppointment({
-                ...appointments[0],
-                patientName: "John Updated",
-              })
-            }
-          >
-            Update
-          </button>
+          <button onClick={() => updateAppointment({ ...appointments[0], patientName: "John Updated" })}>Update</button>
           <button onClick={() => deleteAppointment(appointments[0].id)}>Delete</button>
           <button onClick={() => confirmAppointment(appointments[0].id)}>Confirm</button>
           <button onClick={() => cancelAppointment(appointments[0].id)}>Cancel</button>
@@ -88,7 +80,6 @@ describe("AppointmentsContext", () => {
         <TestComponent />
       </TestProvider>
     );
-
     expect(screen.getByTestId("appointments-count").textContent).toBe("0");
   });
 
@@ -98,7 +89,6 @@ describe("AppointmentsContext", () => {
         <TestComponent />
       </TestProvider>
     );
-
     fireEvent.click(screen.getByText("Add"));
     expect(screen.getByTestId("appointments-count").textContent).toBe("1");
   });
@@ -109,12 +99,9 @@ describe("AppointmentsContext", () => {
         <TestComponent />
       </TestProvider>
     );
-
     fireEvent.click(screen.getByText("Add"));
     fireEvent.click(screen.getByText("Update"));
-
     expect(screen.getByTestId("appointments-count").textContent).toBe("1");
-    // opcional: verificar alteração do nome
   });
 
   it("confirma a consulta", () => {
@@ -123,12 +110,8 @@ describe("AppointmentsContext", () => {
         <TestComponent />
       </TestProvider>
     );
-
     fireEvent.click(screen.getByText("Add"));
     fireEvent.click(screen.getByText("Confirm"));
-
-    // validar que status foi alterado
-    // como TestComponent não mostra status, não há assert aqui
     expect(screen.getByTestId("appointments-count").textContent).toBe("1");
   });
 
@@ -138,10 +121,8 @@ describe("AppointmentsContext", () => {
         <TestComponent />
       </TestProvider>
     );
-
     fireEvent.click(screen.getByText("Add"));
     fireEvent.click(screen.getByText("Cancel"));
-
     expect(screen.getByTestId("appointments-count").textContent).toBe("1");
   });
 
@@ -151,10 +132,8 @@ describe("AppointmentsContext", () => {
         <TestComponent />
       </TestProvider>
     );
-
     fireEvent.click(screen.getByText("Add"));
     fireEvent.click(screen.getByText("Delete"));
-
     expect(screen.getByTestId("appointments-count").textContent).toBe("0");
   });
 });

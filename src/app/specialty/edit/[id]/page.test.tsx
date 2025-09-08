@@ -7,14 +7,16 @@ import * as nextNavigation from "next/navigation";
 const pushMock = jest.fn();
 
 // Mock do hook useSpecialty
-const specialtiesMock = [{ id: 1, name: "Cardiologia" }];
+let specialtiesMock = [{ id: 1, name: "Cardiologia" }];
+const updateSpecialtyMock = jest.fn((id: number, name: string) => {
+  const s = specialtiesMock.find((sp) => sp.id === id);
+  if (s) s.name = name;
+});
+
 jest.mock("../../../hooks/useSpecialty", () => ({
   useSpecialty: () => ({
     specialties: specialtiesMock,
-    updateSpecialty: (id: number, name: string) => {
-      const s = specialtiesMock.find((sp) => sp.id === id);
-      if (s) s.name = name;
-    },
+    updateSpecialty: updateSpecialtyMock,
   }),
 }));
 
@@ -26,8 +28,9 @@ jest.mock("next/navigation", () => ({
 
 describe("EditSpecialtyPage", () => {
   beforeEach(() => {
-    specialtiesMock[0].name = "Cardiologia"; // reset mock
+    specialtiesMock = [{ id: 1, name: "Cardiologia" }];
     pushMock.mockClear();
+    updateSpecialtyMock.mockClear();
   });
 
   it("deve renderizar o formulário com o nome da especialidade", () => {
@@ -63,12 +66,24 @@ describe("EditSpecialtyPage", () => {
   });
 
   it("deve exibir mensagem quando a especialidade não existe", () => {
-    // Sobrescreve useParams apenas neste teste
     jest.spyOn(nextNavigation, "useParams").mockReturnValue({ id: "999" });
 
     render(<EditSpecialtyPage />);
-
     expect(screen.getByText(/especialidade não encontrada/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /voltar/i })).toBeInTheDocument();
+  });
+
+  // TESTE EXTRA: garante que o input é atualizado se a especialidade mudar
+  it("atualiza o input quando a especialidade muda via useEffect", () => {
+    const { rerender } = render(<EditSpecialtyPage />);
+    const input = screen.getByLabelText(/nome da especialidade/i) as HTMLInputElement;
+
+    expect(input.value).toBe("Cardiologia");
+
+    // Simula mudança de especialidade
+    specialtiesMock = [{ id: 1, name: "Neurologia" }];
+    rerender(<EditSpecialtyPage />);
+
+    expect(screen.getByDisplayValue("Neurologia")).toBeInTheDocument();
   });
 });

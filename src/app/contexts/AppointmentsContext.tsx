@@ -2,12 +2,14 @@
 
 "use client";
 
-import { createContext } from 'react';
-import type { Appointment } from '../types/Appointment';
+import { createContext } from "react";
+import type { Appointment } from "../types/Appointment";
 
 export interface AppointmentsContextType {
   appointments: Appointment[];
-  addAppointment: (appointment: Omit<Appointment, 'id'>) => void;
+  addAppointment: (
+    appointment: Omit<Appointment, "id" | "patientName" | "doctorName">
+  ) => void;
   updateAppointment: (appointment: Appointment) => void;
   deleteAppointment: (id: number) => void;
   confirmAppointment: (id: number) => void;

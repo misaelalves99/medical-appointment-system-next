@@ -25,8 +25,8 @@ describe("DeleteAppointment", () => {
   };
 
   beforeEach(() => {
-    (useRouter as jest.Mock).mockReturnValue({ push: pushMock });
     jest.clearAllMocks();
+    (useRouter as jest.Mock).mockReturnValue({ push: pushMock });
   });
 
   it("renderiza corretamente os dados da consulta", () => {
@@ -34,7 +34,7 @@ describe("DeleteAppointment", () => {
 
     expect(screen.getByText("Excluir Consulta")).toBeInTheDocument();
     expect(screen.getByText("Tem certeza que deseja excluir esta consulta?")).toBeInTheDocument();
-    
+
     // Paciente e Médico
     expect(screen.getByText("Paciente")).toBeInTheDocument();
     expect(screen.getByText("Paciente 1")).toBeInTheDocument();
@@ -53,9 +53,8 @@ describe("DeleteAppointment", () => {
 
   it("chama onDelete e navega ao clicar em Excluir", () => {
     render(<DeleteAppointment appointment={appointment} onDelete={onDeleteMock} />);
-    
-    const deleteBtn = screen.getByText("Excluir");
-    fireEvent.click(deleteBtn);
+
+    fireEvent.click(screen.getByText("Excluir"));
 
     expect(onDeleteMock).toHaveBeenCalledTimes(1);
     expect(onDeleteMock).toHaveBeenCalledWith(1);
@@ -64,9 +63,8 @@ describe("DeleteAppointment", () => {
 
   it("navega ao clicar em Cancelar sem chamar onDelete", () => {
     render(<DeleteAppointment appointment={appointment} onDelete={onDeleteMock} />);
-    
-    const cancelBtn = screen.getByText("Cancelar");
-    fireEvent.click(cancelBtn);
+
+    fireEvent.click(screen.getByText("Cancelar"));
 
     expect(onDeleteMock).not.toHaveBeenCalled();
     expect(pushMock).toHaveBeenCalledWith("/appointments");
@@ -80,7 +78,40 @@ describe("DeleteAppointment", () => {
     };
 
     render(<DeleteAppointment appointment={anonAppointment} onDelete={onDeleteMock} />);
+
     expect(screen.getByText(`ID ${anonAppointment.patientId}`)).toBeInTheDocument();
     expect(screen.getByText(`ID ${anonAppointment.doctorId}`)).toBeInTheDocument();
+  });
+
+  it("exibe status corretos para todos os tipos", () => {
+    const statuses: AppointmentStatus[] = [
+      AppointmentStatus.Scheduled,
+      AppointmentStatus.Confirmed,
+      AppointmentStatus.Cancelled,
+      AppointmentStatus.Completed,
+    ];
+
+    statuses.forEach((status) => {
+      render(
+        <DeleteAppointment
+          appointment={{ ...appointment, status }}
+          onDelete={onDeleteMock}
+        />
+      );
+      let label: string;
+      switch (status) {
+        case AppointmentStatus.Scheduled:
+          label = "Agendada"; break;
+        case AppointmentStatus.Confirmed:
+          label = "Confirmada"; break;
+        case AppointmentStatus.Cancelled:
+          label = "Cancelada"; break;
+        case AppointmentStatus.Completed:
+          label = "Concluída"; break;
+        default:
+          label = "Desconhecido";
+      }
+      expect(screen.getByText(label)).toBeInTheDocument();
+    });
   });
 });

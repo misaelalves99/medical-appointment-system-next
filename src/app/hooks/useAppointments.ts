@@ -1,8 +1,6 @@
-// src/hooks/useAppointments.tsx
+// src/hooks/useAppointments.ts
 
-import { useContext } from 'react';
-import { AppointmentsContext } from '../contexts/AppointmentsContext';
+import { useContext } from "react";
+import { AppointmentsContext } from "../contexts/AppointmentsContext";
 
-export const useAppointments = () => {
-  return useContext(AppointmentsContext);
-};
+export const useAppointments = () => useContext(AppointmentsContext);

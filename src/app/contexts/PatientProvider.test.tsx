@@ -17,10 +17,11 @@ describe("PatientProvider", () => {
     return (
       <div>
         <ul>
-          {patients.map((p) => (
+          {patients.map(p => (
             <li key={p.id}>{p.name}</li>
           ))}
         </ul>
+
         <button
           onClick={() =>
             addPatient({
@@ -31,12 +32,13 @@ describe("PatientProvider", () => {
               email: "",
               phone: "",
               address: "",
-              profilePicturePath: "", // Adicione se o tipo Patient aceitar
+              profilePicturePath: "",
             })
           }
         >
           Add
         </button>
+
         <button
           onClick={() =>
             updatePatient({
@@ -53,8 +55,12 @@ describe("PatientProvider", () => {
         >
           Update
         </button>
+
         <button onClick={() => deletePatient(999)}>Delete</button>
-        <button onClick={() => updatePatientProfilePicture(999, "/path/to/photo.jpg")}>Update Photo</button>
+
+        <button onClick={() => updatePatientProfilePicture(999, "/path/to/photo.jpg")}>
+          Update Photo
+        </button>
       </div>
     );
   };
@@ -80,6 +86,7 @@ describe("PatientProvider", () => {
 
     await userEvent.click(screen.getByText("Add"));
     await userEvent.click(screen.getByText("Update"));
+
     expect(screen.getByText("Paciente Atualizado")).toBeInTheDocument();
     expect(screen.queryByText("Novo Paciente")).not.toBeInTheDocument();
   });
@@ -93,6 +100,7 @@ describe("PatientProvider", () => {
 
     await userEvent.click(screen.getByText("Add"));
     expect(screen.getByText("Novo Paciente")).toBeInTheDocument();
+
     await userEvent.click(screen.getByText("Delete"));
     expect(screen.queryByText("Novo Paciente")).not.toBeInTheDocument();
   });

@@ -11,9 +11,13 @@ const pushMock = jest.fn();
 
 // Mock do hook useDoctor
 const removeDoctorMock = jest.fn();
+const doctorsMock: Doctor[] = [
+  { id: 1, name: "Dr. Teste", crm: "12345", specialty: "Cardiologia", email: "teste@ex.com", phone: "999999999", isActive: true },
+];
+
 jest.mock("../../../hooks/useDoctor", () => ({
   useDoctor: () => ({
-    doctors: [{ id: 1, name: "Dr. Teste", crm: "12345", specialty: "Cardiologia", email: "teste@ex.com", phone: "999999999", isActive: true }],
+    doctors: doctorsMock,
     removeDoctor: removeDoctorMock,
   }),
 }));
@@ -34,9 +38,11 @@ describe("DeleteDoctorPage", () => {
   });
 
   it("exibe loading inicialmente se doctor não estiver definido", () => {
-    jest.spyOn(React, "useState").mockReturnValueOnce([null, jest.fn()]);
+    // Simula useState inicial como null
+    const useStateSpy = jest.spyOn(React, "useState").mockImplementationOnce(() => [null, jest.fn()]);
     render(<DeleteDoctorPage />);
     expect(screen.getByText(/carregando/i)).toBeInTheDocument();
+    useStateSpy.mockRestore();
   });
 
   it("renderiza corretamente os dados do médico", () => {
@@ -59,5 +65,11 @@ describe("DeleteDoctorPage", () => {
     render(<DeleteDoctorPage />);
     fireEvent.click(screen.getByText(/cancelar/i));
     expect(pushMock).toHaveBeenCalledWith("/doctors");
+  });
+
+  it("não quebra se id não existir ou médico não encontrado", () => {
+    (useParams as jest.Mock).mockReturnValue({ id: "999" }); // id inexistente
+    render(<DeleteDoctorPage />);
+    expect(screen.getByText(/carregando/i)).toBeInTheDocument();
   });
 });

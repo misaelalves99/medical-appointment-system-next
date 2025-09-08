@@ -4,14 +4,12 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import DoctorList from "./page";
 import { doctorsMock } from "../mocks/doctors";
 
-// Mock do router do Next.js
 const mockPush = jest.fn();
 
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: mockPush }),
 }));
 
-// Mock do hook useDoctor
 jest.mock("../hooks/useDoctor", () => ({
   useDoctor: () => ({ doctors: doctorsMock }),
 }));
@@ -23,30 +21,31 @@ describe("DoctorList Page", () => {
 
   it("renderiza a lista de médicos com cabeçalhos da tabela", async () => {
     render(<DoctorList />);
-
     expect(screen.getByText("Lista de Médicos")).toBeInTheDocument();
 
-    // checa se pelo menos um médico está visível
-    expect(await screen.findByText(doctorsMock[0].name)).toBeInTheDocument();
+    doctorsMock.forEach((doctor) => {
+      expect(screen.getByText(doctor.name)).toBeInTheDocument();
+    });
 
     const headers = ["ID", "Nome", "CRM", "Especialidade", "Ativo", "Ações"];
-    headers.forEach((header) => {
-      expect(screen.getByText(header)).toBeInTheDocument();
+    headers.forEach((header) => expect(screen.getByText(header)).toBeInTheDocument());
+  });
+
+  it("exibe todos os médicos quando a pesquisa está vazia", async () => {
+    render(<DoctorList />);
+    doctorsMock.forEach(async (doctor) => {
+      expect(await screen.findByText(doctor.name)).toBeInTheDocument();
     });
   });
 
-  it("permite pesquisar médicos por qualquer campo", async () => {
+  it("permite pesquisar médicos por qualquer campo (case-insensitive)", async () => {
     render(<DoctorList />);
-
     const searchInput = screen.getByPlaceholderText(
       /Pesquisar por ID, Nome, CRM, Especialidade ou Status/i
     );
 
-    // garante que todos estão visíveis no início
-    expect(await screen.findByText(doctorsMock[0].name)).toBeInTheDocument();
-
-    // pesquisa por nome
-    fireEvent.change(searchInput, { target: { value: doctorsMock[0].name } });
+    // pesquisa por nome lowercase
+    fireEvent.change(searchInput, { target: { value: doctorsMock[0].name.toLowerCase() } });
     await waitFor(() => {
       expect(screen.getByText(doctorsMock[0].name)).toBeInTheDocument();
     });
@@ -60,16 +59,12 @@ describe("DoctorList Page", () => {
 
   it("navega para a página de criação ao clicar em 'Cadastrar Novo Médico'", () => {
     render(<DoctorList />);
-
-    const createButton = screen.getByText(/Cadastrar Novo Médico/i);
-    fireEvent.click(createButton);
-
+    fireEvent.click(screen.getByText(/Cadastrar Novo Médico/i));
     expect(mockPush).toHaveBeenCalledWith("/doctors/create");
   });
 
   it("navega para detalhes, edição e exclusão do médico", async () => {
     render(<DoctorList />);
-
     const doctor = doctorsMock[0];
 
     const detailsButton = await screen.findByRole("button", { name: /Detalhes/i });

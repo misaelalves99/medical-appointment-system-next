@@ -15,7 +15,7 @@ describe("SpecialtyList", () => {
   beforeEach(() => {
     (useRouter as jest.Mock).mockReturnValue({ push: pushMock });
 
-    // Reset do mock com isActive incluído
+    // Reset do mock para cada teste
     specialtiesMock.splice(0, specialtiesMock.length,
       { id: 1, name: "Cardiologia", isActive: true },
       { id: 2, name: "Dermatologia", isActive: true }
@@ -60,9 +60,7 @@ describe("SpecialtyList", () => {
     fireEvent.change(screen.getByLabelText("Pesquisar especialidades"), {
       target: { value: "Inexistente" },
     });
-    expect(
-      screen.getByText("Nenhuma especialidade encontrada.")
-    ).toBeInTheDocument();
+    expect(screen.getByText("Nenhuma especialidade encontrada.")).toBeInTheDocument();
   });
 
   it("deve navegar para detalhes da especialidade", () => {

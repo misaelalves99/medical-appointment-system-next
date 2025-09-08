@@ -101,4 +101,13 @@ describe("CreateDoctorPage", () => {
       expect(screen.getByRole("option", { name: s.name })).toBeInTheDocument();
     });
   });
+
+  it("permite desmarcar o checkbox 'Ativo'", () => {
+    render(<CreateDoctorPage />);
+    const checkbox = screen.getByLabelText(/ativo/i) as HTMLInputElement;
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toBe(true);
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toBe(false);
+  });
 });

@@ -2,13 +2,26 @@
 
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import DeletePatientPage from "./page";
-import { patientsMock } from "../../../mocks/patients";
 import { useRouter, useParams } from "next/navigation";
 
 // Mock do Next.js
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
   useParams: jest.fn(),
+}));
+
+// Mock do hook usePatient
+const deletePatientMock = jest.fn();
+const mockPatients = [
+  { id: 1, name: "Carlos Oliveira" },
+  { id: 2, name: "Maria Lima" },
+];
+
+jest.mock("../../../hooks/usePatient", () => ({
+  usePatient: jest.fn(() => ({
+    patients: mockPatients,
+    deletePatient: deletePatientMock,
+  })),
 }));
 
 describe("DeletePatientPage", () => {
@@ -19,12 +32,11 @@ describe("DeletePatientPage", () => {
     (useRouter as jest.Mock).mockReturnValue({ push: pushMock });
     (useParams as jest.Mock).mockReturnValue({ id: "1" });
 
-    // Reset do mock de pacientes antes de cada teste
-    patientsMock.length = 2; // mantém os pacientes originais
+    deletePatientMock.mockClear();
   });
 
   it("exibe 'Carregando...' se paciente não encontrado", () => {
-    (useParams as jest.Mock).mockReturnValue({ id: "999" }); // id inexistente
+    (useParams as jest.Mock).mockReturnValue({ id: "999" });
     render(<DeletePatientPage />);
     expect(screen.getByText(/Carregando/i)).toBeInTheDocument();
   });
@@ -37,24 +49,21 @@ describe("DeletePatientPage", () => {
     expect(screen.getByRole("button", { name: /Cancelar/i })).toBeInTheDocument();
   });
 
-  it("exclui paciente do mock e redireciona ao clicar em Excluir", async () => {
+  it("chama deletePatient e redireciona ao clicar em Excluir", async () => {
     render(<DeletePatientPage />);
-    expect(patientsMock.length).toBe(2);
-
     fireEvent.click(screen.getByRole("button", { name: /Excluir/i }));
 
     await waitFor(() => {
-      expect(patientsMock.length).toBe(1);
-      expect(patientsMock.find(p => p.id === 1)).toBeUndefined();
+      expect(deletePatientMock).toHaveBeenCalledWith(1);
       expect(pushMock).toHaveBeenCalledWith("/patient");
     });
   });
 
-  it("não exclui paciente e apenas redireciona ao clicar em Cancelar", () => {
+  it("não chama deletePatient e apenas redireciona ao clicar em Cancelar", () => {
     render(<DeletePatientPage />);
     fireEvent.click(screen.getByRole("button", { name: /Cancelar/i }));
 
-    expect(patientsMock.length).toBe(2); // sem alterações
+    expect(deletePatientMock).not.toHaveBeenCalled();
     expect(pushMock).toHaveBeenCalledWith("/patient");
   });
 

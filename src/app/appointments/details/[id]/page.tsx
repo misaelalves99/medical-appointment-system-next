@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import styles from "../DetailsAppointment.module.css";
 import { useAppointments } from "../../../hooks/useAppointments";
+import { usePatient } from "../../../hooks/usePatient";
+import { useDoctor } from "../../../hooks/useDoctor";
 import { Appointment, AppointmentStatus } from "../../../types/Appointment";
 
 export default function DetailsAppointmentPage() {
@@ -14,6 +16,8 @@ export default function DetailsAppointmentPage() {
   const idParam = params?.id ? Number(params.id) : undefined;
 
   const { appointments } = useAppointments();
+  const { patients } = usePatient();
+  const { doctors } = useDoctor();
   const [appointment, setAppointment] = useState<Appointment | null>(null);
 
   // Busca a consulta ao carregar ou quando a lista mudar
@@ -39,6 +43,19 @@ export default function DetailsAppointmentPage() {
     }
   };
 
+  // Busca o nome real do paciente e do médico
+  const getPatientName = () => {
+    if (!appointment) return "N/A";
+    const patient = patients.find(p => p.id === appointment.patientId);
+    return patient ? patient.name : `ID ${appointment.patientId}`;
+  };
+
+  const getDoctorName = () => {
+    if (!appointment) return "N/A";
+    const doctor = doctors.find(d => d.id === appointment.doctorId);
+    return doctor ? doctor.name : `ID ${appointment.doctorId}`;
+  };
+
   // Se não encontrar a consulta
   if (!appointment) {
     return (
@@ -59,14 +76,14 @@ export default function DetailsAppointmentPage() {
       <div className={styles.infoRow}>
         <span className={styles.infoLabel}>Paciente</span>
         <span className={styles.infoValue}>
-          {appointment.patientName ?? `ID ${appointment.patientId}`}
+          {getPatientName()}
         </span>
       </div>
 
       <div className={styles.infoRow}>
         <span className={styles.infoLabel}>Médico</span>
         <span className={styles.infoValue}>
-          {appointment.doctorName ?? `ID ${appointment.doctorId}`}
+          {getDoctorName()}
         </span>
       </div>
 

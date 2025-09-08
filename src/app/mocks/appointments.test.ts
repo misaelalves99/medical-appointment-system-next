@@ -28,4 +28,12 @@ describe("appointmentsMock", () => {
     expect(appt.doctorName).toBe("Dra. Maria Oliveira");
     expect(appt.status).toBe(AppointmentStatus.Confirmed);
   });
+
+  it("appointmentDate deve ser uma string ISO válida", () => {
+    appointmentsMock.forEach(appt => {
+      const date = new Date(appt.appointmentDate);
+      expect(!isNaN(date.getTime())).toBe(true); // data válida
+      expect(date.toISOString()).toBe(appt.appointmentDate); // formato ISO exato
+    });
+  });
 });

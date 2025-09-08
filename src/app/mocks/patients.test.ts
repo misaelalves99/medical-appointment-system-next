@@ -33,7 +33,9 @@ describe("patientsMock", () => {
 
   it("datas de nascimento são válidas ISO", () => {
     patientsMock.forEach(p => {
-      expect(!isNaN(Date.parse(p.dateOfBirth))).toBe(true);
+      const date = new Date(p.dateOfBirth);
+      expect(!isNaN(date.getTime())).toBe(true); // data válida
+      expect(date.toISOString().split("T")[0]).toBe(p.dateOfBirth); // formato YYYY-MM-DD
     });
   });
 });
@@ -70,7 +72,9 @@ describe("patientsHistoryMock", () => {
 
   it("datas de histórico são válidas ISO", () => {
     patientsHistoryMock.forEach(h => {
-      expect(!isNaN(Date.parse(h.recordDate))).toBe(true);
+      const date = new Date(h.recordDate);
+      expect(!isNaN(date.getTime())).toBe(true);
+      expect(date.toISOString().split("T")[0]).toBe(h.recordDate); // formato YYYY-MM-DD
     });
   });
 

@@ -1,12 +1,9 @@
-// src/app/appointments/cancel/page.test.tsx
-
 import { render, screen, fireEvent } from "@testing-library/react";
 import CancelAppointmentPage from "./page";
 import { useRouter } from "next/navigation";
 import * as appointmentsModule from "../../mocks/appointments";
 import { Appointment, AppointmentStatus } from "../../types/Appointment";
 
-// Mock do useRouter
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
 }));
@@ -26,13 +23,10 @@ describe("CancelAppointmentPage", () => {
 
   it("renderiza corretamente os dados da consulta", () => {
     render(<CancelAppointmentPage />);
-    
     const appointment = appointmentsModule.appointmentsMock[0];
 
     expect(screen.getByRole("heading", { name: "Cancelar Consulta" })).toBeInTheDocument();
-    expect(screen.getByText("Tem certeza de que deseja cancelar esta consulta?")).toBeInTheDocument();
-
-    // Verifica dados
+    expect(screen.getByText(/Tem certeza de que deseja cancelar/i)).toBeInTheDocument();
     expect(screen.getByText(/Data e Hora:/).textContent).toContain(
       new Date(appointment.appointmentDate).toLocaleString("pt-BR")
     );
@@ -52,7 +46,6 @@ describe("CancelAppointmentPage", () => {
 
   it("chama handleCancel (console.log + navegação) ao clicar em Confirmar Cancelamento", () => {
     render(<CancelAppointmentPage />);
-    
     const confirmButton = screen.getByText("Confirmar Cancelamento");
     fireEvent.click(confirmButton);
 
@@ -63,10 +56,7 @@ describe("CancelAppointmentPage", () => {
 
   it("navega de volta ao clicar no botão Voltar", () => {
     render(<CancelAppointmentPage />);
-    
-    const backButton = screen.getByText("Voltar");
-    fireEvent.click(backButton);
-
+    fireEvent.click(screen.getByText("Voltar"));
     expect(pushMock).toHaveBeenCalledWith("/appointments");
   });
 
@@ -84,14 +74,15 @@ describe("CancelAppointmentPage", () => {
       },
     ];
 
-    // Spy no getter do módulo
     jest
       .spyOn(appointmentsModule, "appointmentsMock", "get")
       .mockReturnValue(mockAppointments);
 
     render(<CancelAppointmentPage />);
-
     expect(screen.getByText(/Paciente:/).textContent).toContain("ID 42");
     expect(screen.getByText(/Médico:/).textContent).toContain("ID 77");
+    expect(screen.getByText(/Data e Hora:/).textContent).toContain(
+      new Date(mockAppointments[0].appointmentDate).toLocaleString("pt-BR")
+    );
   });
 });

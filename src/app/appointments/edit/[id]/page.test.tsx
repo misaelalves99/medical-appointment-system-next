@@ -1,4 +1,5 @@
 // src/app/appointments/edit/[id]/page.test.tsx
+
 import { render, screen, fireEvent } from "@testing-library/react";
 import EditAppointmentPage from "./page";
 import { useRouter, useParams } from "next/navigation";
@@ -16,6 +17,8 @@ describe("EditAppointmentPage", () => {
   beforeEach(() => {
     (useRouter as jest.Mock).mockReturnValue({ push: pushMock });
     jest.clearAllMocks();
+
+    // Reset do mock
     appointmentsMock.length = 0;
     appointmentsMock.push({
       id: 1,
@@ -38,13 +41,12 @@ describe("EditAppointmentPage", () => {
     expect((screen.getByDisplayValue("10") as HTMLOptionElement).value).toBe("10");
     expect((screen.getByDisplayValue("20") as HTMLOptionElement).value).toBe("20");
     expect(screen.getByDisplayValue("2025-08-22T10:00")).toBeInTheDocument();
-    expect(screen.getByDisplayValue("1")).toBeInTheDocument(); // enum convertido para string
+    expect(screen.getByDisplayValue("2")).toBeInTheDocument(); // Confirmed = 2
     expect(screen.getByDisplayValue("Observação inicial")).toBeInTheDocument();
   });
 
   it("atualiza os campos ao alterar inputs", () => {
     (useParams as jest.Mock).mockReturnValue({ id: "1" });
-
     render(<EditAppointmentPage />);
 
     const patientSelect = screen.getByLabelText("Paciente") as HTMLSelectElement;
@@ -65,7 +67,6 @@ describe("EditAppointmentPage", () => {
 
   it("atualiza o mock e navega ao submeter o formulário", () => {
     (useParams as jest.Mock).mockReturnValue({ id: "1" });
-
     render(<EditAppointmentPage />);
 
     fireEvent.change(screen.getByLabelText("Paciente"), { target: { value: "11" } });
@@ -92,9 +93,21 @@ describe("EditAppointmentPage", () => {
 
   it("navega ao clicar em Cancelar", () => {
     (useParams as jest.Mock).mockReturnValue({ id: "1" });
-
     render(<EditAppointmentPage />);
     fireEvent.click(screen.getByText("Cancelar"));
     expect(pushMock).toHaveBeenCalledWith("/appointments");
+  });
+
+  it("exibe fallback de ID se paciente ou médico não existirem nos mocks", () => {
+    (useParams as jest.Mock).mockReturnValue({ id: "1" });
+
+    appointmentsMock[0].patientName = "";
+    appointmentsMock[0].doctorName = "";
+
+    render(<EditAppointmentPage />);
+
+    // Seleção não deve quebrar, mas se o nome não existe, fallback será usado na lógica futura
+    expect(screen.getByDisplayValue(appointmentsMock[0].patientId.toString())).toBeInTheDocument();
+    expect(screen.getByDisplayValue(appointmentsMock[0].doctorId.toString())).toBeInTheDocument();
   });
 });

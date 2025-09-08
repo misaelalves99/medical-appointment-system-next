@@ -4,7 +4,7 @@ import { render } from "@testing-library/react";
 import { PatientContext, PatientContextType } from "./PatientContext";
 
 describe("PatientContext", () => {
-  it("deve criar contexto com funções", () => {
+  it("deve criar contexto com funções definidas", () => {
     const contextValue: PatientContextType = {
       patients: [],
       addPatient: jest.fn(),
@@ -13,19 +13,20 @@ describe("PatientContext", () => {
       updatePatientProfilePicture: jest.fn(),
     };
 
-    // Render dummy component para consumir contexto
-    const Dummy = () => {
-      return (
-        <PatientContext.Provider value={contextValue}>
-          <div>Teste</div>
-        </PatientContext.Provider>
-      );
-    };
+    // Dummy component para testar o Provider
+    const Dummy = () => (
+      <PatientContext.Provider value={contextValue}>
+        <div>Teste</div>
+      </PatientContext.Provider>
+    );
 
     const { getByText } = render(<Dummy />);
     expect(getByText("Teste")).toBeInTheDocument();
-    // Apenas garantimos que o Provider existe
+
+    // Garante que todas as funções estão presentes
     expect(typeof contextValue.addPatient).toBe("function");
+    expect(typeof contextValue.updatePatient).toBe("function");
+    expect(typeof contextValue.deletePatient).toBe("function");
     expect(typeof contextValue.updatePatientProfilePicture).toBe("function");
   });
 });

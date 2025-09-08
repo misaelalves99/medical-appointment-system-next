@@ -1,9 +1,11 @@
 // src/contexts/SpecialtyProvider.test.tsx
+
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useContext } from "react";
 import { SpecialtyProvider } from "./SpecialtyProvider";
-import { SpecialtyContext } from "./SpecialtyContext";
+import { SpecialtyContext, SpecialtyContextType } from "./SpecialtyContext";
+import type { Specialty } from "../types/Specialty";
 
 describe("SpecialtyProvider", () => {
   const TestComponent = () => {
@@ -59,5 +61,26 @@ describe("SpecialtyProvider", () => {
     expect(screen.getByText("Cardiologia")).toBeInTheDocument();
     await userEvent.click(screen.getByText("Remove"));
     expect(screen.queryByText("Cardiologia")).not.toBeInTheDocument();
+  });
+
+  it("deve garantir que a propriedade isActive está presente ao adicionar", async () => {
+    let contextValue: SpecialtyContextType | undefined;
+
+    const Consumer = () => {
+      contextValue = useContext(SpecialtyContext);
+      return null;
+    };
+
+    render(
+      <SpecialtyProvider>
+        <Consumer />
+      </SpecialtyProvider>
+    );
+
+    contextValue!.addSpecialty("Dermatologia");
+
+    const added: Specialty | undefined = contextValue!.specialties.find(s => s.name === "Dermatologia");
+    expect(added).toBeDefined();
+    expect(added!.isActive).toBe(true);
   });
 });

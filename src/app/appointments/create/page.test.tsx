@@ -27,9 +27,9 @@ describe("CreateAppointmentPage", () => {
   });
 
   it("renderiza o formulário com campos e opções", () => {
-    render(<CreateAppointmentPage params={{ id: "1" }} />);
+    render(<CreateAppointmentPage />);
 
-    expect(screen.getByText(/Nova Consulta/i)).toBeInTheDocument();
+    expect(screen.getByText(/Cadastrar Consulta/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Paciente/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Médico/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Data da Consulta/i)).toBeInTheDocument();
@@ -43,12 +43,13 @@ describe("CreateAppointmentPage", () => {
       expect(screen.getByText(d.name)).toBeInTheDocument()
     );
 
-    const statusOptions = ["Agendada", "Confirmada", "Cancelada", "Concluída"];
-    statusOptions.forEach((s) => expect(screen.getByText(s)).toBeInTheDocument());
+    ["Agendada", "Confirmada", "Cancelada", "Concluída"].forEach((s) =>
+      expect(screen.getByText(s)).toBeInTheDocument()
+    );
   });
 
   it("atualiza o state ao mudar inputs", () => {
-    render(<CreateAppointmentPage params={{ id: "1" }} />);
+    render(<CreateAppointmentPage />);
 
     fireEvent.change(screen.getByLabelText(/Paciente/i), {
       target: { value: patientsMock[0].id.toString() },
@@ -84,7 +85,7 @@ describe("CreateAppointmentPage", () => {
   });
 
   it("cria nova consulta e navega ao submeter o formulário", () => {
-    render(<CreateAppointmentPage params={{ id: "1" }} />);
+    render(<CreateAppointmentPage />);
 
     fireEvent.change(screen.getByLabelText(/Paciente/i), {
       target: { value: patientsMock[0].id.toString() },
@@ -110,13 +111,13 @@ describe("CreateAppointmentPage", () => {
   });
 
   it("navega ao clicar em Cancelar", () => {
-    render(<CreateAppointmentPage params={{ id: "1" }} />);
+    render(<CreateAppointmentPage />);
     fireEvent.click(screen.getByText(/Cancelar/i));
     expect(pushMock).toHaveBeenCalledWith("/appointments");
   });
 
   it("botões possuem classes CSS corretas", () => {
-    render(<CreateAppointmentPage params={{ id: "1" }} />);
+    render(<CreateAppointmentPage />);
     expect(screen.getByText(/Salvar/i)).toHaveClass("formSubmit");
     expect(screen.getByText(/Cancelar/i)).toHaveClass("formCancel");
   });

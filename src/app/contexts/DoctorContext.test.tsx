@@ -4,7 +4,6 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useContext } from "react";
 import { DoctorContext } from "./DoctorContext";
-// Corrigido de DoctorProvider para DoctorsProvider
 import { DoctorsProvider } from "./DoctorProvider";
 
 const TestComponent = () => {
@@ -55,7 +54,7 @@ const TestComponent = () => {
   );
 };
 
-describe("DoctorsProvider", () => {
+describe("DoctorsProvider - Context", () => {
   it("gerencia estado de médicos corretamente", async () => {
     const user = userEvent.setup();
 
@@ -68,20 +67,16 @@ describe("DoctorsProvider", () => {
     const count = screen.getByTestId("doctors-count");
     const first = screen.getByTestId("first-doctor");
 
-    // Estado inicial
     expect(count.textContent).toBe("0");
     expect(first.textContent).toBe("");
 
-    // Adicionar médico
     await user.click(screen.getByText("Add"));
     expect(count.textContent).toBe("1");
     expect(first.textContent).toBe("Dr. Alice");
 
-    // Atualizar médico
     await user.click(screen.getByText("Update"));
     expect(first.textContent).toBe("Dr. Bob");
 
-    // Remover médico
     await user.click(screen.getByText("Remove"));
     expect(count.textContent).toBe("0");
     expect(first.textContent).toBe("");

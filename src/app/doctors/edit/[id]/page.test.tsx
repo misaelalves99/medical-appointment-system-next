@@ -5,7 +5,6 @@ import EditDoctorPage from "./page";
 
 const mockPush = jest.fn();
 const mockUpdateDoctor = jest.fn();
-
 let mockParams: Record<string, string> = {};
 
 jest.mock("next/navigation", () => ({
@@ -46,7 +45,6 @@ describe("EditDoctorPage", () => {
 
   it("renderiza campos preenchidos com os dados do doctor", async () => {
     mockParams = { id: "1" };
-
     render(<EditDoctorPage />);
 
     expect(await screen.findByDisplayValue("Dr. Teste")).toBeInTheDocument();
@@ -59,18 +57,28 @@ describe("EditDoctorPage", () => {
 
   it("permite editar campos do formulário", async () => {
     mockParams = { id: "1" };
-
     render(<EditDoctorPage />);
 
     const nameInput = await screen.findByDisplayValue("Dr. Teste");
     fireEvent.change(nameInput, { target: { value: "Novo Nome" } });
-
     expect((nameInput as HTMLInputElement).value).toBe("Novo Nome");
+
+    const isActiveCheckbox = screen.getByLabelText(/Ativo/i);
+    fireEvent.click(isActiveCheckbox);
+    expect((isActiveCheckbox as HTMLInputElement).checked).toBe(false);
+  });
+
+  it("popula corretamente o select de especialidades", async () => {
+    mockParams = { id: "1" };
+    render(<EditDoctorPage />);
+
+    ["Cardiologia", "Neurologia"].forEach(s =>
+      expect(screen.getByRole("option", { name: s })).toBeInTheDocument()
+    );
   });
 
   it("chama updateDoctor e navega ao salvar alterações", async () => {
     mockParams = { id: "1" };
-
     render(<EditDoctorPage />);
 
     const nameInput = await screen.findByDisplayValue("Dr. Teste");
@@ -88,9 +96,7 @@ describe("EditDoctorPage", () => {
 
   it("navega para /doctors ao clicar em Cancelar", async () => {
     mockParams = { id: "1" };
-
     render(<EditDoctorPage />);
-
     fireEvent.click(screen.getByRole("button", { name: /Cancelar/i }));
     expect(mockPush).toHaveBeenCalledWith("/doctors");
   });
