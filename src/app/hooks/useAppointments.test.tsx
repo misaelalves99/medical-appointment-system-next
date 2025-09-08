@@ -7,7 +7,6 @@ import { useAppointments } from "./useAppointments";
 import { AppointmentStatus } from "../types/Appointment";
 
 describe("useAppointments hook com provider real", () => {
-  // Wrapper JSX correto para renderHook
   const wrapper = ({ children }: { children: React.ReactNode }) => (
     <AppointmentsProvider>{children}</AppointmentsProvider>
   );
