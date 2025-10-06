@@ -3,64 +3,63 @@
 /* Container principal */
 .patientIndexContainer {
   max-width: 1000px;
-  margin: 2rem auto;
-  padding: 2rem;
+  margin: 2.5rem auto;
+  padding: 2.5rem;
   background: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #2c3e50;
+  color: #1f2937;
 }
 
 /* Título */
 .patientIndexContainer h1 {
   font-size: 2rem;
   font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 1.5rem;
+  color: #098996;
+  margin-bottom: 2rem;
   text-align: center;
 }
 
 /* Ações do topo */
 .actionsContainer {
   display: flex;
-  flex-direction: column; /* Coloca botão acima do input */
+  flex-direction: column;
   align-items: flex-start;
   gap: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-/* Link de criação */
 .createLink {
-  background-color: #2563eb;
-  color: #ffffff;
-  padding: 0.6rem 1.4rem;
-  border-radius: 8px;
+  background: linear-gradient(90deg, #09D696, #09CADB, #098996);
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
   font-weight: 600;
   text-decoration: none;
-  transition: background 0.2s ease-in-out, transform 0.1s ease;
+  transition: all 0.3s ease;
 }
 
 .createLink:hover {
-  background-color: #1d4ed8;
+  background: linear-gradient(90deg, #098996, #09CADB, #09D696);
   transform: translateY(-2px);
 }
 
 /* Input de busca */
 .searchInput {
   width: 100%;
-  max-width: 300px; /* limita o tamanho máximo para não ficar gigante */
-  padding: 0.4rem 0.65rem; /* um pouco menor que antes */
+  max-width: 320px;
+  padding: 0.65rem 1rem;
   border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 0. nine 0. nine five rem; /* tamanho padrão de mercado */
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .searchInput:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  border-color: #09CADB;
+  box-shadow: 0 0 0 3px rgba(9, 202, 219, 0.25);
 }
 
 /* Mensagem quando não há resultados */
@@ -83,14 +82,14 @@
 
 .table th,
 .table td {
-  padding: 0.75rem 1rem;
+  padding: 0.85rem 1.25rem;
   text-align: left;
 }
 
 .table th {
-  background-color: #f3f4f6;
+  background-color: #e0f7f5;
   font-weight: 600;
-  color: #374151;
+  color: #098996;
 }
 
 .table tr:nth-child(even) {
@@ -99,6 +98,11 @@
 
 .table tr:nth-child(odd) {
   background-color: #f9fafb;
+}
+
+.table tr:hover {
+  background-color: #d0f0ec;
+  transition: background 0.2s ease;
 }
 
 /* Coluna de ações */
@@ -111,37 +115,55 @@
 .detailsLink,
 .editLink,
 .deleteLink {
-  padding: 0.4rem 0.8rem;
+  padding: 0.5rem 0.9rem;
   font-size: 0.85rem;
-  border-radius: 6px;
+  border-radius: 8px;
   border: none;
   cursor: pointer;
   font-weight: 500;
   transition: all 0.2s ease-in-out;
 }
 
-/* Cores */
+/* Cores dos botões */
 .detailsLink {
-  background-color: #3b82f6;
+  background-color: #09CADB;
   color: #fff;
 }
 
 .detailsLink:hover {
-  background-color: #2563eb;
+  background-color: #098996;
 }
 
 .editLink {
-  background-color: #f59e0b;
+  background-color: #09D696;
   color: #fff;
 }
 
 .editLink:hover {
-  background-color: #d97706;
+  background-color: #098996;
 }
 
 .deleteLink {
   background-color: #ef4444;
   color: #fff;
+}
+
+/* Botões de ação com ícones */
+.iconBtn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.iconBtn:hover {
+  transform: translateY(-1px) scale(1.1);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 .deleteLink:hover {
@@ -163,13 +185,13 @@
   .editLink,
   .deleteLink {
     font-size: 0.8rem;
-    padding: 0.3rem 0.6rem;
+    padding: 0.4rem 0.8rem;
   }
 }
 
 @media (max-width: 768px) {
   .actionsContainer {
-    align-items: stretch; /* Input ocupa toda a largura no mobile */
+    align-items: stretch;
   }
 
   .table {
@@ -186,7 +208,7 @@
   .table th,
   .table td {
     font-size: 0.8rem;
-    padding: 0.5rem 0.5rem;
+    padding: 0.5rem;
   }
 
   .actionsColumn {

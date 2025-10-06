@@ -1,13 +1,22 @@
 /* src/components/Layout/Footer.module.css */
 
 .footer {
-  background-color: #007bff;
-  color: white;
+  background-color: #f9fafb;
+  color: #098996;
   text-align: center;
-  padding: 1rem;
+  padding: 1rem 0;
+  font-weight: 500;
+  box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.12);
   position: fixed;
   bottom: 0;
   width: 100%;
-  font-weight: 500;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  transition: background 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    font-size: 0.9rem;
+    padding: 0.8rem 0;
+  }
 }

@@ -1,43 +1,38 @@
-// src/app/layout.tsx
+// app/layout.tsx
+'use client';
 
-import type { Metadata } from "next";
-import "./globals.css";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import './globals.css';
+import { ReactNode } from 'react';
+import ProtectedApp from './ProtectedApp';
 
 // Providers de contexto
-import { PatientProvider } from "./contexts/PatientProvider";
-import { DoctorsProvider } from "./contexts/DoctorProvider";
-import { AppointmentsProvider } from "./contexts/AppointmentsProvider";
-import { SpecialtyProvider } from "./contexts/SpecialtyProvider";
+import { PatientProvider } from './contexts/PatientProvider';
+import { DoctorsProvider } from './contexts/DoctorProvider';
+import { SpecialtyProvider } from './contexts/SpecialtyProvider';
+import { AppointmentsProvider } from './contexts/AppointmentsProvider';
+import { AuthProvider } from './contexts/AuthProvider'; // ✅ AuthProvider do Firebase
 
-export const metadata: Metadata = {
-  title: "Medical Appointment System",
-  description: "Sistema de agendamento médico em Next.js 14",
-};
+interface RootLayoutProps {
+  children: ReactNode;
+}
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="pt-BR">
       <body>
-        {/* Providers globais para toda a aplicação */}
-        <PatientProvider>
-          <DoctorsProvider>
-            <SpecialtyProvider>
-              <AppointmentsProvider>
-                <Navbar />
-                <main style={{ minHeight: "80vh", padding: "1rem" }}>
-                  {children}
-                </main>
-                <Footer />
-              </AppointmentsProvider>
-            </SpecialtyProvider>
-          </DoctorsProvider>
-        </PatientProvider>
+        <AuthProvider> {/* 🔒 Protege toda a aplicação */}
+          <PatientProvider>
+            <DoctorsProvider>
+              <SpecialtyProvider>
+                <AppointmentsProvider>
+                  <ProtectedApp>
+                    {children}
+                  </ProtectedApp>
+                </AppointmentsProvider>
+              </SpecialtyProvider>
+            </DoctorsProvider>
+          </PatientProvider>
+        </AuthProvider>
       </body>
     </html>
   );

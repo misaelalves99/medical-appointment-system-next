@@ -1,5 +1,4 @@
 // app/appointments/page.tsx
-
 "use client";
 
 import { useMemo, useState } from "react";
@@ -9,6 +8,9 @@ import { useAppointments } from "../hooks/useAppointments";
 import { usePatient } from "../hooks/usePatient";
 import { useDoctor } from "../hooks/useDoctor";
 import { getAppointmentStatusLabel } from "../utils/enumHelpers";
+
+// Ícones
+import { FaInfoCircle, FaEdit, FaTrash } from "react-icons/fa";
 
 export default function AppointmentList() {
   const { appointments } = useAppointments();
@@ -54,9 +56,14 @@ export default function AppointmentList() {
       <h1 className={styles.title}>Lista de Consultas</h1>
 
       <div className={styles.actions}>
-        <button className={styles.createBtn} onClick={() => router.push("/appointments/create")}>
+        <button
+          className={styles.createBtn}
+          onClick={() => router.push("/appointments/create")}
+          title="Nova Consulta"
+        >
           Nova Consulta
         </button>
+
         <input
           type="text"
           placeholder="Pesquisar por ID, data, hora, paciente ou status..."
@@ -67,7 +74,7 @@ export default function AppointmentList() {
       </div>
 
       {appointmentsWithNames.length === 0 ? (
-        <p>Nenhuma consulta cadastrada.</p>
+        <p className={styles.noResults}>Nenhuma consulta cadastrada.</p>
       ) : (
         <table className={styles.table}>
           <thead>
@@ -89,9 +96,27 @@ export default function AppointmentList() {
                 <td>{a.patientName}</td>
                 <td>{getAppointmentStatusLabel(a.status)}</td>
                 <td className={styles.actionButtons}>
-                  <button className={styles.detailsBtn} onClick={() => router.push(`/appointments/details/${a.id}`)}>Detalhes</button>
-                  <button className={styles.editBtn} onClick={() => router.push(`/appointments/edit/${a.id}`)}>Editar</button>
-                  <button className={styles.deleteBtn} onClick={() => router.push(`/appointments/delete/${a.id}`)}>Excluir</button>
+                  <button
+                    className={`${styles.detailsBtn} ${styles.iconBtn}`}
+                    onClick={() => router.push(`/appointments/details/${a.id}`)}
+                    title="Detalhes"
+                  >
+                    <FaInfoCircle size={16} />
+                  </button>
+                  <button
+                    className={`${styles.editBtn} ${styles.iconBtn}`}
+                    onClick={() => router.push(`/appointments/edit/${a.id}`)}
+                    title="Editar"
+                  >
+                    <FaEdit size={16} />
+                  </button>
+                  <button
+                    className={`${styles.deleteBtn} ${styles.iconBtn}`}
+                    onClick={() => router.push(`/appointments/delete/${a.id}`)}
+                    title="Excluir"
+                  >
+                    <FaTrash size={16} />
+                  </button>
                 </td>
               </tr>
             ))}

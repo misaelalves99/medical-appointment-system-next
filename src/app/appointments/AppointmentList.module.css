@@ -1,71 +1,69 @@
 /* src/pages/Appointments/AppointmentList.module.css */
 
+/* Container principal */
 .container {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 2rem;
+  max-width: 950px;
+  margin: 2.5rem auto;
+  padding: 2.5rem;
   background-color: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #2c3e50;
+  color: #1f2937;
 }
 
+/* Título */
 .title {
   font-size: 2rem;
   font-weight: 700;
   text-align: center;
-  color: #1f2937;
-  margin-bottom: 1.5rem;
+  color: #098996;
+  margin-bottom: 2rem;
 }
 
+/* Ações do topo (botão + input) */
 .actions {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.actions .createBtn {
-  align-self: flex-start;
-}
-
-.actions .searchInput {
-  width: 100%;
-  max-width: 300px;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .createBtn {
-  background-color: #2563eb;
-  color: #ffffff;
-  padding: 0.6rem 1.4rem;
+  align-self: flex-start;
+  background: linear-gradient(90deg, #09D696, #09CADB, #098996);
+  color: #fff;
+  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease-in-out;
+  transition: all 0.3s ease;
 }
 
 .createBtn:hover {
-  background-color: #1d4ed8;
+  background: linear-gradient(90deg, #098996, #09CADB, #09D696);
+  transform: translateY(-2px);
 }
 
+/* Input de busca */
 .searchInput {
   width: 100%;
-  max-width: 300px;
-  padding: 0.5rem 0.75rem;
+  max-width: 320px;
+  padding: 0.65rem 1rem;
   border: 1px solid #d1d5db;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 0.95rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .searchInput:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  border-color: #09CADB;
+  box-shadow: 0 0 0 3px rgba(9, 202, 219, 0.25);
 }
 
+/* Tabela de consultas */
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -77,14 +75,14 @@
 
 .table th,
 .table td {
-  padding: 0.75rem 1rem;
+  padding: 0.85rem 1.25rem;
   text-align: left;
 }
 
 .table th {
-  background-color: #f3f4f6;
+  background-color: #e0f7f5;
   font-weight: 600;
-  color: #374151;
+  color: #098996;
 }
 
 .table tr:nth-child(even) {
@@ -95,42 +93,71 @@
   background-color: #f9fafb;
 }
 
-/* Botões de ações */
-.actionButtons button {
-  display: inline-block;
-  padding: 0.4rem 0.8rem;
-  margin-right: 0.25rem;
+.table tr:hover {
+  background-color: #d0f0ec;
+  transition: background 0.2s ease;
+}
+
+/* Coluna de ações */
+.actionButtons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Botões de ação */
+.detailsBtn,
+.editBtn,
+.deleteBtn {
+  padding: 0.5rem 0.9rem;
   font-size: 0.85rem;
-  border-radius: 6px;
-  font-weight: 500;
-  color: #ffffff;
+  border-radius: 8px;
   border: none;
   cursor: pointer;
+  font-weight: 500;
   transition: all 0.2s ease-in-out;
+  color: #fff;
 }
 
+/* Gradientes para detalhes e editar */
 .detailsBtn {
-  background-color: #3b82f6;
+  background: linear-gradient(90deg, #09CADB, #098996);
 }
-
 .detailsBtn:hover {
-  background-color: #2563eb;
+  background: linear-gradient(90deg, #098996, #09CADB);
 }
 
 .editBtn {
-  background-color: #f59e0b;
+  background: linear-gradient(90deg, #09D696, #098996);
 }
-
 .editBtn:hover {
-  background-color: #d97706;
+  background: linear-gradient(90deg, #098996, #09D696);
 }
 
+/* Excluir em vermelho */
 .deleteBtn {
   background-color: #ef4444;
 }
-
 .deleteBtn:hover {
   background-color: #dc2626;
+}
+
+/* Botões de ação com ícones */
+.iconBtn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.iconBtn:hover {
+  transform: translateY(-1px) scale(1.1);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 /* Mensagem quando não há resultados */
@@ -141,10 +168,11 @@
   font-style: italic;
 }
 
+/* Responsividade */
 @media (max-width: 768px) {
   .actions {
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.75rem;
   }
 
   .searchInput {

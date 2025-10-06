@@ -2,83 +2,85 @@
 
 .homeContainer {
   max-width: 900px;
-  margin: 50px auto;
-  padding: 40px;
+  margin: 4rem auto;
+  padding: 3rem 2rem;
   background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
   text-align: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .homeContainer h1 {
-  font-size: 2.2rem;
-  color: #2c3e50;
-  margin-bottom: 20px;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
 }
 
 .homeContainer p {
   font-size: 1.1rem;
-  color: #555555;
-  margin-bottom: 30px;
+  color: #4b5563;
+  margin-bottom: 2rem;
 }
 
 .homeButtons {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 20px;
+  gap: 1.5rem;
 }
 
 .homeButtons a {
   display: inline-block;
-  padding: 15px 30px;
-  border-radius: 8px;
+  padding: 1rem 2rem;
+  border-radius: 12px;
   font-size: 1rem;
   font-weight: 600;
   text-decoration: none;
   color: #fff;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-/* Botões individuais com cores diferentes */
+/* Botões gradientes consistentes com identidade visual */
 .patientBtn {
-  background-color: #3498db;
+  background: linear-gradient(90deg, #09D696, #09CADB);
 }
 
 .patientBtn:hover {
-  background-color: #2980b9;
+  background: linear-gradient(90deg, #09CADB, #098996);
 }
 
 .doctorBtn {
-  background-color: #2ecc71;
+  background: linear-gradient(90deg, #09CADB, #098996);
 }
 
 .doctorBtn:hover {
-  background-color: #27ae60;
+  background: linear-gradient(90deg, #098996, #09D696);
 }
 
 .specialtyBtn {
-  background-color: #e67e22;
+  background: linear-gradient(90deg, #098996, #09D696);
 }
 
 .specialtyBtn:hover {
-  background-color: #d35400;
+  background: linear-gradient(90deg, #09D696, #09CADB);
 }
 
 .appointmentBtn {
-  background-color: #9b59b6;
+  background: linear-gradient(90deg, #09CADB, #09D696);
 }
 
 .appointmentBtn:hover {
-  background-color: #8e44ad;
+  background: linear-gradient(90deg, #09D696, #098996);
 }
 
 /* Responsividade */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .homeButtons {
     flex-direction: column;
+    gap: 1rem;
   }
 
   .homeButtons a {

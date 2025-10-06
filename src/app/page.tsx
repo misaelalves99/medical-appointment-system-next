@@ -7,7 +7,6 @@ export default function HomePage() {
   return (
     <div className={styles.homeContainer}>
       <h1>Bem-vindo ao Sistema de Agendamento Médico</h1>
-
       <p>Escolha uma das opções abaixo:</p>
 
       <div className={styles.homeButtons}>

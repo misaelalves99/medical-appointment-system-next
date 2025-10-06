@@ -1,11 +1,13 @@
 // app/specialty/page.tsx
-
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./SpecialtyList.module.css";
 import { useSpecialty } from "../hooks/useSpecialty";
+
+// Ícones
+import { FaInfoCircle, FaEdit, FaTrash } from "react-icons/fa";
 
 export default function SpecialtyList() {
   const { specialties } = useSpecialty();
@@ -24,14 +26,15 @@ export default function SpecialtyList() {
     <div className={styles.specialtyIndexContainer}>
       <h1>Especialidades</h1>
 
-      <button
-        className={styles.createLink}
-        onClick={() => router.push("/specialty/create")}
-      >
-        Cadastrar Nova Especialidade
-      </button>
+      <div className={styles.actionsContainer}>
+        <button
+          className={styles.createLink}
+          onClick={() => router.push("/specialty/create")}
+          title="Nova Especialidade"
+        >
+          Nova Especialidade
+        </button>
 
-      <div>
         <input
           type="text"
           placeholder="Pesquisar por Nome ou ID..."
@@ -40,7 +43,11 @@ export default function SpecialtyList() {
           className={styles.searchInput}
           aria-label="Pesquisar especialidades"
         />
+      </div>
 
+      {filteredSpecialties.length === 0 ? (
+        <p className={styles.noResults}>Nenhuma especialidade encontrada.</p>
+      ) : (
         <table className={styles.specialtyTable}>
           <thead>
             <tr>
@@ -56,36 +63,38 @@ export default function SpecialtyList() {
                 <td>{specialty.name}</td>
                 <td className={styles.actions}>
                   <button
-                    className={styles.detailsButton}
-                    onClick={() => router.push(`/specialty/details/${specialty.id}`)}
+                    className={`${styles.detailsButton} ${styles.iconBtn}`}
+                    onClick={() =>
+                      router.push(`/specialty/details/${specialty.id}`)
+                    }
+                    title="Detalhes"
                   >
-                    Detalhes
+                    <FaInfoCircle size={16} />
                   </button>
                   <button
-                    className={styles.editButton}
-                    onClick={() => router.push(`/specialty/edit/${specialty.id}`)}
+                    className={`${styles.editButton} ${styles.iconBtn}`}
+                    onClick={() =>
+                      router.push(`/specialty/edit/${specialty.id}`)
+                    }
+                    title="Editar"
                   >
-                    Editar
+                    <FaEdit size={16} />
                   </button>
                   <button
-                    className={styles.deleteButton}
-                    onClick={() => router.push(`/specialty/delete/${specialty.id}`)}
+                    className={`${styles.deleteButton} ${styles.iconBtn}`}
+                    onClick={() =>
+                      router.push(`/specialty/delete/${specialty.id}`)
+                    }
+                    title="Excluir"
                   >
-                    Excluir
+                    <FaTrash size={16} />
                   </button>
                 </td>
               </tr>
             ))}
-            {filteredSpecialties.length === 0 && (
-              <tr>
-                <td colSpan={3} className={styles.noResults}>
-                  Nenhuma especialidade encontrada.
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
-      </div>
+      )}
     </div>
   );
 }

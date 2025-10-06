@@ -1,13 +1,13 @@
-// app/patient/page.tsx
-
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import styles from "./Patient.module.css";
 import { usePatient } from "../hooks/usePatient";
 import type { Patient } from "../types/Patient";
+import styles from "./Patient.module.css";
+
+// Ícones
+import { FaInfoCircle, FaEdit, FaTrash } from "react-icons/fa";
 
 export default function PatientIndex() {
   const { patients } = usePatient();
@@ -25,9 +25,12 @@ export default function PatientIndex() {
       <h1>Pacientes</h1>
 
       <div className={styles.actionsContainer}>
-        <Link href="/patient/create" className={styles.createLink}>
-          Cadastrar Novo Paciente
-        </Link>
+        <button
+          className={styles.createLink}
+          onClick={() => router.push("/patient/create")}
+        >
+          Novo Paciente
+        </button>
 
         <input
           type="text"
@@ -60,22 +63,25 @@ export default function PatientIndex() {
                 <td>{patient.phone || "-"}</td>
                 <td className={styles.actionsColumn}>
                   <button
+                    className={`${styles.detailsLink} ${styles.iconBtn}`}
                     onClick={() => router.push(`/patient/details/${patient.id}`)}
-                    className={styles.detailsLink}
+                    title="Detalhes"
                   >
-                    Detalhes
+                    <FaInfoCircle size={16} />
                   </button>
                   <button
+                    className={`${styles.editLink} ${styles.iconBtn}`}
                     onClick={() => router.push(`/patient/edit/${patient.id}`)}
-                    className={styles.editLink}
+                    title="Editar"
                   >
-                    Editar
+                    <FaEdit size={16} />
                   </button>
                   <button
+                    className={`${styles.deleteLink} ${styles.iconBtn}`}
                     onClick={() => router.push(`/patient/delete/${patient.id}`)}
-                    className={styles.deleteLink}
+                    title="Excluir"
                   >
-                    Excluir
+                    <FaTrash size={16} />
                   </button>
                 </td>
               </tr>

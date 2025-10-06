@@ -1,57 +1,69 @@
 /* src/pages/Specialty/SpecialtyList.module.css */
 
+/* Container principal */
 .specialtyIndexContainer {
   max-width: 900px;
-  margin: 2rem auto;
-  padding: 2rem;
+  margin: 2.5rem auto;
+  padding: 2.5rem;
   background-color: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #2c3e50;
+  color: #1f2937;
 }
 
+/* Título */
 .specialtyIndexContainer h1 {
   font-size: 2rem;
   font-weight: 700;
   text-align: center;
-  color: #1f2937;
+  color: #098996;
+  margin-bottom: 2rem;
+}
+
+.actionsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Botão de criar nova especialidade */
+.createLink {
+  display: inline-block;
+  background: linear-gradient(90deg, #09D696, #09CADB, #098996);
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
   margin-bottom: 1.5rem;
 }
 
-.createLink {
-  display: inline-block;
-  background-color: #2563eb;
-  color: #ffffff;
-  padding: 0.6rem 1.4rem;
-  border-radius: 8px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background 0.2s ease-in-out;
-  margin-bottom: 1rem;
-}
-
 .createLink:hover {
-  background-color: #1d4ed8;
+  background: linear-gradient(90deg, #098996, #09CADB, #09D696);
+  transform: translateY(-2px);
 }
 
+/* Input de busca */
 .searchInput {
   width: 100%;
-  max-width: 300px;
-  padding: 0.5rem 0.75rem;
+  max-width: 320px;
+  padding: 0.65rem 1rem;
   border: 1px solid #d1d5db;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 0.95rem;
-  margin-bottom: 1rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .searchInput:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  border-color: #09CADB;
+  box-shadow: 0 0 0 3px rgba(9, 202, 219, 0.25);
 }
 
+/* Tabela de especialidades */
 .specialtyTable {
   width: 100%;
   border-collapse: collapse;
@@ -63,14 +75,14 @@
 
 .specialtyTable th,
 .specialtyTable td {
-  padding: 0.75rem 1rem;
+  padding: 0.85rem 1.25rem;
   text-align: left;
 }
 
 .specialtyTable th {
-  background-color: #f3f4f6;
+  background-color: #e0f7f5;
   font-weight: 600;
-  color: #374151;
+  color: #098996;
 }
 
 .specialtyTable tr:nth-child(even) {
@@ -81,33 +93,47 @@
   background-color: #f9fafb;
 }
 
-.actions button {
-  display: inline-block;
-  padding: 0.4rem 0.8rem;
-  margin-right: 0.25rem;
-  font-size: 0.85rem;
-  border-radius: 6px;
-  font-weight: 500;
-  color: #ffffff;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
+.specialtyTable tr:hover {
+  background-color: #d0f0ec;
+  transition: background 0.2s ease;
 }
 
+/* Coluna de ações */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Botões de ação */
+.detailsButton,
+.editButton,
+.deleteButton {
+  padding: 0.5rem 0.9rem;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  color: #fff;
+}
+
+/* Gradientes dos botões */
 .detailsButton {
-  background-color: #3b82f6;
+  background: linear-gradient(90deg, #09CADB, #098996);
 }
 
 .detailsButton:hover {
-  background-color: #2563eb;
+  background: linear-gradient(90deg, #098996, #09CADB);
 }
 
 .editButton {
-  background-color: #f59e0b;
+  background: linear-gradient(90deg, #09D696, #098996);
 }
 
 .editButton:hover {
-  background-color: #d97706;
+  background: linear-gradient(90deg, #098996, #09D696);
 }
 
 .deleteButton {
@@ -118,6 +144,25 @@
   background-color: #dc2626;
 }
 
+/* Botões de ação com ícones */
+.iconBtn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.iconBtn:hover {
+  transform: translateY(-1px) scale(1.1);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Mensagem quando não há resultados */
 .noResults {
   text-align: center;
   padding: 1rem;
@@ -125,6 +170,7 @@
   font-style: italic;
 }
 
+/* Responsividade */
 @media (max-width: 768px) {
   .specialtyIndexContainer {
     padding: 1rem;
