@@ -1,17 +1,24 @@
-// app/contexts/AuthContext.tsxx
-
+// app/contexts/AuthContext.tsx
 'use client';
 
 import { createContext } from 'react';
-import { User } from 'firebase/auth';
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  photoURL?: string;
+}
 
 export interface AuthContextType {
   user: User | null;
+  loading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
-  register: (email: string, password: string, name?: string) => Promise<boolean>;
-  logout: () => Promise<void>;
+  register: (name: string, email: string, password: string) => Promise<boolean>;
   loginWithGoogle: () => Promise<boolean>;
   loginWithFacebook: () => Promise<boolean>;
+  logout: () => Promise<void>;
+  mapAuthError: (code?: string) => string;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);

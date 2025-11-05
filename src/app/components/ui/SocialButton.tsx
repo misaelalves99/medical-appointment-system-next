@@ -1,23 +1,26 @@
 // app/components/ui/SocialButton.tsx
 'use client';
 
-import React from 'react';
 import { IconType } from 'react-icons';
 import styles from './SocialButton.module.css';
 
 interface Props {
   icon: IconType;
-  color?: string; // cor de fundo do botão
-  onClick?: () => void;
+  color: string;
+  onClick?: () => void | Promise<void>;
+  ariaLabel: string;
+  disabled?: boolean;
 }
 
-export default function SocialButton({ icon: Icon, color, onClick }: Props) {
+export default function SocialButton({ icon: Icon, color, onClick, ariaLabel, disabled }: Props) {
   return (
     <button
       type="button"
       className={styles.socialBtn}
-      style={{ backgroundColor: color || '#2A9DDA' }}
+      style={{ backgroundColor: color, opacity: disabled ? 0.6 : 1, cursor: disabled ? 'not-allowed' : 'pointer' }}
       onClick={onClick}
+      aria-label={ariaLabel}
+      disabled={disabled}
     >
       <Icon className={styles.icon} />
     </button>
