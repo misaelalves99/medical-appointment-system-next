@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { Appointment, AppointmentStatus } from "../types/Appointment";
 import styles from "../AppointmentForm.module.css";
 import { useRouter, useParams } from "next/navigation";
-import { appointmentsMock } from "../mocks/appointments";
+import { useAppointments } from "../hooks/useAppointments";
 
 interface FormState {
   patientId: number;
@@ -29,6 +29,7 @@ const toLocalDateTimeInput = (iso: string) => {
 const fromLocalDateTimeInputToISO = (val: string) => new Date(val).toISOString();
 
 const AppointmentForm: React.FC<{ mode: "create" | "edit" }> = ({ mode }) => {
+  const { appointments, addAppointment, updateAppointment } = useAppointments();
   const [state, setState] = useState<FormState>({
     patientId: 0,
     patientName: "",
@@ -47,7 +48,7 @@ const AppointmentForm: React.FC<{ mode: "create" | "edit" }> = ({ mode }) => {
   useEffect(() => {
     if (mode === "edit" && idParam) {
       setLoading(true);
-      const item = appointmentsMock.find((a) => a.id === idParam);
+      const item = appointments.find((a) => a.id === idParam);
       if (item) {
         setState({
           patientId: item.patientId,
@@ -90,15 +91,13 @@ const AppointmentForm: React.FC<{ mode: "create" | "edit" }> = ({ mode }) => {
     };
 
     if (mode === "create") {
-      const newId =
-        appointmentsMock.length > 0
-          ? Math.max(...appointmentsMock.map((a) => a.id)) + 1
-          : 1;
-      appointmentsMock.push({ id: newId, ...payload });
+
+      addAppointment(payload);
     } else if (mode === "edit" && idParam) {
-      const idx = appointmentsMock.findIndex((a) => a.id === idParam);
-      if (idx !== -1) {
-        appointmentsMock[idx] = { id: idParam, ...payload };
+
+      const current = appointments.find((a) => a.id === idParam);
+      if (current) {
+        updateAppointment({ ...current, ...payload, id: idParam });
       }
     }
 
