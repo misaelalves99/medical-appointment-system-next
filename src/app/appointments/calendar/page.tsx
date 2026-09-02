@@ -1,17 +1,14 @@
-// src/app/appointments/calendar/page.tsx
-
 "use client";
 
 import { useRouter } from "next/navigation";
 import styles from "./CalendarAppointments.module.css";
-import { Appointment, AppointmentStatus } from "../../types/Appointment";
-import { appointmentsMock } from "../../mocks/appointments"; // importe o mock
+import { AppointmentStatus } from "../../types/Appointment";
+import { useAppointments } from "../../hooks/useAppointments";
 
 export default function CalendarAppointmentsPage() {
   const router = useRouter();
-  const appointments: Appointment[] = appointmentsMock;
+  const { appointments } = useAppointments();
 
-  // Helper para converter enum para string legível
   const statusToString = (status: AppointmentStatus) => {
     switch (status) {
       case AppointmentStatus.Scheduled:

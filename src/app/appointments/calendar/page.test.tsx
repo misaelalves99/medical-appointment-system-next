@@ -1,10 +1,12 @@
-// src/app/appointments/calendar/page.test.tsx
-
-import { render, screen, fireEvent } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import CalendarAppointmentsPage from "./page";
 import * as nextNavigation from "next/navigation";
-import * as appointmentsModule from "../../mocks/appointments";
 import { Appointment, AppointmentStatus } from "../../types/Appointment";
+import { useAppointments } from "../../hooks/useAppointments";
+
+jest.mock("../../hooks/useAppointments", () => ({
+  useAppointments: jest.fn(),
+}));
 
 type RouterType = ReturnType<typeof nextNavigation.useRouter>;
 
@@ -24,6 +26,21 @@ interface MockRouter extends Partial<RouterType> {
   };
   isFallback: boolean;
 }
+
+const mockUseAppointments = useAppointments as jest.MockedFunction<typeof useAppointments>;
+
+const defaultAppointments: Appointment[] = [
+  {
+    id: 1,
+    patientId: 1,
+    patientName: "João da Silva",
+    doctorId: 2,
+    doctorName: "Dra. Maria Oliveira",
+    appointmentDate: "2025-08-15T14:30:00Z",
+    status: AppointmentStatus.Confirmed,
+    notes: "Paciente apresentou melhora significativa.",
+  },
+];
 
 describe("CalendarAppointmentsPage", () => {
   const pushMock = jest.fn();
@@ -45,25 +62,64 @@ describe("CalendarAppointmentsPage", () => {
     isFallback: false,
   };
 
+  const setAppointments = (appointments: Appointment[]) => {
+    mockUseAppointments.mockReturnValue({
+      appointments,
+      addAppointment: jest.fn(),
+      updateAppointment: jest.fn(),
+      deleteAppointment: jest.fn(),
+      confirmAppointment: jest.fn(),
+      cancelAppointment: jest.fn(),
+    });
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
+
     jest
       .spyOn(nextNavigation, "useRouter")
       .mockReturnValue(mockRouter as unknown as RouterType);
+
+    setAppointments(defaultAppointments.map((appointment) => ({ ...appointment })));
   });
 
   it("renderiza o título da página", () => {
     render(<CalendarAppointmentsPage />);
+
     expect(
       screen.getByRole("heading", { name: /Calendário de Consultas/i })
     ).toBeInTheDocument();
   });
 
-  it("renderiza todos os agendamentos do mock ordenados por data", () => {
+  it("renderiza todos os agendamentos do boundary ordenados por data", () => {
+    const appointments: Appointment[] = [
+      {
+        id: 2,
+        patientId: 2,
+        patientName: "Paciente Dois",
+        doctorId: 2,
+        doctorName: "Médico Dois",
+        appointmentDate: "2025-08-20T15:00:00Z",
+        status: AppointmentStatus.Scheduled,
+        notes: "",
+      },
+      {
+        id: 1,
+        patientId: 1,
+        patientName: "Paciente Um",
+        doctorId: 1,
+        doctorName: "Médico Um",
+        appointmentDate: "2025-08-10T10:00:00Z",
+        status: AppointmentStatus.Confirmed,
+        notes: "",
+      },
+    ];
+
+    setAppointments(appointments);
     render(<CalendarAppointmentsPage />);
 
-    const rows = screen.getAllByRole("row").slice(1); // ignorar header
-    const sortedMock = [...appointmentsModule.appointmentsMock].sort(
+    const rows = screen.getAllByRole("row").slice(1);
+    const sortedAppointments = [...appointments].sort(
       (a, b) =>
         new Date(a.appointmentDate).getTime() -
         new Date(b.appointmentDate).getTime()
@@ -78,12 +134,15 @@ describe("CalendarAppointmentsPage", () => {
 
     rows.forEach((row, index) => {
       const cells = row.querySelectorAll("td");
-      const appointment = sortedMock[index];
+      const appointment = sortedAppointments[index];
       const dt = new Date(appointment.appointmentDate);
 
       expect(cells[0].textContent).toBe(dt.toLocaleDateString("pt-BR"));
       expect(cells[1].textContent).toBe(
-        dt.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })
+        dt.toLocaleTimeString("pt-BR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
       );
       expect(cells[2].textContent).toBe(
         appointment.patientName || `ID ${appointment.patientId}`
@@ -91,22 +150,22 @@ describe("CalendarAppointmentsPage", () => {
       expect(cells[3].textContent).toBe(
         appointment.doctorName || `ID ${appointment.doctorId}`
       );
-
-      const statusText =
-        statusMap[appointment.status] || "Desconhecido";
-
-      expect(cells[4].textContent).toBe(statusText);
+      expect(cells[4].textContent).toBe(
+        statusMap[appointment.status] || "Desconhecido"
+      );
     });
   });
 
   it("botão Voltar navega para /appointments", () => {
     render(<CalendarAppointmentsPage />);
+
     fireEvent.click(screen.getByText(/Voltar/i));
+
     expect(pushMock).toHaveBeenCalledWith("/appointments");
   });
 
   it("mostra ID quando paciente ou médico não tem nome", () => {
-    const mockAppointments: Appointment[] = [
+    setAppointments([
       {
         id: 1,
         patientId: 10,
@@ -117,10 +176,7 @@ describe("CalendarAppointmentsPage", () => {
         status: AppointmentStatus.Scheduled,
         notes: "",
       },
-    ];
-
-    appointmentsModule.appointmentsMock.length = 0;
-    appointmentsModule.appointmentsMock.push(...mockAppointments);
+    ]);
 
     render(<CalendarAppointmentsPage />);
 
@@ -129,7 +185,7 @@ describe("CalendarAppointmentsPage", () => {
   });
 
   it("mostra 'Desconhecido' para status não mapeado", () => {
-    const mockAppointments: Appointment[] = [
+    setAppointments([
       {
         id: 1,
         patientId: 1,
@@ -140,19 +196,18 @@ describe("CalendarAppointmentsPage", () => {
         status: "Unknown" as unknown as AppointmentStatus,
         notes: "",
       },
-    ];
-
-    appointmentsModule.appointmentsMock.length = 0;
-    appointmentsModule.appointmentsMock.push(...mockAppointments);
+    ]);
 
     render(<CalendarAppointmentsPage />);
+
     expect(screen.getByText("Desconhecido")).toBeInTheDocument();
   });
 
-  it("renderiza mensagem quando não há agendamentos", () => {
-    appointmentsModule.appointmentsMock.length = 0;
+  it("renderiza apenas o cabeçalho quando não há agendamentos", () => {
+    setAppointments([]);
 
     render(<CalendarAppointmentsPage />);
+
     expect(screen.getAllByRole("row")).toHaveLength(1);
   });
 });
