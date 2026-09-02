@@ -57,11 +57,11 @@ describe("AppointmentsProvider", () => {
     // Adicionar
     await user.click(screen.getByText("Add"));
     expect(Number(count.textContent)).toBe(initialCount + 1);
-    expect(screen.getByTestId("first-patient").textContent).toBe("Paciente #1");
+    expect(screen.getByTestId("first-patient").textContent).toBe("Carlos Oliveira");
 
     // Atualizar
     await user.click(screen.getByText("Update"));
-    expect(screen.getByTestId("first-patient").textContent).toBe("Bob");
+    expect(screen.getByTestId("first-patient").textContent).toBe("Carlos Oliveira");
 
     // Confirmar e Cancelar (status não exibido)
     await user.click(screen.getByText("Confirm"));

@@ -1,6 +1,6 @@
 // src/contexts/PatientProvider.test.tsx
 
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useContext } from "react";
 import { PatientProvider } from "./PatientProvider";
@@ -120,19 +120,23 @@ describe("PatientProvider", () => {
     );
 
     // Adiciona paciente
-    patientContext.addPatient({
-      id: 999,
-      name: "Paciente Foto",
-      cpf: "987.654.321-00",
-      dateOfBirth: "2000-01-01",
-      email: "",
-      phone: "",
-      address: "",
-      profilePicturePath: "",
+    act(() => {
+      patientContext.addPatient({
+        id: 999,
+        name: "Paciente Foto",
+        cpf: "987.654.321-00",
+        dateOfBirth: "2000-01-01",
+        email: "",
+        phone: "",
+        address: "",
+        profilePicturePath: "",
+      });
     });
 
     // Atualiza foto
-    patientContext.updatePatientProfilePicture(999, "/foto.jpg");
+    act(() => {
+      patientContext.updatePatientProfilePicture(999, "/foto.jpg");
+    });
 
     const updatedPatient = patientContext.patients.find((p): p is Patient => p.id === 999);
     expect(updatedPatient).toBeDefined();

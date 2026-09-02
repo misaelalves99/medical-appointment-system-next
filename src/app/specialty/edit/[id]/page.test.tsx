@@ -2,9 +2,9 @@
 
 import { render, screen, fireEvent } from "@testing-library/react";
 import EditSpecialtyPage from "./page";
-import * as nextNavigation from "next/navigation";
 
 const pushMock = jest.fn();
+let paramsMock = { id: "1" };
 
 // Mock do hook useSpecialty
 let specialtiesMock = [{ id: 1, name: "Cardiologia" }];
@@ -23,7 +23,7 @@ jest.mock("../../../hooks/useSpecialty", () => ({
 // Mock do Next.js router e params
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: pushMock }),
-  useParams: () => ({ id: "1" }),
+  useParams: () => paramsMock,
 }));
 
 describe("EditSpecialtyPage", () => {
@@ -31,6 +31,7 @@ describe("EditSpecialtyPage", () => {
     specialtiesMock = [{ id: 1, name: "Cardiologia" }];
     pushMock.mockClear();
     updateSpecialtyMock.mockClear();
+    paramsMock = { id: "1" };
   });
 
   it("deve renderizar o formulário com o nome da especialidade", () => {
@@ -66,7 +67,7 @@ describe("EditSpecialtyPage", () => {
   });
 
   it("deve exibir mensagem quando a especialidade não existe", () => {
-    jest.spyOn(nextNavigation, "useParams").mockReturnValue({ id: "999" });
+    paramsMock = { id: "999" };
 
     render(<EditSpecialtyPage />);
     expect(screen.getByText(/especialidade não encontrada/i)).toBeInTheDocument();

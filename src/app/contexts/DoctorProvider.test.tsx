@@ -78,9 +78,9 @@ describe("DoctorsProvider - Provider", () => {
     expect(screen.getByText("Dr. Teste - Teste")).toBeInTheDocument();
 
     await userEvent.click(updateBtn);
-    expect(screen.getByText("Dr. Updated - Teste")).toBeInTheDocument();
+    expect(screen.getByText("Dr. Updated - Cardiologia")).toBeInTheDocument();
 
     await userEvent.click(removeBtn);
-    expect(screen.queryByText("Dr. Updated - Teste")).not.toBeInTheDocument();
+    expect(screen.queryByText("Dr. Updated - Cardiologia")).not.toBeInTheDocument();
   });
 });

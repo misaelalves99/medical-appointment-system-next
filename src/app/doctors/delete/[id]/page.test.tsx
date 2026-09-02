@@ -53,7 +53,7 @@ describe("DeleteDoctorPage", () => {
 
   it("chama removeDoctor e router.push ao clicar em Excluir", async () => {
     render(<DeleteDoctorPage />);
-    fireEvent.click(screen.getByText(/excluir/i));
+    fireEvent.click(screen.getByRole("button", { name: /^excluir$/i }));
 
     await waitFor(() => {
       expect(removeDoctorMock).toHaveBeenCalledWith(1);

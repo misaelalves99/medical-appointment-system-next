@@ -83,6 +83,7 @@ export default function AppointmentList() {
               <th>Data</th>
               <th>Hora</th>
               <th>Paciente</th>
+              <th>Médico</th>
               <th>Status</th>
               <th>Ações</th>
             </tr>
@@ -94,6 +95,7 @@ export default function AppointmentList() {
                 <td>{a.dateStr}</td>
                 <td>{a.timeStr}</td>
                 <td>{a.patientName}</td>
+                <td>{a.doctorName}</td>
                 <td>{getAppointmentStatusLabel(a.status)}</td>
                 <td className={styles.actionButtons}>
                   <button

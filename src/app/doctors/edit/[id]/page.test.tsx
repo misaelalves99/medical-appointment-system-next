@@ -12,29 +12,33 @@ jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: mockPush }),
 }));
 
+const mockDoctors = [
+  {
+    id: 1,
+    name: "Dr. Teste",
+    crm: "12345",
+    specialty: "Cardiologia",
+    email: "teste@ex.com",
+    phone: "999999999",
+    isActive: true,
+  },
+];
+
 jest.mock("../../../hooks/useDoctor", () => ({
   useDoctor: () => ({
-    doctors: [
-      {
-        id: 1,
-        name: "Dr. Teste",
-        crm: "12345",
-        specialty: "Cardiologia",
-        email: "teste@ex.com",
-        phone: "999999999",
-        isActive: true,
-      },
-    ],
+    doctors: mockDoctors,
     updateDoctor: mockUpdateDoctor,
   }),
 }));
 
+const mockSpecialties = [
+  { id: 1, name: "Cardiologia" },
+  { id: 2, name: "Neurologia" },
+];
+
 jest.mock("../../../hooks/useSpecialty", () => ({
   useSpecialty: () => ({
-    specialties: [
-      { id: 1, name: "Cardiologia" },
-      { id: 2, name: "Neurologia" },
-    ],
+    specialties: mockSpecialties,
   }),
 }));
 
@@ -84,7 +88,7 @@ describe("EditDoctorPage", () => {
     const nameInput = await screen.findByDisplayValue("Dr. Teste");
     fireEvent.change(nameInput, { target: { value: "Nome Atualizado" } });
 
-    fireEvent.click(screen.getByRole("button", { name: /Salvar Alterações/i }));
+    fireEvent.click(screen.getByRole("button", { name: /Salvar Altera/i }));
 
     await waitFor(() => {
       expect(mockUpdateDoctor).toHaveBeenCalledWith(

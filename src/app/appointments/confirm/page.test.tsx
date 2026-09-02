@@ -31,13 +31,13 @@ describe("ConfirmAppointmentPage", () => {
     expect(screen.getByRole("heading", { name: "Confirmar Consulta" })).toBeInTheDocument();
     expect(screen.getByText("Deseja confirmar esta consulta?")).toBeInTheDocument();
 
-    expect(screen.getByText(/Data e Hora:/).textContent).toContain(
+    expect(screen.getByText(/Data e Hora:/).closest("li")?.textContent).toContain(
       new Date(appointment.appointmentDate).toLocaleString("pt-BR")
     );
-    expect(screen.getByText(/Paciente:/).textContent).toContain(
+    expect(screen.getByText(/Paciente:/).closest("li")?.textContent).toContain(
       appointment.patientName || `ID ${appointment.patientId}`
     );
-    expect(screen.getByText(/Médico:/).textContent).toContain(
+    expect(screen.getByText(/Médico:/).closest("li")?.textContent).toContain(
       appointment.doctorName || `ID ${appointment.doctorId}`
     );
   });
@@ -78,13 +78,12 @@ describe("ConfirmAppointmentPage", () => {
       },
     ];
 
-    jest
-      .spyOn(appointmentsModule, "appointmentsMock", "get")
-      .mockReturnValue(mockAppointments);
+    appointmentsModule.appointmentsMock.length = 0;
+    appointmentsModule.appointmentsMock.push(...mockAppointments);
 
     render(<ConfirmAppointmentPage />);
 
-    expect(screen.getByText(/Paciente:/).textContent).toContain("ID 42");
-    expect(screen.getByText(/Médico:/).textContent).toContain("ID 77");
+    expect(screen.getByText(/Paciente:/).closest("li")?.textContent).toContain("ID 42");
+    expect(screen.getByText(/Médico:/).closest("li")?.textContent).toContain("ID 77");
   });
 });

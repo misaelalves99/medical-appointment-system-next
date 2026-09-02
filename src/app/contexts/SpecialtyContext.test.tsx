@@ -1,6 +1,6 @@
 // src/contexts/SpecialtyContext.test.tsx
 
-import { render, screen } from "@testing-library/react";
+import { render, screen, act, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React, { useContext, useState, ReactNode } from "react";
 import { SpecialtyContext, SpecialtyContextType } from "./SpecialtyContext";
@@ -99,9 +99,11 @@ describe("SpecialtyContext", () => {
       </TestProvider>
     );
 
-    contextValue!.addSpecialty("Dermatologia");
-    const added = contextValue!.specialties.find(s => s.name === "Dermatologia");
-    expect(added).toBeDefined();
-    expect(added!.isActive).toBe(true);
+    act(() => contextValue!.addSpecialty("Dermatologia"));
+    await waitFor(() => {
+      const added = contextValue!.specialties.find(s => s.name === "Dermatologia");
+      expect(added).toBeDefined();
+      expect(added!.isActive).toBe(true);
+    });
   });
 });

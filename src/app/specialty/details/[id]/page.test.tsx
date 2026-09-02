@@ -2,7 +2,6 @@
 
 import { render, screen, fireEvent } from "@testing-library/react";
 import DetailsSpecialtyPage from "./page";
-import * as nextNavigation from "next/navigation"; // Importa tudo para spyOn
 
 // Mock do hook useSpecialty
 const specialtiesMock = [{ id: 1, name: "Cardiologia" }];
@@ -14,14 +13,16 @@ jest.mock("../../../hooks/useSpecialty", () => ({
 
 // Mock do Next.js
 const pushMock = jest.fn();
+let paramsMock = { id: "1" };
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: pushMock }),
-  useParams: () => ({ id: "1" }),
+  useParams: () => paramsMock,
 }));
 
 describe("DetailsSpecialtyPage", () => {
   beforeEach(() => {
     pushMock.mockClear();
+    paramsMock = { id: "1" };
   });
 
   it("deve renderizar os detalhes da especialidade", () => {
@@ -45,7 +46,7 @@ describe("DetailsSpecialtyPage", () => {
 
   it("deve exibir mensagem de não encontrado quando a especialidade não existe", () => {
     // Sobrescreve useParams apenas neste teste
-    jest.spyOn(nextNavigation, "useParams").mockReturnValue({ id: "999" });
+    paramsMock = { id: "999" };
 
     render(<DetailsSpecialtyPage />);
 

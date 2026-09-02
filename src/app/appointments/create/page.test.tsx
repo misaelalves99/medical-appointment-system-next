@@ -5,13 +5,42 @@ import CreateAppointmentPage from "./page";
 import { useRouter } from "next/navigation";
 import { patientsMock } from "../../mocks/patients";
 import { doctorsMock } from "../../mocks/doctors";
-import { appointmentsMock } from "../../mocks/appointments";
 import { AppointmentStatus } from "../../types/Appointment";
 
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
 }));
 
+jest.mock("../../hooks/usePatient", () => ({
+  usePatient: () => ({
+    patients: patientsMock,
+  }),
+}));
+
+const doctorFixture = [
+  {
+    id: doctorsMock[0].id,
+    name: doctorsMock[0].name,
+    crm: doctorsMock[0].crm,
+    specialty: doctorsMock[0].specialty,
+    email: doctorsMock[0].email,
+    phone: doctorsMock[0].phone,
+    isActive: doctorsMock[0].isActive,
+  },
+];
+
+const addAppointmentMock = jest.fn();
+
+jest.mock("../../hooks/useAppointments", () => ({
+  useAppointments: () => ({
+    addAppointment: addAppointmentMock,
+  }),
+}));
+jest.mock("../../hooks/useDoctor", () => ({
+  useDoctor: () => ({
+    doctors: doctorFixture,
+  }),
+}));
 describe("CreateAppointmentPage", () => {
   const pushMock = jest.fn();
   const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
@@ -19,7 +48,6 @@ describe("CreateAppointmentPage", () => {
   beforeEach(() => {
     (useRouter as jest.Mock).mockReturnValue({ push: pushMock });
     jest.clearAllMocks();
-    appointmentsMock.length = 0; // reset do mock
   });
 
   afterAll(() => {
@@ -39,7 +67,7 @@ describe("CreateAppointmentPage", () => {
     patientsMock.forEach((p) =>
       expect(screen.getByText(p.name)).toBeInTheDocument()
     );
-    doctorsMock.forEach((d) =>
+    doctorFixture.forEach((d) =>
       expect(screen.getByText(d.name)).toBeInTheDocument()
     );
 
@@ -76,9 +104,7 @@ describe("CreateAppointmentPage", () => {
     expect(
       (screen.getByLabelText(/Data da Consulta/i) as HTMLInputElement).value
     ).toBe("2025-08-22T10:00");
-    expect((screen.getByLabelText(/Status/i) as HTMLSelectElement).value).toBe(
-      AppointmentStatus.Scheduled
-    );
+    expect((screen.getByLabelText(/Status/i) as HTMLSelectElement).value).toBe(AppointmentStatus.Scheduled.toString());
     expect((screen.getByLabelText(/Observações/i) as HTMLTextAreaElement).value).toBe(
       "Teste observação"
     );
@@ -101,12 +127,14 @@ describe("CreateAppointmentPage", () => {
     });
 
     fireEvent.click(screen.getByText(/Salvar/i));
-
-    expect(appointmentsMock.length).toBe(1);
-    expect(appointmentsMock[0].patientId).toBe(patientsMock[0].id);
-    expect(appointmentsMock[0].doctorId).toBe(doctorsMock[0].id);
-    expect(appointmentsMock[0].appointmentDate).toBe("2025-08-22T10:00");
-    expect(consoleSpy).toHaveBeenCalledWith("Nova consulta criada:", appointmentsMock[0]);
+    expect(addAppointmentMock).toHaveBeenCalledTimes(1);
+    expect(addAppointmentMock).toHaveBeenCalledWith({
+      patientId: patientsMock[0].id,
+      doctorId: doctorsMock[0].id,
+      appointmentDate: new Date("2025-08-22T10:00").toISOString(),
+      status: AppointmentStatus.Scheduled,
+      notes: "",
+    });
     expect(pushMock).toHaveBeenCalledWith("/appointments");
   });
 

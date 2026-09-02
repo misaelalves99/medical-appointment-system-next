@@ -10,6 +10,14 @@ jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
 }));
 
+
+let doctorHookDoctors: unknown[] = [];
+
+jest.mock("../../../hooks/useDoctor", () => ({
+  useDoctor: () => ({
+    doctors: doctorHookDoctors,
+  }),
+}));
 describe("DoctorDetailsPage", () => {
   const mockPush = jest.fn();
 
@@ -19,6 +27,8 @@ describe("DoctorDetailsPage", () => {
   });
 
   it("exibe mensagem quando o médico não for encontrado", () => {
+
+    doctorHookDoctors = [];
     (useParams as jest.Mock).mockReturnValue({ id: "999" });
     render(<DoctorDetailsPage />);
     expect(screen.getByText(/médico não encontrado/i)).toBeInTheDocument();
@@ -27,6 +37,7 @@ describe("DoctorDetailsPage", () => {
 
   it("renderiza corretamente os detalhes do médico encontrado", () => {
     const doctor = doctorsMock[0];
+    doctorHookDoctors = [doctor];
     (useParams as jest.Mock).mockReturnValue({ id: String(doctor.id) });
 
     render(<DoctorDetailsPage />);
@@ -36,7 +47,7 @@ describe("DoctorDetailsPage", () => {
     expect(screen.getByText(new RegExp(doctor.crm, "i"))).toBeInTheDocument();
     expect(screen.getByText(new RegExp(doctor.specialty, "i"))).toBeInTheDocument();
     expect(screen.getByText(new RegExp(doctor.email, "i"))).toBeInTheDocument();
-    expect(screen.getByText(new RegExp(doctor.phone, "i"))).toBeInTheDocument();
+    expect(screen.getByText(doctor.phone)).toBeInTheDocument();
     expect(
       screen.getByText(doctor.isActive ? /Sim/i : /Não/i)
     ).toBeInTheDocument();
@@ -46,6 +57,7 @@ describe("DoctorDetailsPage", () => {
 
   it("navega para a edição ao clicar em Editar", () => {
     const doctor = doctorsMock[0];
+    doctorHookDoctors = [doctor];
     (useParams as jest.Mock).mockReturnValue({ id: String(doctor.id) });
 
     render(<DoctorDetailsPage />);
@@ -56,6 +68,7 @@ describe("DoctorDetailsPage", () => {
 
   it("navega de volta à lista ao clicar em Voltar", () => {
     const doctor = doctorsMock[0];
+    doctorHookDoctors = [doctor];
     (useParams as jest.Mock).mockReturnValue({ id: String(doctor.id) });
 
     render(<DoctorDetailsPage />);

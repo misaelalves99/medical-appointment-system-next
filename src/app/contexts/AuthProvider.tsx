@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useCallback, type ReactNode } from 'react';
 import { AuthContext, type User } from './AuthContext';
 import { auth, googleProvider, facebookProvider } from '@/app/lib/firebase';
+import { FirebaseError } from 'firebase/app';
 import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
@@ -14,7 +15,7 @@ import {
   type User as FirebaseUser,
 } from 'firebase/auth';
 
-/** ➜ normaliza o usuário do Firebase */
+/** âžœ normaliza o usuÃ¡rio do Firebase */
 const toUser = (u: FirebaseUser): User => ({
   id: u.uid,
   name: u.displayName ?? '',
@@ -22,27 +23,36 @@ const toUser = (u: FirebaseUser): User => ({
   photoURL: u.photoURL ?? undefined,
 });
 
-/** ➜ mensagens amigáveis de erro */
+/** âžœ mensagens amigÃ¡veis de erro */
 export const mapAuthError = (code?: string) => {
   switch (code) {
     case 'auth/invalid-email':
-      return 'E-mail inválido.';
+      return 'E-mail invÃ¡lido.';
     case 'auth/user-not-found':
-      return 'Usuário não encontrado.';
+      return 'UsuÃ¡rio nÃ£o encontrado.';
     case 'auth/wrong-password':
     case 'auth/invalid-credential':
       return 'E-mail ou senha incorretos.';
     case 'auth/email-already-in-use':
-      return 'Este e-mail já está cadastrado.';
+      return 'Este e-mail jÃ¡ estÃ¡ cadastrado.';
     case 'auth/weak-password':
       return 'A senha deve ter pelo menos 6 caracteres.';
     case 'auth/too-many-requests':
       return 'Muitas tentativas. Tente novamente mais tarde.';
     case 'auth/unauthorized-domain':
-      return 'Domínio não autorizado nas configurações do Firebase.';
+      return 'DomÃ­nio nÃ£o autorizado nas configuraÃ§Ãµes do Firebase.';
     default:
-      return 'Falha na autenticação. Tente novamente.';
+      return 'Falha na autenticaÃ§Ã£o. Tente novamente.';
   }
+};
+
+const logAuthError = (scope: string, error: unknown) => {
+  if (error instanceof FirebaseError) {
+    console.error(scope, error.code, error.message);
+    return;
+  }
+
+  console.error(scope, 'unknown-error');
 };
 
 interface Props { children: ReactNode }
@@ -51,7 +61,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // observa a sessão
+  // observa a sessÃ£o
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (fb) => {
       if (fb) setUser(toUser(fb));
@@ -66,8 +76,8 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     try {
       await signInWithEmailAndPassword(auth, email.trim(), password.trim());
       return true;
-    } catch (e: any) {
-      console.error('login:', e?.code, e?.message);
+    } catch (e: unknown) {
+      logAuthError('login:', e);
       return false;
     }
   }, []);
@@ -79,8 +89,8 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         await updateProfile(cred.user, { displayName: name.trim() });
       }
       return true;
-    } catch (e: any) {
-      console.error('register:', e?.code, e?.message);
+    } catch (e: unknown) {
+      logAuthError('register:', e);
       return false;
     }
   }, []);
@@ -88,12 +98,12 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
   // sociais
   const loginWithGoogle = useCallback(async () => {
     try { await signInWithPopup(auth, googleProvider); return true; }
-    catch (e: any) { console.error('google:', e?.code, e?.message); return false; }
+    catch (e: unknown) { logAuthError('google:', e); return false; }
   }, []);
 
   const loginWithFacebook = useCallback(async () => {
     try { await signInWithPopup(auth, facebookProvider); return true; }
-    catch (e: any) { console.error('facebook:', e?.code, e?.message); return false; }
+    catch (e: unknown) { logAuthError('facebook:', e); return false; }
   }, []);
 
   const logout = useCallback(async () => {

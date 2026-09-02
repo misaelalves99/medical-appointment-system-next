@@ -1,6 +1,6 @@
 // src/contexts/SpecialtyProvider.test.tsx
 
-import { render, screen } from "@testing-library/react";
+import { render, screen, act, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useContext } from "react";
 import { SpecialtyProvider } from "./SpecialtyProvider";
@@ -32,9 +32,9 @@ describe("SpecialtyProvider", () => {
       </SpecialtyProvider>
     );
 
-    expect(screen.queryByText("Cardiologia")).not.toBeInTheDocument();
+    expect(screen.getAllByText("Cardiologia")).toHaveLength(1);
     await userEvent.click(screen.getByText("Add"));
-    expect(screen.getByText("Cardiologia")).toBeInTheDocument();
+    expect(screen.getAllByText("Cardiologia")).toHaveLength(2);
   });
 
   it("deve atualizar uma especialidade", async () => {
@@ -47,7 +47,7 @@ describe("SpecialtyProvider", () => {
     await userEvent.click(screen.getByText("Add"));
     await userEvent.click(screen.getByText("Update"));
     expect(screen.getByText("Neurologia")).toBeInTheDocument();
-    expect(screen.queryByText("Cardiologia")).not.toBeInTheDocument();
+    expect(screen.getAllByText("Cardiologia")).toHaveLength(1);
   });
 
   it("deve remover uma especialidade", async () => {
@@ -58,9 +58,9 @@ describe("SpecialtyProvider", () => {
     );
 
     await userEvent.click(screen.getByText("Add"));
-    expect(screen.getByText("Cardiologia")).toBeInTheDocument();
+    expect(screen.getAllByText("Cardiologia")).toHaveLength(2);
     await userEvent.click(screen.getByText("Remove"));
-    expect(screen.queryByText("Cardiologia")).not.toBeInTheDocument();
+    expect(screen.getAllByText("Cardiologia")).toHaveLength(1);
   });
 
   it("deve garantir que a propriedade isActive está presente ao adicionar", async () => {
@@ -77,10 +77,12 @@ describe("SpecialtyProvider", () => {
       </SpecialtyProvider>
     );
 
-    contextValue!.addSpecialty("Dermatologia");
+    act(() => contextValue!.addSpecialty("Dermatologia"));
 
-    const added: Specialty | undefined = contextValue!.specialties.find(s => s.name === "Dermatologia");
-    expect(added).toBeDefined();
-    expect(added!.isActive).toBe(true);
+    await waitFor(() => {
+      const added: Specialty | undefined = contextValue!.specialties.find(s => s.name === "Dermatologia");
+      expect(added).toBeDefined();
+      expect(added!.isActive).toBe(true);
+    });
   });
 });

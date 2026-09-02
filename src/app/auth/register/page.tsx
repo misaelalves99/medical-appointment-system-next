@@ -4,6 +4,7 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { FirebaseError } from 'firebase/app';
 import { FaGoogle, FaFacebookF } from 'react-icons/fa';
 import { useAuth } from '@/app/hooks/useAuth';
 import SocialButton from '@/app/components/ui/SocialButton';
@@ -22,11 +23,11 @@ export default function RegisterPage() {
   const mapError = useMemo(
     () => mapAuthError ?? ((code?: string) => {
       switch (code) {
-        case 'auth/invalid-email': return 'E-mail inválido.';
-        case 'auth/email-already-in-use': return 'Este e-mail já está cadastrado.';
+        case 'auth/invalid-email': return 'E-mail invÃ¡lido.';
+        case 'auth/email-already-in-use': return 'Este e-mail jÃ¡ estÃ¡ cadastrado.';
         case 'auth/weak-password': return 'A senha deve ter pelo menos 6 caracteres.';
-        case 'auth/unauthorized-domain': return 'Domínio não autorizado nas configurações do Firebase.';
-        default: return 'Não foi possível criar a conta. Tente novamente.';
+        case 'auth/unauthorized-domain': return 'DomÃ­nio nÃ£o autorizado nas configuraÃ§Ãµes do Firebase.';
+        default: return 'NÃ£o foi possÃ­vel criar a conta. Tente novamente.';
       }
     }),
     [mapAuthError]
@@ -41,23 +42,21 @@ export default function RegisterPage() {
     const passTrim = password.trim();
 
     if (!nameTrim || !emailTrim || !passTrim) { setErrorMsg('Preencha nome, e-mail e senha.'); return; }
-    if (passTrim.length < 6) { setErrorMsg('A senha deve ter no mínimo 6 caracteres.'); return; }
+    if (passTrim.length < 6) { setErrorMsg('A senha deve ter no mÃ­nimo 6 caracteres.'); return; }
 
     setSubmitting(true);
     setErrorMsg(null);
     try {
       const ok = await register(nameTrim, emailTrim, passTrim);
       if (ok) router.push('/'); else setErrorMsg(mapError());
-    } catch (err: any) {
-      setErrorMsg(mapError(err?.code));
-    } finally { setSubmitting(false); }
+    } catch (err: unknown) { setErrorMsg(mapError(err instanceof FirebaseError ? err.code : undefined)); } finally { setSubmitting(false); }
   };
 
   const social = (fn: () => Promise<boolean>) => async () => {
     if (submitting) return;
     setSubmitting(true); setErrorMsg(null);
     try { const ok = await fn(); if (ok) router.push('/'); else setErrorMsg(mapError()); }
-    catch (err: any) { setErrorMsg(mapError(err?.code)); }
+    catch (err: unknown) { setErrorMsg(mapError(err instanceof FirebaseError ? err.code : undefined)); }
     finally { setSubmitting(false); }
   };
 
@@ -68,23 +67,23 @@ export default function RegisterPage() {
       <div className={styles.imageSide}>
         <div className={styles.overlay}>
           <h2 className={styles.welcomeTitle}>Movendo a empresa para frente</h2>
-          <p className={styles.welcomeText}>Priorizando eficiência, inovação e confiança em cada ação.</p>
+          <p className={styles.welcomeText}>Priorizando eficiÃªncia, inovaÃ§Ã£o e confianÃ§a em cada aÃ§Ã£o.</p>
         </div>
         <img src="/assets/auth-banner.png" alt="Registro" />
       </div>
 
       <div className={styles.formSide}>
         <h1 className={styles.title}>Criar Conta</h1>
-        <p className={styles.subtitle}>Cadastre-se para começar a gerenciar suas consultas.</p>
+        <p className={styles.subtitle}>Cadastre-se para comeÃ§ar a gerenciar suas consultas.</p>
 
         {errorMsg && <div className={styles.error}>{errorMsg}</div>}
 
         <form onSubmit={handleRegister} className={styles.form} noValidate>
           <input type="text" placeholder="Nome completo" value={name} onChange={(e) => setName(e.target.value)} required className={styles.input} autoComplete="name" aria-label="Nome completo" />
           <input type="email" placeholder="E-mail" value={email} onChange={(e) => setEmail(e.target.value)} required className={styles.input} autoComplete="email" inputMode="email" aria-label="E-mail" />
-          <input type="password" placeholder="Senha (mín. 6 caracteres)" value={password} onChange={(e) => setPassword(e.target.value)} required className={styles.input} autoComplete="new-password" aria-label="Senha" minLength={6} />
+          <input type="password" placeholder="Senha (mÃ­n. 6 caracteres)" value={password} onChange={(e) => setPassword(e.target.value)} required className={styles.input} autoComplete="new-password" aria-label="Senha" minLength={6} />
           <button type="submit" className={styles.btnPrimary} disabled={disabled}>
-            {submitting ? 'Registrando…' : 'Registrar'}
+            {submitting ? 'Registrandoâ€¦' : 'Registrar'}
           </button>
         </form>
 
@@ -96,7 +95,7 @@ export default function RegisterPage() {
         </div>
 
         <p className={styles.text}>
-          Já possui conta? <Link href="/auth/login" className={styles.link}>Entrar</Link>
+          JÃ¡ possui conta? <Link href="/auth/login" className={styles.link}>Entrar</Link>
         </p>
       </div>
     </div>

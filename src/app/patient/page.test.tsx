@@ -42,9 +42,10 @@ describe("PatientIndex Page", () => {
   it("renderiza título e link para cadastrar", () => {
     render(<PatientIndex />);
     expect(screen.getByText("Pacientes")).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: /Cadastrar Novo Paciente/i })
-    ).toHaveAttribute("href", "/patient/create");
+    fireEvent.click(
+      screen.getByRole("button", { name: /Novo Paciente/i })
+    );
+    expect(pushMock).toHaveBeenCalledWith("/patient/create");
   });
 
   it("renderiza pacientes do mock", () => {
@@ -83,13 +84,13 @@ describe("PatientIndex Page", () => {
     render(<PatientIndex />);
     const firstPatient = mockPatients[0];
 
-    fireEvent.click(screen.getAllByText("Detalhes")[0]);
+    fireEvent.click(screen.getAllByRole("button", { name: "Detalhes" })[0]);
     expect(pushMock).toHaveBeenCalledWith(`/patient/details/${firstPatient.id}`);
 
-    fireEvent.click(screen.getAllByText("Editar")[0]);
+    fireEvent.click(screen.getAllByRole("button", { name: "Editar" })[0]);
     expect(pushMock).toHaveBeenCalledWith(`/patient/edit/${firstPatient.id}`);
 
-    fireEvent.click(screen.getAllByText("Excluir")[0]);
+    fireEvent.click(screen.getAllByRole("button", { name: "Excluir" })[0]);
     expect(pushMock).toHaveBeenCalledWith(`/patient/delete/${firstPatient.id}`);
   });
 });

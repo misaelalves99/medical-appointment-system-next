@@ -1,7 +1,7 @@
 // src/app/specialty/create/__tests__/CreateSpecialtyPage.test.tsx
 
 import { render, screen, fireEvent } from "@testing-library/react";
-import CreateSpecialtyPage from "../page";
+import CreateSpecialtyPage from "./page";
 
 // Mock do useSpecialty
 const addSpecialtyMock = jest.fn();

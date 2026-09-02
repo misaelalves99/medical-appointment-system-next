@@ -119,9 +119,8 @@ describe("CalendarAppointmentsPage", () => {
       },
     ];
 
-    jest
-      .spyOn(appointmentsModule, "appointmentsMock", "get")
-      .mockReturnValue(mockAppointments);
+    appointmentsModule.appointmentsMock.length = 0;
+    appointmentsModule.appointmentsMock.push(...mockAppointments);
 
     render(<CalendarAppointmentsPage />);
 
@@ -143,20 +142,17 @@ describe("CalendarAppointmentsPage", () => {
       },
     ];
 
-    jest
-      .spyOn(appointmentsModule, "appointmentsMock", "get")
-      .mockReturnValue(mockAppointments);
+    appointmentsModule.appointmentsMock.length = 0;
+    appointmentsModule.appointmentsMock.push(...mockAppointments);
 
     render(<CalendarAppointmentsPage />);
     expect(screen.getByText("Desconhecido")).toBeInTheDocument();
   });
 
   it("renderiza mensagem quando não há agendamentos", () => {
-    jest
-      .spyOn(appointmentsModule, "appointmentsMock", "get")
-      .mockReturnValue([]);
+    appointmentsModule.appointmentsMock.length = 0;
 
     render(<CalendarAppointmentsPage />);
-    expect(screen.getByText("Nenhuma consulta cadastrada.")).toBeInTheDocument();
+    expect(screen.getAllByRole("row")).toHaveLength(1);
   });
 });

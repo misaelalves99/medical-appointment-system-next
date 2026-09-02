@@ -22,7 +22,22 @@ export default function EditSpecialtyPage() {
     if (specialty) setName(specialty.name);
   }, [specialty]);
 
-  if (!specialty) return <p>Especialidade não encontrada.</p>;
+  if (!specialty) {
+    return (
+      <div className={styles.container}>
+        <p>Especialidade não encontrada.</p>
+        <div className={styles.actions}>
+          <button
+            type="button"
+            className={styles.buttonBack}
+            onClick={() => router.push("/specialty")}
+          >
+            Voltar
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();

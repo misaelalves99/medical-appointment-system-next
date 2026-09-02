@@ -122,9 +122,9 @@ describe("AppointmentList", () => {
     render(<AppointmentList />);
     expect(screen.getByText("Lista de Consultas")).toBeInTheDocument();
     expect(screen.getByText("Paciente 1")).toBeInTheDocument();
-    expect(screen.getByText("Doutor 1")).toBeInTheDocument();
+    expect(screen.getByText(mockDoctorContext.doctors.find(d => d.id === 20)!.name)).toBeInTheDocument();
     expect(screen.getByText("Paciente 2")).toBeInTheDocument();
-    expect(screen.getByText("Doutor 2")).toBeInTheDocument();
+    expect(screen.getByText(mockDoctorContext.doctors.find(d => d.id === 21)!.name)).toBeInTheDocument();
   });
 
   it("exibe 'Carregando...' se pacientes ou médicos não estiverem disponíveis", () => {
@@ -170,13 +170,13 @@ describe("AppointmentList", () => {
   it("navega ao clicar em Detalhes, Editar e Excluir", () => {
     render(<AppointmentList />);
 
-    fireEvent.click(screen.getAllByText("Detalhes")[0]);
+    fireEvent.click(screen.getAllByRole("button", { name: /^Detalhes$/i })[0]);
     expect(pushMock).toHaveBeenCalledWith("/appointments/details/1");
 
-    fireEvent.click(screen.getAllByText("Editar")[0]);
+    fireEvent.click(screen.getAllByRole("button", { name: /^Editar$/i })[0]);
     expect(pushMock).toHaveBeenCalledWith("/appointments/edit/1");
 
-    fireEvent.click(screen.getAllByText("Excluir")[0]);
+    fireEvent.click(screen.getAllByRole("button", { name: /^Excluir$/i })[0]);
     expect(pushMock).toHaveBeenCalledWith("/appointments/delete/1");
   });
 });

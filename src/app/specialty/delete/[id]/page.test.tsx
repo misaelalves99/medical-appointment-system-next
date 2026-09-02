@@ -2,7 +2,6 @@
 
 import { render, screen, fireEvent } from "@testing-library/react";
 import DeleteSpecialtyPage from "./page";
-import * as nextNavigation from "next/navigation";
 
 // Mock do hook useSpecialty
 const removeSpecialtyMock = jest.fn();
@@ -20,15 +19,17 @@ jest.mock("../../../hooks/useSpecialty", () => ({
 
 // Mock do Next.js
 const pushMock = jest.fn();
+let paramsMock = { id: "1" };
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ push: pushMock }),
-  useParams: () => ({ id: "1" }),
+  useParams: () => paramsMock,
 }));
 
 describe("DeleteSpecialtyPage", () => {
   beforeEach(() => {
     removeSpecialtyMock.mockClear();
     pushMock.mockClear();
+    paramsMock = { id: "1" };
   });
 
   it("deve renderizar informações da especialidade", () => {
@@ -59,7 +60,7 @@ describe("DeleteSpecialtyPage", () => {
   });
 
   it("deve exibir mensagem de carregando se id inválido", () => {
-    jest.spyOn(nextNavigation, "useParams").mockReturnValue({ id: "999" });
+    paramsMock = { id: "999" };
 
     render(<DeleteSpecialtyPage />);
     expect(screen.getByText(/Carregando/i)).toBeInTheDocument();

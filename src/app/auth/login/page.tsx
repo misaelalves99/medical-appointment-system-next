@@ -4,6 +4,7 @@
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { FirebaseError } from 'firebase/app';
 import { FaGoogle, FaFacebookF } from 'react-icons/fa';
 import { useAuth } from '@/app/hooks/useAuth';
 import SocialButton from '@/app/components/ui/SocialButton';
@@ -21,13 +22,13 @@ export default function LoginPage() {
   const mapError = useMemo(
     () => mapAuthError ?? ((code?: string) => {
       switch (code) {
-        case 'auth/invalid-email': return 'E-mail inválido.';
-        case 'auth/user-not-found': return 'Usuário não encontrado.';
+        case 'auth/invalid-email': return 'E-mail invÃ¡lido.';
+        case 'auth/user-not-found': return 'UsuÃ¡rio nÃ£o encontrado.';
         case 'auth/wrong-password':
         case 'auth/invalid-credential': return 'E-mail ou senha incorretos.';
         case 'auth/too-many-requests': return 'Muitas tentativas. Tente novamente mais tarde.';
-        case 'auth/unauthorized-domain': return 'Domínio não autorizado nas configurações do Firebase.';
-        default: return 'Falha na autenticação. Tente novamente.';
+        case 'auth/unauthorized-domain': return 'DomÃ­nio nÃ£o autorizado nas configuraÃ§Ãµes do Firebase.';
+        default: return 'Falha na autenticaÃ§Ã£o. Tente novamente.';
       }
     }),
     [mapAuthError]
@@ -46,16 +47,14 @@ export default function LoginPage() {
     try {
       const ok = await login(emailTrim, passTrim);
       if (ok) router.push('/'); else setErrorMsg(mapError());
-    } catch (err: any) {
-      setErrorMsg(mapError(err?.code));
-    } finally { setSubmitting(false); }
+    } catch (err: unknown) { setErrorMsg(mapError(err instanceof FirebaseError ? err.code : undefined)); } finally { setSubmitting(false); }
   };
 
   const social = (fn: () => Promise<boolean>) => async () => {
     if (submitting) return;
     setSubmitting(true); setErrorMsg(null);
     try { const ok = await fn(); if (ok) router.push('/'); else setErrorMsg(mapError()); }
-    catch (err: any) { setErrorMsg(mapError(err?.code)); }
+    catch (err: unknown) { setErrorMsg(mapError(err instanceof FirebaseError ? err.code : undefined)); }
     finally { setSubmitting(false); }
   };
 
@@ -66,14 +65,14 @@ export default function LoginPage() {
       <div className={styles.imageSide}>
         <div className={styles.overlay}>
           <h2 className={styles.welcomeTitle}>Movendo a empresa para frente</h2>
-          <p className={styles.welcomeText}>Priorizando eficiência, inovação e confiança em cada ação.</p>
+          <p className={styles.welcomeText}>Priorizando eficiÃªncia, inovaÃ§Ã£o e confianÃ§a em cada aÃ§Ã£o.</p>
         </div>
-        <img src="/assets/auth-banner.png" alt="Sistema Médico" />
+        <img src="/assets/auth-banner.png" alt="Sistema MÃ©dico" />
       </div>
 
       <div className={styles.formSide}>
         <h1 className={styles.title}>Login</h1>
-        <p className={styles.subtitle}>Bem-vindo! Entre na sua conta ou registre-se para começar.</p>
+        <p className={styles.subtitle}>Bem-vindo! Entre na sua conta ou registre-se para comeÃ§ar.</p>
 
         {errorMsg && <div className={styles.error}>{errorMsg}</div>}
 
@@ -100,7 +99,7 @@ export default function LoginPage() {
             aria-label="Senha"
           />
           <button type="submit" className={styles.btnPrimary} disabled={disabled}>
-            {submitting ? 'Entrando…' : 'Entrar'}
+            {submitting ? 'Entrandoâ€¦' : 'Entrar'}
           </button>
         </form>
 
@@ -112,7 +111,7 @@ export default function LoginPage() {
         </div>
 
         <p className={styles.text}>
-          Não tem uma conta? <Link href="/auth/register" className={styles.link}>Registre-se</Link>
+          NÃ£o tem uma conta? <Link href="/auth/register" className={styles.link}>Registre-se</Link>
         </p>
       </div>
     </div>

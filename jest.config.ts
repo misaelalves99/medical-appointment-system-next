@@ -9,16 +9,23 @@ const config: Config = {
   setupFilesAfterEnv: ["<rootDir>/src/setupTests.ts"],
 
   transform: {
-    "^.+\\.(ts|tsx)$": "ts-jest",
+    "^.+\\.(ts|tsx)$": [
+      "ts-jest",
+      {
+        tsconfig: {
+          jsx: "react-jsx",
+        },
+      },
+    ],
   },
 
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
 
   moduleNameMapper: {
-    // CSS/SCSS Modules → identity-obj-proxy
+    // CSS/SCSS Modules â†’ identity-obj-proxy
     "\\.(css|less|scss|sass)$": "identity-obj-proxy",
 
-    // Aliases do Next.js (import '@/...') → src/...
+    // Aliases do Next.js (import '@/...') â†’ src/...
     "^@/(.*)$": "<rootDir>/src/$1",
 
     // Mock para next/navigation (evita erro em hooks/pages do Next 13+)

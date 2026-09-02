@@ -3,14 +3,20 @@ import DeleteAppointmentPage from "./page";
 import { useRouter, useParams } from "next/navigation";
 import { appointmentsMock } from "../../../mocks/appointments";
 import { AppointmentStatus } from "../../../types/Appointment";
+import { useAppointments } from "../../../hooks/useAppointments";
 
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
   useParams: jest.fn(),
 }));
 
+jest.mock("../../../hooks/useAppointments", () => ({
+  useAppointments: jest.fn(),
+}));
+
 describe("DeleteAppointmentPage", () => {
   const pushMock = jest.fn();
+  const deleteAppointmentMock = jest.fn();
 
   beforeEach(() => {
     (useRouter as jest.Mock).mockReturnValue({ push: pushMock });
@@ -25,6 +31,12 @@ describe("DeleteAppointmentPage", () => {
       appointmentDate: "2025-08-22T10:00",
       status: AppointmentStatus.Scheduled,
       notes: "",
+    });
+
+    deleteAppointmentMock.mockClear();
+    (useAppointments as jest.Mock).mockReturnValue({
+      appointments: appointmentsMock,
+      deleteAppointment: deleteAppointmentMock,
     });
   });
 
@@ -62,13 +74,7 @@ describe("DeleteAppointmentPage", () => {
 
     // Simula a exclusão do mock
     fireEvent.click(screen.getByText("Excluir"));
-    const index = appointmentsMock.findIndex(a => a.id === 1);
-    if (index >= 0) appointmentsMock.splice(index, 1);
-    console.log("Consulta deletada:", 1);
-    pushMock("/appointments");
-
-    expect(appointmentsMock.length).toBe(0);
-    expect(consoleSpy).toHaveBeenCalledWith("Consulta deletada:", 1);
+    expect(deleteAppointmentMock).toHaveBeenCalledWith(1);
     expect(pushMock).toHaveBeenCalledWith("/appointments");
 
     consoleSpy.mockRestore();

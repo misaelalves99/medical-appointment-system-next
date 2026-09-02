@@ -117,32 +117,32 @@ const AppointmentForm: React.FC<{ mode: "create" | "edit" }> = ({ mode }) => {
         <form className={styles.form} onSubmit={handleSubmit}>
           {/* Inputs iguais ao original */}
           <div>
-            <label>Paciente ID:</label>
-            <input
+            <label htmlFor="appointment-patient-id">Paciente ID:</label>
+          <input id="appointment-patient-id"
               type="number"
               value={state.patientId}
               onChange={(e) => setState({ ...state, patientId: Number(e.target.value) })}
             />
           </div>
           <div>
-            <label>Médico ID:</label>
-            <input
+            <label htmlFor="appointment-doctor-id">Médico ID:</label>
+          <input id="appointment-doctor-id"
               type="number"
               value={state.doctorId}
               onChange={(e) => setState({ ...state, doctorId: Number(e.target.value) })}
             />
           </div>
           <div>
-            <label>Data e Hora:</label>
-            <input
+            <label htmlFor="appointment-date">Data e Hora:</label>
+          <input id="appointment-date"
               type="datetime-local"
               value={state.appointmentDate}
               onChange={(e) => setState({ ...state, appointmentDate: e.target.value })}
             />
           </div>
           <div>
-            <label>Status:</label>
-            <select
+            <label htmlFor="appointment-status">Status:</label>
+          <select id="appointment-status"
               value={state.status}
               onChange={(e) =>
                 setState({
@@ -157,8 +157,8 @@ const AppointmentForm: React.FC<{ mode: "create" | "edit" }> = ({ mode }) => {
             </select>
           </div>
           <div>
-            <label>Notas:</label>
-            <textarea
+            <label htmlFor="appointment-notes">Notas:</label>
+          <textarea id="appointment-notes"
               value={state.notes}
               onChange={(e) => setState({ ...state, notes: e.target.value })}
             />

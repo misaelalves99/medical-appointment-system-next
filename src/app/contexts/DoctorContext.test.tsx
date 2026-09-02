@@ -67,18 +67,18 @@ describe("DoctorsProvider - Context", () => {
     const count = screen.getByTestId("doctors-count");
     const first = screen.getByTestId("first-doctor");
 
-    expect(count.textContent).toBe("0");
-    expect(first.textContent).toBe("");
+    expect(count.textContent).toBe("2");
+    expect(first.textContent).toBe("Dr. João Silva");
 
     await user.click(screen.getByText("Add"));
-    expect(count.textContent).toBe("1");
-    expect(first.textContent).toBe("Dr. Alice");
+    expect(count.textContent).toBe("3");
+    expect(first.textContent).toBe("Dr. João Silva");
 
     await user.click(screen.getByText("Update"));
     expect(first.textContent).toBe("Dr. Bob");
 
     await user.click(screen.getByText("Remove"));
-    expect(count.textContent).toBe("0");
-    expect(first.textContent).toBe("");
+    expect(count.textContent).toBe("2");
+    expect(first.textContent).toBe("Dra. Ana Paula");
   });
 });

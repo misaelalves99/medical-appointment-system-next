@@ -3,12 +3,68 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import EditAppointmentPage from "./page";
 import { useRouter, useParams } from "next/navigation";
-import { appointmentsMock } from "../../../mocks/appointments";
+
 import { AppointmentStatus } from "../../../types/Appointment";
 
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
   useParams: jest.fn(),
+}));
+
+const patientFixture = [
+  {
+    id: 11,
+    name: "Paciente Teste",
+    email: "paciente@teste.local",
+    phone: "11999999999",
+    birthDate: "1990-01-01",
+    isActive: true,
+  },
+];
+
+jest.mock("../../../hooks/usePatient", () => ({
+  usePatient: () => ({
+    patients: patientFixture,
+  }),
+}));
+const doctorFixture = [
+  {
+    id: 21,
+    name: "Medico Teste",
+    crm: "CRM-21",
+    specialty: "Cardiologia",
+    email: "medico@teste.local",
+    phone: "11988888888",
+    isActive: true,
+  },
+];
+
+jest.mock("../../../hooks/useDoctor", () => ({
+  useDoctor: () => ({
+    doctors: doctorFixture,
+  }),
+}));
+
+const appointmentFixture = [
+  {
+    id: 1,
+    patientId: 11,
+    patientName: "Paciente Teste",
+    doctorId: 21,
+    doctorName: "Medico Teste",
+    appointmentDate: "2025-08-22T10:00",
+    status: AppointmentStatus.Confirmed,
+    notes: "Observação inicial",
+  },
+];
+
+const updateAppointmentMock = jest.fn();
+
+jest.mock("../../../hooks/useAppointments", () => ({
+  useAppointments: () => ({
+    appointments: appointmentFixture,
+    updateAppointment: updateAppointmentMock,
+  }),
 }));
 
 describe("EditAppointmentPage", () => {
@@ -18,18 +74,7 @@ describe("EditAppointmentPage", () => {
     (useRouter as jest.Mock).mockReturnValue({ push: pushMock });
     jest.clearAllMocks();
 
-    // Reset do mock
-    appointmentsMock.length = 0;
-    appointmentsMock.push({
-      id: 1,
-      patientId: 10,
-      patientName: "Paciente Teste",
-      doctorId: 20,
-      doctorName: "Doutor Teste",
-      appointmentDate: "2025-08-22T10:00",
-      status: AppointmentStatus.Confirmed,
-      notes: "Observação inicial",
-    });
+
   });
 
   it("renderiza o formulário com dados preenchidos", () => {
@@ -38,10 +83,10 @@ describe("EditAppointmentPage", () => {
     render(<EditAppointmentPage />);
 
     expect(screen.getByText("Editar Consulta")).toBeInTheDocument();
-    expect((screen.getByDisplayValue("10") as HTMLOptionElement).value).toBe("10");
-    expect((screen.getByDisplayValue("20") as HTMLOptionElement).value).toBe("20");
+    expect((screen.getByLabelText("Paciente") as HTMLSelectElement).value).toBe("11");
+    expect((screen.getByLabelText("Médico") as HTMLSelectElement).value).toBe("21");
     expect(screen.getByDisplayValue("2025-08-22T10:00")).toBeInTheDocument();
-    expect(screen.getByDisplayValue("2")).toBeInTheDocument(); // Confirmed = 2
+    expect((screen.getByLabelText("Status") as HTMLSelectElement).value).toBe(AppointmentStatus.Confirmed.toString());
     expect(screen.getByDisplayValue("Observação inicial")).toBeInTheDocument();
   });
 
@@ -65,7 +110,7 @@ describe("EditAppointmentPage", () => {
     expect(notesInput.value).toBe("Nova observação");
   });
 
-  it("atualiza o mock e navega ao submeter o formulário", () => {
+  it("chama updateAppointment e navega ao submeter o formulário", () => {
     (useParams as jest.Mock).mockReturnValue({ id: "1" });
     render(<EditAppointmentPage />);
 
@@ -74,21 +119,19 @@ describe("EditAppointmentPage", () => {
     fireEvent.change(screen.getByLabelText("Data da Consulta"), { target: { value: "2025-08-23T14:00" } });
     fireEvent.change(screen.getByLabelText("Observações"), { target: { value: "Nova observação" } });
 
-    const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
-
     fireEvent.click(screen.getByText("Salvar"));
 
-    const updated = appointmentsMock.find(a => a.id === 1);
-    expect(updated).toBeDefined();
-    expect(updated?.patientId).toBe(11);
-    expect(updated?.doctorId).toBe(21);
-    expect(updated?.appointmentDate).toBe("2025-08-23T14:00");
-    expect(updated?.notes).toBe("Nova observação");
+    expect(updateAppointmentMock).toHaveBeenCalledTimes(1);
+    expect(updateAppointmentMock).toHaveBeenCalledWith({
+      id: 1,
+      patientId: 11,
+      doctorId: 21,
+      appointmentDate: "2025-08-23T17:00:00.000Z",
+      status: AppointmentStatus.Confirmed,
+      notes: "Nova observação",
+    });
 
-    expect(consoleSpy).toHaveBeenCalledWith("Consulta atualizada:", updated);
     expect(pushMock).toHaveBeenCalledWith("/appointments");
-
-    consoleSpy.mockRestore();
   });
 
   it("navega ao clicar em Cancelar", () => {
@@ -98,16 +141,12 @@ describe("EditAppointmentPage", () => {
     expect(pushMock).toHaveBeenCalledWith("/appointments");
   });
 
-  it("exibe fallback de ID se paciente ou médico não existirem nos mocks", () => {
+  it("mantém paciente e médico selecionados com fixtures disponíveis", () => {
     (useParams as jest.Mock).mockReturnValue({ id: "1" });
-
-    appointmentsMock[0].patientName = "";
-    appointmentsMock[0].doctorName = "";
 
     render(<EditAppointmentPage />);
 
-    // Seleção não deve quebrar, mas se o nome não existe, fallback será usado na lógica futura
-    expect(screen.getByDisplayValue(appointmentsMock[0].patientId.toString())).toBeInTheDocument();
-    expect(screen.getByDisplayValue(appointmentsMock[0].doctorId.toString())).toBeInTheDocument();
+    expect((screen.getByLabelText("Paciente") as HTMLSelectElement).value).toBe("11");
+    expect((screen.getByLabelText("Médico") as HTMLSelectElement).value).toBe("21");
   });
 });

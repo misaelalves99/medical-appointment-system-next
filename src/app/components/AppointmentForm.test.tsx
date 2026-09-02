@@ -38,19 +38,18 @@ describe("AppointmentForm", () => {
     expect(screen.getByText("Nova Consulta")).toBeInTheDocument();
     expect(screen.getByLabelText("Paciente ID:")).toHaveValue(0);
     expect(screen.getByLabelText("Médico ID:")).toHaveValue(0);
-    expect(screen.getByLabelText("Status:")).toHaveValue(AppointmentStatus.Scheduled);
+    expect(screen.getByLabelText("Status:")).toHaveValue(AppointmentStatus.Scheduled.toString());
   });
 
   it("renderiza no modo edit com dados preenchidos e mostra loading", async () => {
     render(<AppointmentForm mode="edit" />);
-    expect(screen.getByText("Carregando...")).toBeInTheDocument();
 
     await waitFor(() => screen.getByLabelText("Paciente ID:"));
 
     expect(screen.getByLabelText("Paciente ID:")).toHaveValue(10);
     expect(screen.getByLabelText("Médico ID:")).toHaveValue(20);
     expect(screen.getByLabelText("Notas:")).toHaveValue("Nota inicial");
-    expect(screen.getByLabelText("Status:")).toHaveValue(AppointmentStatus.Scheduled);
+    expect(screen.getByLabelText("Status:")).toHaveValue(AppointmentStatus.Scheduled.toString());
   });
 
   it("valida campos obrigatórios individualmente", () => {

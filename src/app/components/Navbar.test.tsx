@@ -6,6 +6,11 @@ import "@testing-library/jest-dom";
 // mock do usePathname do Next.js
 jest.mock("next/navigation", () => ({
   usePathname: jest.fn(),
+  useRouter: jest.fn(() => ({ push: jest.fn() })),
+}));
+
+jest.mock("../hooks/useAuth", () => ({
+  useAuth: () => ({ logout: jest.fn() }),
 }));
 
 // importa o hook já tipado como jest.Mock
@@ -50,7 +55,7 @@ describe("Navbar Component", () => {
     mockUsePathname.mockReturnValue("/");
     render(<Navbar />);
 
-    const toggleButton = screen.getByRole("button", { name: /abrir menu/i });
+    const toggleButton = screen.getByRole("button", { name: /^abrir menu$/i });
     expect(toggleButton).toHaveAttribute("aria-expanded", "false");
 
     fireEvent.click(toggleButton);

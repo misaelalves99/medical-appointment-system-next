@@ -46,10 +46,10 @@ const DeleteAppointment: React.FC<DeleteAppointmentProps> = ({
 
       <dl>
         <dt>Paciente</dt>
-        <dd>{appointment.patientName ?? `ID ${appointment.patientId}`}</dd>
+        <dd>{appointment.patientName || `ID ${appointment.patientId}`}</dd>
 
         <dt>Médico</dt>
-        <dd>{appointment.doctorName ?? `ID ${appointment.doctorId}`}</dd>
+        <dd>{appointment.doctorName || `ID ${appointment.doctorId}`}</dd>
 
         <dt>Data e Hora</dt>
         <dd>{new Date(appointment.appointmentDate).toLocaleString("pt-BR")}</dd>

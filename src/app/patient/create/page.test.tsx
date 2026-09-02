@@ -68,8 +68,19 @@ describe("CreatePatientPage", () => {
       address: "Rua Novo, 456",
     };
 
+    const fieldLabels: Record<keyof typeof patientData, RegExp> = {
+      name: /Nome:/i,
+      cpf: /CPF:/i,
+      dateOfBirth: /Data de Nascimento:/i,
+      gender: /Sexo:/i,
+      phone: /Telefone:/i,
+      email: /Email:/i,
+      address: /Endereço:/i,
+    };
+
     Object.entries(patientData).forEach(([key, value]) => {
-      const input = screen.getByLabelText(new RegExp(key, "i"));
+      const typedKey = key as keyof typeof patientData;
+      const input = screen.getByLabelText(fieldLabels[typedKey]);
       fireEvent.change(input, { target: { value } });
     });
 

@@ -36,7 +36,7 @@ describe("useDoctor hook com provider real", () => {
     };
 
     act(() => result.current.addDoctor(newDoctor));
-    expect(result.current.doctors).toContainEqual(newDoctor);
+    expect(result.current.doctors).toContainEqual({ ...newDoctor, id: 3 });
   });
 
   it("deve atualizar um médico corretamente", () => {
@@ -54,7 +54,7 @@ describe("useDoctor hook com provider real", () => {
     };
     act(() => result.current.addDoctor(doctor));
 
-    const updatedDoctor = { ...doctor, name: "Dr. Atualizado" };
+    const updatedDoctor = { ...doctor, id: 3, name: "Dr. Atualizado" };
     act(() => result.current.updateDoctor(updatedDoctor));
 
     expect(result.current.doctors).toContainEqual(updatedDoctor);
@@ -74,10 +74,10 @@ describe("useDoctor hook com provider real", () => {
       isActive: true,
     };
     act(() => result.current.addDoctor(doctor));
-    expect(result.current.doctors.length).toBe(1);
+    expect(result.current.doctors.length).toBe(3);
 
-    act(() => result.current.removeDoctor(1));
-    expect(result.current.doctors.length).toBe(0);
+    act(() => result.current.removeDoctor(3));
+    expect(result.current.doctors.length).toBe(2);
   });
 
   it("lança erro se usado fora do provider", () => {

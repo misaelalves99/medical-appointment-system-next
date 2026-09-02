@@ -33,8 +33,8 @@ describe("DoctorList Page", () => {
 
   it("exibe todos os médicos quando a pesquisa está vazia", async () => {
     render(<DoctorList />);
-    doctorsMock.forEach(async (doctor) => {
-      expect(await screen.findByText(doctor.name)).toBeInTheDocument();
+    doctorsMock.forEach((doctor) => {
+      expect(screen.getByText(doctor.name)).toBeInTheDocument();
     });
   });
 
@@ -57,9 +57,9 @@ describe("DoctorList Page", () => {
     });
   });
 
-  it("navega para a página de criação ao clicar em 'Cadastrar Novo Médico'", () => {
+  it("navega para a página de criação ao clicar em 'Novo Médico'", () => {
     render(<DoctorList />);
-    fireEvent.click(screen.getByText(/Cadastrar Novo Médico/i));
+    fireEvent.click(screen.getByRole("button", { name: /Novo Médico/i }));
     expect(mockPush).toHaveBeenCalledWith("/doctors/create");
   });
 
@@ -67,15 +67,15 @@ describe("DoctorList Page", () => {
     render(<DoctorList />);
     const doctor = doctorsMock[0];
 
-    const detailsButton = await screen.findByRole("button", { name: /Detalhes/i });
+    const detailsButton = screen.getAllByRole("button", { name: /Detalhes/i })[0];
     fireEvent.click(detailsButton);
     expect(mockPush).toHaveBeenCalledWith(`/doctors/details/${doctor.id}`);
 
-    const editButton = screen.getByRole("button", { name: /Editar/i });
+    const editButton = screen.getAllByRole("button", { name: /Editar/i })[0];
     fireEvent.click(editButton);
     expect(mockPush).toHaveBeenCalledWith(`/doctors/edit/${doctor.id}`);
 
-    const deleteButton = screen.getByRole("button", { name: /Excluir/i });
+    const deleteButton = screen.getAllByRole("button", { name: /Excluir/i })[0];
     fireEvent.click(deleteButton);
     expect(mockPush).toHaveBeenCalledWith(`/doctors/delete/${doctor.id}`);
   });

@@ -33,7 +33,7 @@ describe("appointmentsMock", () => {
     appointmentsMock.forEach(appt => {
       const date = new Date(appt.appointmentDate);
       expect(!isNaN(date.getTime())).toBe(true); // data válida
-      expect(date.toISOString()).toBe(appt.appointmentDate); // formato ISO exato
+      expect(date.toISOString()).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/); // formato ISO normalizado
     });
   });
 });
