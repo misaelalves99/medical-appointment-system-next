@@ -12,6 +12,7 @@ interface PatientProviderProps {
 }
 
 export const PatientProvider: React.FC<PatientProviderProps> = ({ children }) => {
+  // Demo boundary: patient state starts from synthetic fixtures and remains in memory only.
   const [patients, setPatients] = useState<Patient[]>(patientsMock);
 
   const addPatient = (patient: Patient) => {

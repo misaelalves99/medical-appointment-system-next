@@ -29,7 +29,7 @@ describe("UploadProfilePicturePage", () => {
     (useParams as jest.Mock).mockReturnValue({ id: "1" });
     render(<UploadProfilePicturePage />);
     expect(screen.getByText(new RegExp(patientsMock[0].name))).toBeInTheDocument();
-    const submitButton = screen.getByRole("button", { name: /Enviar Foto/i });
+    const submitButton = screen.getByRole("button", { name: /Simular envio/i });
     expect(submitButton).toBeDisabled();
   });
 
@@ -42,7 +42,7 @@ describe("UploadProfilePicturePage", () => {
     fireEvent.change(fileInput, { target: { files: [file] } });
 
     expect(fileInput.files?.[0]).toBe(file);
-    const submitButton = screen.getByRole("button", { name: /Enviar Foto/i });
+    const submitButton = screen.getByRole("button", { name: /Simular envio/i });
     expect(submitButton).not.toBeDisabled();
   });
 
@@ -50,7 +50,7 @@ describe("UploadProfilePicturePage", () => {
     (useParams as jest.Mock).mockReturnValue({ id: "1" });
     render(<UploadProfilePicturePage />);
     const fileInput = screen.getByLabelText(/Selecionar Foto/i) as HTMLInputElement;
-    const submitButton = screen.getByRole("button", { name: /Enviar Foto/i });
+    const submitButton = screen.getByRole("button", { name: /Simular envio/i });
 
     const file = new File(["dummy content"], "photo.png", { type: "image/png" });
     fireEvent.change(fileInput, { target: { files: [file] } });
@@ -59,9 +59,7 @@ describe("UploadProfilePicturePage", () => {
     window.alert = jest.fn();
     fireEvent.click(submitButton);
 
-    expect(window.alert).toHaveBeenCalledWith(
-      expect.stringContaining(patientsMock[0].name)
-    );
+    expect(window.alert).toHaveBeenCalledWith("Simulação concluída. Nenhum arquivo foi armazenado.");
     expect(pushMock).toHaveBeenCalledWith("/patient");
   });
 

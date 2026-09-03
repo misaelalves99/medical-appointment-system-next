@@ -32,8 +32,8 @@ export default function UploadProfilePicturePage() {
     e.preventDefault();
     if (!selectedFile) return;
 
-    console.log("Arquivo enviado para paciente:", patient.id, selectedFile);
-    alert(`Foto enviada para o paciente ${patient.name}!`);
+    // Demo-only interaction: no file or patient data is persisted or transmitted.
+    alert("Simulação concluída. Nenhum arquivo foi armazenado.");
 
     setSelectedFile(null);
     router.push("/patient");
@@ -48,9 +48,9 @@ export default function UploadProfilePicturePage() {
 
       <div className={styles.header}>
         <p className={styles.eyebrow}>Cadastro clínico</p>
-        <h1 id="upload-profile-title">Upload de Foto de Perfil</h1>
+        <h1 id="upload-profile-title">Simulação de Foto de Perfil</h1>
         <p className={styles.description}>
-          Selecione uma imagem para atualizar a representação visual do cadastro.
+          Demonstração local de seleção de imagem. Nenhum arquivo é enviado ou armazenado.
         </p>
       </div>
 
@@ -66,7 +66,7 @@ export default function UploadProfilePicturePage() {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} encType="multipart/form-data" className={styles.form}>
+        <form onSubmit={handleSubmit} className={styles.form}>
           <input type="hidden" name="id" value={patient.id} />
 
           <div className={styles.fieldGroup}>
@@ -107,7 +107,7 @@ export default function UploadProfilePicturePage() {
               disabled={!selectedFile}
             >
               <FaUpload aria-hidden="true" />
-              Enviar Foto
+              Simular envio
             </button>
           </div>
         </form>

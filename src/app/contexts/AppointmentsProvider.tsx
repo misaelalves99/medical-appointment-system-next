@@ -26,6 +26,7 @@ export const AppointmentsProvider: React.FC<AppointmentsProviderProps> = ({ chil
     };
   };
 
+  // Demo boundary: scheduling state starts from synthetic fixtures and remains in memory only.
   const [appointments, setAppointments] = useState<Appointment[]>(appointmentsMock.map(resolveNames));
 
   const addAppointment = (appointment: Omit<Appointment, "id" | "patientName" | "doctorName">) => {
