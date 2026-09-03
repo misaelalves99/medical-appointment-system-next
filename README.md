@@ -29,8 +29,23 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Quality and delivery
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Before proposing a delivery change, validate the application locally:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+    npm run lint
+    npm test -- --runInBand
+    npm run build
+
+The repository includes a GitHub Actions quality workflow that executes the same required checks for the Stage 07 delivery branch and for pull requests targeting main.
+
+### Environment setup
+
+Copy .env.example to .env.local and provide the environment-specific values locally.
+
+.env.example documents variable names only. Environment-specific values must not be committed.
+
+### Deployment status
+
+Stage 07 is preparing the repository delivery foundation. A successful local build or CI run does not by itself mean that the application has been published to a production environment.
+
