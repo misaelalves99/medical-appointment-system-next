@@ -24,7 +24,6 @@ export default function DeleteDoctorPage() {
   const handleDelete = () => {
     if (doctor) {
       removeDoctor(doctor.id);
-      console.log("Médico excluído:", doctor);
       router.push("/doctors");
     }
   };

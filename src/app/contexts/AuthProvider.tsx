@@ -48,11 +48,9 @@ export const mapAuthError = (code?: string) => {
 
 const logAuthError = (scope: string, error: unknown) => {
   if (error instanceof FirebaseError) {
-    console.error(scope, error.code, error.message);
     return;
   }
 
-  console.error(scope, 'unknown-error');
 };
 
 interface Props { children: ReactNode }

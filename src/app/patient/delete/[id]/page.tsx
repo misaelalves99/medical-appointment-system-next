@@ -24,7 +24,6 @@ export default function DeletePatientPage() {
   const handleDelete = () => {
     if (patient) {
       deletePatient(patient.id);
-      console.log("Paciente excluído:", patient);
       router.push("/patient");
     }
   };

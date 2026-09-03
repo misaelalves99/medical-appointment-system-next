@@ -199,4 +199,14 @@ describe('AppointmentList workspace', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Excluir consulta 1' }));
     expect(pushMock).toHaveBeenCalledWith('/appointments/delete/1');
   });
+
+  it('routes confirm and cancel actions with the selected appointment identity', () => {
+    render(<AppointmentList />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Confirmar consulta 1' }));
+    expect(pushMock).toHaveBeenCalledWith('/appointments/confirm/1');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Cancelar consulta 1' }));
+    expect(pushMock).toHaveBeenCalledWith('/appointments/cancel/1');
+  });
 });

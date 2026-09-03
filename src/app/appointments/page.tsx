@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaEdit, FaInfoCircle, FaPlus, FaSearch, FaTrash } from 'react-icons/fa';
+import { FaBan, FaCheck, FaEdit, FaInfoCircle, FaPlus, FaSearch, FaTrash } from 'react-icons/fa';
 import styles from './AppointmentList.module.css';
 import { useAppointments } from '../hooks/useAppointments';
 import { usePatient } from '../hooks/usePatient';
@@ -192,6 +192,24 @@ export default function AppointmentList() {
                             title='Editar'
                           >
                             <FaEdit aria-hidden='true' />
+                          </button>
+                          <button
+                            type='button'
+                            className={styles.iconBtn}
+                            onClick={() => router.push(`/appointments/confirm/${appointment.id}`)}
+                            aria-label={`Confirmar consulta ${appointment.id}`}
+                            title='Confirmar'
+                          >
+                            <FaCheck aria-hidden='true' />
+                          </button>
+                          <button
+                            type='button'
+                            className={styles.iconBtn}
+                            onClick={() => router.push(`/appointments/cancel/${appointment.id}`)}
+                            aria-label={`Cancelar consulta ${appointment.id}`}
+                            title='Cancelar'
+                          >
+                            <FaBan aria-hidden='true' />
                           </button>
                           <button
                             type='button'

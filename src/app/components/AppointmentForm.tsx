@@ -71,7 +71,6 @@ const AppointmentForm: React.FC<{ mode: "create" | "edit" }> = ({ mode }) => {
     if (!state.appointmentDate) e.appointmentDate = "Data e hora são obrigatórias";
 
     // apenas para exibição no console, evita warning de variável não usada
-    if (Object.keys(e).length > 0) console.warn("Erros de validação:", e);
 
     return Object.keys(e).length === 0;
   };

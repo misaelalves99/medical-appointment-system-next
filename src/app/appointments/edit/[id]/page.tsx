@@ -11,6 +11,12 @@ import { useDoctor } from "../../../hooks/useDoctor";
 import type { AppointmentForm, Option } from "../../../types/AppointmentForm";
 import { AppointmentStatus } from "../../../types/Appointment";
 
+const toLocalDateTimeInputValue = (isoValue: string) => {
+  const date = new Date(isoValue);
+  const offsetMs = date.getTimezoneOffset() * 60 * 1000;
+  return new Date(date.getTime() - offsetMs).toISOString().slice(0, 16);
+};
+
 export default function EditAppointmentPage() {
   const router = useRouter();
   const params = useParams();
@@ -53,7 +59,7 @@ export default function EditAppointmentPage() {
         setFormData({
           patientId: appointment.patientId.toString(),
           doctorId: appointment.doctorId.toString(),
-          appointmentDate: appointment.appointmentDate.slice(0, 16),
+          appointmentDate: toLocalDateTimeInputValue(appointment.appointmentDate),
           status: appointment.status.toString(),
           notes: appointment.notes || "",
         });

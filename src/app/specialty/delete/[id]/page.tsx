@@ -25,7 +25,6 @@ export default function DeleteSpecialtyPage() {
   const handleDelete = () => {
     if (specialty) {
       removeSpecialty(specialty.id);
-      console.log("Especialidade excluída:", specialty);
       router.push("/specialty");
     }
   };

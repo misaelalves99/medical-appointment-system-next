@@ -43,6 +43,20 @@ describe('RegisterPage', () => {
     expect(submit.disabled).toBe(false);
   });
 
+  it('shows a safe error and does not route when registration is rejected', async () => {
+    mockRegister.mockResolvedValue(false);
+
+    render(<RegisterPage />);
+
+    fireEvent.change(screen.getByLabelText('Nome completo'), { target: { value: 'Pessoa Teste' } });
+    fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: 'invalid@example.com' } });
+    fireEvent.change(screen.getByLabelText('Senha'), { target: { value: 'SenhaTeste123!' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Registrar' }));
+
+    expect(await screen.findByRole('alert')).toBeInTheDocument();
+    expect(mockPush).not.toHaveBeenCalled();
+  });
+
   it('submits normalized registration data and routes on successful registration', async () => {
     mockRegister.mockResolvedValue(true);
 

@@ -40,6 +40,19 @@ describe('LoginPage', () => {
     expect(submit.disabled).toBe(false);
   });
 
+  it('shows a safe error and does not route when authentication is rejected', async () => {
+    mockLogin.mockResolvedValue(false);
+
+    render(<LoginPage />);
+
+    fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: 'invalid@example.com' } });
+    fireEvent.change(screen.getByLabelText('Senha'), { target: { value: 'invalid-password' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Entrar' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Falha na autenticação. Tente novamente.');
+    expect(mockPush).not.toHaveBeenCalled();
+  });
+
   it('submits normalized credentials and routes on successful authentication', async () => {
     mockLogin.mockResolvedValue(true);
 
