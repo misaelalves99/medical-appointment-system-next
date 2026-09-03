@@ -1,101 +1,226 @@
-/* src/pages/Patient/Details/DetailsPatient.module.css */
-
-/* Container principal */
-.patientDetailsContainer {
-  max-width: 500px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #1f2937;
+.workspace {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  color: #162033;
 }
 
-/* Título */
-.patientDetailsContainer h1 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  text-align: center;
-  color: #111827;
-}
-
-/* Imagem de perfil */
-.profileImage {
-  display: block;
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin: 0 auto 1.5rem auto;
-  border: 2px solid #2563eb;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-}
-
-/* Detalhes */
-.patientDetailsContainer p {
-  font-size: 0.95rem;
-  margin-bottom: 0.75rem;
-  line-height: 1.4;
-}
-
-.patientDetailsContainer strong {
-  color: #374151;
-}
-
-/* Botões */
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
-  flex-wrap: wrap;
-}
-
-.actions button {
-  padding: 0.55rem 1.25rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  border-radius: 8px;
-  border: none;
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 22px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: #087f79;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 800;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
 }
 
-/* Botão de edição */
-.actions .edit {
-  background-color: #2563eb;
-  color: #fff;
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
 }
 
-.actions .edit:hover {
-  background-color: #1d4ed8;
+.eyebrow {
+  margin: 0 0 8px;
+  color: #087f79;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.header h1,
+.notFoundCard h1 {
+  margin: 0;
+  color: #101828;
+  font-size: clamp(1.75rem, 3vw, 2.15rem);
+  line-height: 1.15;
+}
+
+.description {
+  margin: 10px 0 0;
+  color: #667085;
+  line-height: 1.6;
+}
+
+.detailsCard,
+.notFoundCard {
+  border: 1px solid #e4e7ec;
+  border-radius: 18px;
+  background: #ffffff;
+  padding: 26px;
+  box-shadow: 0 12px 30px rgba(16, 24, 40, 0.05);
+}
+
+.identityHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 26px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #eaecf0;
+}
+
+.identityIcon {
+  display: flex;
+  width: 52px;
+  height: 52px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #e9f9f6;
+  color: #087f79;
+  font-size: 1.25rem;
+}
+
+.identityLabel {
+  margin: 0 0 3px;
+  color: #667085;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.identityHeader h2 {
+  margin: 0;
+  color: #101828;
+  font-size: 1.3rem;
+}
+
+.identityId {
+  margin: 4px 0 0;
+  color: #667085;
+  font-size: 0.86rem;
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin: 0;
+}
+
+.detailItem {
+  min-width: 0;
+  border: 1px solid #eaecf0;
+  border-radius: 12px;
+  background: #fcfcfd;
+  padding: 15px 16px;
+}
+
+.detailItem dt {
+  margin-bottom: 6px;
+  color: #667085;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.detailItem dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: #101828;
+  font-size: 0.96rem;
+  font-weight: 700;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.editButton,
+.secondaryButton {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 11px;
+  padding: 0 18px;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 150ms ease, background 150ms ease, box-shadow 150ms ease;
+}
+
+.editButton {
+  background: linear-gradient(135deg, #10b981, #0891b2);
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(8, 145, 178, 0.16);
+}
+
+.secondaryButton {
+  background: #f2f4f7;
+  color: #344054;
+}
+
+.editButton:hover,
+.secondaryButton:hover {
   transform: translateY(-1px);
 }
 
-/* Botão de voltar */
-.actions .back {
-  background-color: #e5e7eb;
-  color: #374151;
+.notFoundCard p:not(.eyebrow) {
+  margin: 12px 0 20px;
+  color: #667085;
 }
 
-.actions .back:hover {
-  background-color: #d1d5db;
-  transform: translateY(-1px);
+.backLink:focus-visible,
+.editButton:focus-visible,
+.secondaryButton:focus-visible {
+  outline: 3px solid rgba(8, 145, 178, 0.28);
+  outline-offset: 3px;
 }
 
-/* Responsividade */
-@media (max-width: 480px) {
-  .patientDetailsContainer {
-    padding: 1.5rem;
-  }
-
-  .actions {
+@media (max-width: 720px) {
+  .header {
+    align-items: stretch;
     flex-direction: column;
   }
 
-  .actions button {
+  .detailsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .fullWidth {
+    grid-column: auto;
+  }
+
+  .editButton {
     width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .detailsCard,
+  .notFoundCard {
+    padding: 20px 16px;
+  }
+
+  .secondaryButton {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editButton,
+  .secondaryButton {
+    transition: none;
+  }
+
+  .editButton:hover,
+  .secondaryButton:hover {
+    transform: none;
   }
 }

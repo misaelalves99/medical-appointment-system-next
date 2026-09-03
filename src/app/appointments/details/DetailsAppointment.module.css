@@ -1,114 +1,298 @@
-/* src/pages/Appointment/Details/DetailsAppointment.module.css */
-
-/* Container principal */
-.appointmentDetailsContainer {
-  max-width: 500px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #1f2937;
+.workspace {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  display: grid;
+  gap: 1.5rem;
 }
 
-/* Título */
-.appointmentDetailsContainer h1 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  text-align: center;
-  color: #111827;
-}
-
-/* Linhas de informação */
-.infoRow {
+.header {
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #e5e7eb;
+  gap: 1.5rem;
 }
 
-.infoLabel {
-  font-weight: 600;
-  color: #374151;
+.eyebrow {
+  margin: 0 0 0.35rem;
+  color: #0f766e;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
 }
 
-.infoValue {
-  color: #1f2937;
+.title {
+  margin: 0;
+  color: #0f172a;
+  font-size: clamp(1.75rem, 3vw, 2.35rem);
+  line-height: 1.1;
 }
 
-/* Observações */
+.description {
+  max-width: 680px;
+  margin: 0.65rem 0 0;
+  color: #64748b;
+  font-size: 0.98rem;
+  line-height: 1.65;
+}
+
+.backButton,
+.backAction,
+.editAction {
+  min-height: 44px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  padding: 0.7rem 1rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.backButton,
+.backAction {
+  border-color: #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+}
+
+.backButton:hover,
+.backAction:hover {
+  border-color: #94a3b8;
+  background: #f8fafc;
+}
+
+.detailsCard,
+.emptyCard {
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+}
+
+.detailsCard {
+  overflow: hidden;
+}
+
+.emptyCard {
+  max-width: 680px;
+  padding: 1.5rem;
+}
+
+.emptyText {
+  margin: 0.75rem 0 1.25rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.35rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  background: linear-gradient(135deg, #f0fdfa 0%, #f8fafc 70%);
+}
+
+.cardLabel {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.cardTitle {
+  margin: 0.2rem 0 0;
+  color: #0f172a;
+  font-size: 1.25rem;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.statusScheduled {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.statusConfirmed {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.statusCancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.statusCompleted {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.statusUnknown {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0 1.5rem;
+}
+
+.detailItem {
+  min-width: 0;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.detailItem:nth-child(odd) {
+  padding-right: 1.5rem;
+}
+
+.detailItem:nth-child(even) {
+  padding-left: 1.5rem;
+  border-left: 1px solid #e2e8f0;
+}
+
+.detailLabel {
+  margin: 0 0 0.35rem;
+  color: #64748b;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.detailValue {
+  margin: 0;
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
 .notes {
-  margin-top: 1rem;
-  padding: 0.75rem;
-  background-color: #f9fafb;
-  border-left: 4px solid #2563eb;
-  border-radius: 4px;
-  font-size: 0.95rem;
-  color: #1f2937;
+  margin: 1.5rem;
+  padding: 1rem 1.1rem;
+  border-left: 4px solid #0d9488;
+  border-radius: 8px;
+  background: #f8fafc;
 }
 
-/* Botões */
+.notesTitle {
+  margin: 0;
+  color: #334155;
+  font-size: 0.9rem;
+}
+
+.notesText {
+  margin: 0.45rem 0 0;
+  color: #475569;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
 .actions {
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
-  margin-top: 1.5rem;
-  flex-wrap: wrap;
+  margin: 0 1.5rem;
+  padding: 1.25rem 0 1.5rem;
+  border-top: 1px solid #e2e8f0;
 }
 
-/* Botões e links dentro de actions */
-.actions button,
-.actions a {
-  padding: 0.55rem 1.25rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  border-radius: 8px;
-  text-align: center;
-  cursor: pointer;
-  border: none;
-  transition: all 0.2s ease-in-out;
+.editAction {
+  background: #0f766e;
+  color: #ffffff;
 }
 
-/* Botão de edição */
-.actions button.edit,
-.actions a.edit {
-  background-color: #2563eb;
-  color: #fff;
-}
-
-.actions button.edit:hover,
-.actions a.edit:hover {
-  background-color: #1d4ed8;
+.editAction:hover {
+  background: #115e59;
   transform: translateY(-1px);
 }
 
-/* Botão de voltar */
-.actions button.back,
-.actions a.back {
-  background-color: #e5e7eb;
-  color: #374151;
+.backButton:focus-visible,
+.backAction:focus-visible,
+.editAction:focus-visible {
+  outline: 3px solid rgba(13, 148, 136, 0.24);
+  outline-offset: 2px;
+  border-color: #0d9488;
+  box-shadow: 0 0 0 1px #0d9488;
 }
 
-.actions button.back:hover,
-.actions a.back:hover {
-  background-color: #d1d5db;
-  transform: translateY(-1px);
-}
-
-/* Responsividade */
-@media (max-width: 480px) {
-  .appointmentDetailsContainer {
-    padding: 1.5rem;
-  }
-
-  .actions {
+@media (max-width: 760px) {
+  .header {
     flex-direction: column;
   }
 
-  .actions button,
-  .actions a {
+  .backButton {
     width: 100%;
+  }
+
+  .detailsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .detailItem:nth-child(odd),
+  .detailItem:nth-child(even) {
+    padding-left: 0;
+    padding-right: 0;
+    border-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .cardHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .detailsGrid {
+    padding: 0 1rem;
+  }
+
+  .notes {
+    margin: 1rem;
+  }
+
+  .actions {
+    margin: 0 1rem;
+    flex-direction: column-reverse;
+  }
+
+  .backAction,
+  .editAction {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backButton,
+  .backAction,
+  .editAction {
+    transition: none;
+  }
+
+  .editAction:hover {
+    transform: none;
   }
 }

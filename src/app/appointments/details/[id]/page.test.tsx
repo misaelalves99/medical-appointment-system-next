@@ -93,8 +93,8 @@ describe("DetailsAppointmentPage", () => {
     expect(screen.getByText("Data e Hora")).toBeInTheDocument();
     expect(screen.getByText(formattedDateTime)).toBeInTheDocument();
     expect(screen.getByText("Status")).toBeInTheDocument();
-    expect(screen.getByText("Agendada")).toBeInTheDocument();
-    expect(screen.getByText(/Observações:/)).toBeInTheDocument();
+    expect(screen.getAllByText("Agendada")).toHaveLength(2);
+    expect(screen.getByRole("heading", { name: "Observações" })).toBeInTheDocument();
     expect(
       screen.getByText(appointmentFixture.notes),
     ).toBeInTheDocument();
@@ -115,7 +115,7 @@ describe("DetailsAppointmentPage", () => {
 
     render(<DetailsAppointmentPage />);
 
-    fireEvent.click(screen.getByText("Editar"));
+    fireEvent.click(screen.getByRole("button", { name: "Editar consulta" }));
 
     expect(pushMock).toHaveBeenCalledWith("/appointments/edit/1");
   });

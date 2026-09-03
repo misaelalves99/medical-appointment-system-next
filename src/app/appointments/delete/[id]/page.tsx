@@ -1,7 +1,5 @@
 // src/app/appointments/delete/[id]/page.tsx
 
-// src/app/appointments/delete/[id]/page.tsx
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -20,7 +18,7 @@ export default function DeleteAppointmentPage() {
 
   useEffect(() => {
     if (idParam) {
-      const found = appointments.find(a => a.id === idParam) || null;
+      const found = appointments.find((item) => item.id === idParam) || null;
       setAppointment(found);
     }
   }, [idParam, appointments]);
@@ -34,30 +32,94 @@ export default function DeleteAppointmentPage() {
 
   const handleCancel = () => router.push("/appointments");
 
-  if (!appointment) return <p>Agendamento não encontrado.</p>;
+  if (!appointment) {
+    return (
+      <section className={styles.workspace} aria-labelledby="delete-not-found-title">
+        <div className={styles.notFoundCard}>
+          <p className={styles.eyebrow}>Agenda clínica</p>
+          <h1 id="delete-not-found-title" className={styles.title}>
+            Excluir Consulta
+          </h1>
+          <p className={styles.notFoundText}>Agendamento não encontrado.</p>
+          <button type="button" className={styles.cancelButton} onClick={handleCancel}>
+            Voltar para consultas
+          </button>
+        </div>
+      </section>
+    );
+  }
 
   const dt = new Date(appointment.appointmentDate);
-  const formattedDate = dt.toLocaleDateString();
-  const formattedTime = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const formattedDate = dt.toLocaleDateString("pt-BR");
+  const formattedTime = dt.toLocaleTimeString("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   return (
-    <div className={styles.container}>
-      <h1>Confirmar Exclusão</h1>
-      <p>
-        Tem certeza de que deseja excluir o agendamento de{" "}
-        <strong>{appointment.patientName}</strong> com{" "}
-        <strong>{appointment.doctorName}</strong> no dia{" "}
-        <strong>{formattedDate}</strong> às <strong>{formattedTime}</strong>?
-      </p>
+    <section className={styles.workspace} aria-labelledby="delete-appointment-title">
+      <header className={styles.header}>
+        <div>
+          <p className={styles.eyebrow}>Agenda clínica</p>
+          <h1 id="delete-appointment-title" className={styles.title}>
+            Excluir Consulta
+          </h1>
+          <p className={styles.description}>
+            Revise os dados abaixo antes de remover definitivamente este agendamento.
+          </p>
+        </div>
 
-      <div className={styles.actions}>
-        <button onClick={handleDelete} className={styles.deleteButton}>
-          Excluir
+        <button type="button" className={styles.backButton} onClick={handleCancel}>
+          Voltar para consultas
         </button>
-        <button onClick={handleCancel} className={styles.cancelButton}>
-          Cancelar
-        </button>
+      </header>
+
+      <div className={styles.dangerCard}>
+        <div className={styles.warningHeader}>
+          <div className={styles.warningIcon} aria-hidden="true">!</div>
+          <div>
+            <h2 className={styles.warningTitle}>Confirmar exclusão</h2>
+            <p className={styles.warningText}>
+              Esta ação remove a consulta da agenda atual.
+            </p>
+          </div>
+        </div>
+
+        <dl className={styles.summaryGrid}>
+          <div className={styles.summaryItem}>
+            <dt className={styles.summaryLabel}>Paciente</dt>
+            <dd className={styles.summaryValue}>{appointment.patientName}</dd>
+          </div>
+
+          <div className={styles.summaryItem}>
+            <dt className={styles.summaryLabel}>Médico</dt>
+            <dd className={styles.summaryValue}>{appointment.doctorName}</dd>
+          </div>
+
+          <div className={styles.summaryItem}>
+            <dt className={styles.summaryLabel}>Data</dt>
+            <dd className={styles.summaryValue}>{formattedDate}</dd>
+          </div>
+
+          <div className={styles.summaryItem}>
+            <dt className={styles.summaryLabel}>Hora</dt>
+            <dd className={styles.summaryValue}>{formattedTime}</dd>
+          </div>
+        </dl>
+
+        <p className={styles.confirmationText}>
+          Tem certeza de que deseja excluir esta consulta?
+        </p>
+
+        <div className={styles.actions}>
+          <button type="button" onClick={handleCancel} className={styles.cancelButton}>
+            Cancelar
+          </button>
+          <button type="button" onClick={handleDelete} className={styles.deleteButton}>
+            Excluir consulta
+          </button>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

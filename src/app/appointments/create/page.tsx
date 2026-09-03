@@ -25,8 +25,15 @@ export default function CreateAppointmentPage() {
     notes: "",
   });
 
-  const patientOptions: Option[] = patients.map(p => ({ value: p.id.toString(), label: p.name }));
-  const doctorOptions: Option[] = doctors.map(d => ({ value: d.id.toString(), label: d.name }));
+  const patientOptions: Option[] = patients.map((patient) => ({
+    value: patient.id.toString(),
+    label: patient.name,
+  }));
+
+  const doctorOptions: Option[] = doctors.map((doctor) => ({
+    value: doctor.id.toString(),
+    label: doctor.name,
+  }));
 
   const statusOptions: Option[] = [
     { value: AppointmentStatus.Scheduled.toString(), label: "Agendada" },
@@ -36,14 +43,14 @@ export default function CreateAppointmentPage() {
   ];
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value } = event.target;
+    setFormData((previous) => ({ ...previous, [name]: value }));
   };
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
 
     addAppointment({
       patientId: Number(formData.patientId),
@@ -57,101 +64,170 @@ export default function CreateAppointmentPage() {
   };
 
   return (
-    <div className={styles.createAppointmentContainer}>
-      <h1 className={styles.title}>Cadastrar Consulta</h1>
-      <form onSubmit={handleSubmit} className={styles.form}>
-
-        {/* Paciente */}
-        <div className={styles.formGroup}>
-          <label htmlFor="patientId" className={styles.formLabel}>Paciente</label>
-          <select
-            id="patientId"
-            name="patientId"
-            value={formData.patientId}
-            onChange={handleChange}
-            required
-            className={styles.formSelect}
-          >
-            <option value="">-- Selecione o paciente --</option>
-            {patientOptions.map(p => (
-              <option key={p.value} value={p.value}>{p.label}</option>
-            ))}
-          </select>
+    <section className={styles.workspace} aria-labelledby="create-appointment-title">
+      <header className={styles.header}>
+        <div>
+          <p className={styles.eyebrow}>Agenda clínica</p>
+          <h1 id="create-appointment-title" className={styles.title}>
+            Cadastrar Consulta
+          </h1>
+          <p className={styles.description}>
+            Registre paciente, médico, data, status e observações da nova consulta.
+          </p>
         </div>
 
-        {/* Médico */}
-        <div className={styles.formGroup}>
-          <label htmlFor="doctorId" className={styles.formLabel}>Médico</label>
-          <select
-            id="doctorId"
-            name="doctorId"
-            value={formData.doctorId}
-            onChange={handleChange}
-            required
-            className={styles.formSelect}
-          >
-            <option value="">-- Selecione o médico --</option>
-            {doctorOptions.map(d => (
-              <option key={d.value} value={d.value}>{d.label}</option>
-            ))}
-          </select>
+        <button
+          type="button"
+          className={styles.backButton}
+          onClick={() => router.push("/appointments")}
+        >
+          Voltar para consultas
+        </button>
+      </header>
+
+      <div className={styles.formCard}>
+        <div className={styles.formIntro}>
+          <h2 className={styles.formTitle}>Dados da consulta</h2>
+          <p id="create-required-guidance" className={styles.formGuidance}>
+            Campos marcados com * são obrigatórios.
+          </p>
         </div>
 
-        {/* Data e hora */}
-        <div className={styles.formGroup}>
-          <label htmlFor="appointmentDate" className={styles.formLabel}>Data da Consulta</label>
-          <input
-            type="datetime-local"
-            id="appointmentDate"
-            name="appointmentDate"
-            value={formData.appointmentDate}
-            onChange={handleChange}
-            required
-            className={styles.formInput}
-          />
-        </div>
+        <form
+          onSubmit={handleSubmit}
+          className={styles.form}
+          aria-describedby="create-required-guidance"
+        >
+          <div className={styles.formGrid}>
+            <div className={styles.formGroup}>
+              <label htmlFor="patientId" className={styles.formLabel}>
+                Paciente <span aria-hidden="true" className={styles.requiredMark}>*</span>
+              </label>
+              <select
+                id="patientId"
+                name="patientId"
+                value={formData.patientId}
+                onChange={handleChange}
+                required
+                aria-describedby="patientId-help"
+                className={styles.formSelect}
+              >
+                <option value="">-- Selecione o paciente --</option>
+                {patientOptions.map((patient) => (
+                  <option key={patient.value} value={patient.value}>
+                    {patient.label}
+                  </option>
+                ))}
+              </select>
+              <span id="patientId-help" className={styles.fieldHint}>
+                Escolha um paciente cadastrado.
+              </span>
+            </div>
 
-        {/* Status */}
-        <div className={styles.formGroup}>
-          <label htmlFor="status" className={styles.formLabel}>Status</label>
-          <select
-            id="status"
-            name="status"
-            value={formData.status}
-            onChange={handleChange}
-            required
-            className={styles.formSelect}
-          >
-            {statusOptions.map(s => (
-              <option key={s.value} value={s.value}>{s.label}</option>
-            ))}
-          </select>
-        </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="doctorId" className={styles.formLabel}>
+                Médico <span aria-hidden="true" className={styles.requiredMark}>*</span>
+              </label>
+              <select
+                id="doctorId"
+                name="doctorId"
+                value={formData.doctorId}
+                onChange={handleChange}
+                required
+                aria-describedby="doctorId-help"
+                className={styles.formSelect}
+              >
+                <option value="">-- Selecione o médico --</option>
+                {doctorOptions.map((doctor) => (
+                  <option key={doctor.value} value={doctor.value}>
+                    {doctor.label}
+                  </option>
+                ))}
+              </select>
+              <span id="doctorId-help" className={styles.fieldHint}>
+                Escolha o profissional responsável.
+              </span>
+            </div>
 
-        {/* Observações */}
-        <div className={styles.formGroup}>
-          <label htmlFor="notes" className={styles.formLabel}>Observações</label>
-          <textarea
-            id="notes"
-            name="notes"
-            rows={4}
-            value={formData.notes}
-            onChange={handleChange}
-            className={styles.formTextarea}
-          />
-        </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="appointmentDate" className={styles.formLabel}>
+                Data da Consulta <span aria-hidden="true" className={styles.requiredMark}>*</span>
+              </label>
+              <input
+                type="datetime-local"
+                id="appointmentDate"
+                name="appointmentDate"
+                value={formData.appointmentDate}
+                onChange={handleChange}
+                required
+                aria-describedby="appointmentDate-help"
+                className={styles.formInput}
+              />
+              <span id="appointmentDate-help" className={styles.fieldHint}>
+                Informe a data e o horário previstos.
+              </span>
+            </div>
 
-        <div className={styles.formActions}>
-          <button type="submit" className={`${styles.formButton} ${styles.formSubmit}`}>Salvar</button>
-          <button
-            type="button"
-            className={`${styles.formButton} ${styles.formCancel}`}
-            onClick={() => router.push("/appointments")}
-          >
-            Cancelar
-          </button>
-        </div>
-      </form>
-    </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="status" className={styles.formLabel}>
+                Status <span aria-hidden="true" className={styles.requiredMark}>*</span>
+              </label>
+              <select
+                id="status"
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+                required
+                aria-describedby="status-help"
+                className={styles.formSelect}
+              >
+                {statusOptions.map((status) => (
+                  <option key={status.value} value={status.value}>
+                    {status.label}
+                  </option>
+                ))}
+              </select>
+              <span id="status-help" className={styles.fieldHint}>
+                Defina o estado atual da consulta.
+              </span>
+            </div>
+
+            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+              <label htmlFor="notes" className={styles.formLabel}>
+                Observações
+              </label>
+              <textarea
+                id="notes"
+                name="notes"
+                rows={4}
+                value={formData.notes}
+                onChange={handleChange}
+                aria-describedby="notes-help"
+                className={styles.formTextarea}
+              />
+              <span id="notes-help" className={styles.fieldHint}>
+                Campo opcional para informações administrativas relevantes.
+              </span>
+            </div>
+          </div>
+
+          <div className={styles.formActions}>
+            <button
+              type="button"
+              className={`${styles.formButton} ${styles.formCancel}`}
+              onClick={() => router.push("/appointments")}
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className={`${styles.formButton} ${styles.formSubmit}`}
+            >
+              Salvar
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
   );
 }

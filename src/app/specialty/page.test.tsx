@@ -1,88 +1,107 @@
-// src/app/specialty/page.test.tsx
-
-import { render, screen, fireEvent } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import SpecialtyList from "./page";
 import { useSpecialty } from "../hooks/useSpecialty";
-import { useRouter } from "next/navigation";
-
-jest.mock("next/navigation", () => ({
-  useRouter: jest.fn(),
-}));
 
 jest.mock("../hooks/useSpecialty", () => ({
   useSpecialty: jest.fn(),
 }));
 
 describe("SpecialtyList", () => {
-  const pushMock = jest.fn();
+  const useSpecialtyMock = useSpecialty as jest.Mock;
 
   beforeEach(() => {
-    (useRouter as jest.Mock).mockReturnValue({ push: pushMock });
-
-    (useSpecialty as jest.Mock).mockReturnValue({
+    useSpecialtyMock.mockReturnValue({
       specialties: [
         { id: 1, name: "Cardiologia", isActive: true },
         { id: 2, name: "Dermatologia", isActive: true },
       ],
     });
-
-    pushMock.mockClear();
   });
 
-  it("deve renderizar a lista de especialidades", () => {
+  it("renderiza o workspace e a lista de especialidades", () => {
     render(<SpecialtyList />);
-    expect(screen.getByText("Especialidades")).toBeInTheDocument();
+
+    expect(
+      screen.getByRole("heading", { name: /gerenciamento de especialidades/i })
+    ).toBeInTheDocument();
     expect(screen.getByText("Cardiologia")).toBeInTheDocument();
     expect(screen.getByText("Dermatologia")).toBeInTheDocument();
+    expect(screen.getByText("2 resultados")).toBeInTheDocument();
   });
 
-  it("deve navegar para a página de criação ao clicar em 'Nova Especialidade'", () => {
+  it("expõe a ação de criação pela rota preservada", () => {
     render(<SpecialtyList />);
-    fireEvent.click(screen.getByText("Nova Especialidade"));
-    expect(pushMock).toHaveBeenCalledWith("/specialty/create");
+
+    expect(
+      screen.getByRole("link", { name: /nova especialidade/i })
+    ).toHaveAttribute("href", "/specialty/create");
   });
 
-  it("deve filtrar especialidades pelo nome", () => {
+  it("filtra especialidades pelo nome", () => {
     render(<SpecialtyList />);
-    fireEvent.change(screen.getByLabelText("Pesquisar especialidades"), {
-      target: { value: "Cardio" },
-    });
+
+    fireEvent.change(
+      screen.getByRole("searchbox", { name: /pesquisar especialidades/i }),
+      { target: { value: "Cardio" } }
+    );
+
     expect(screen.getByText("Cardiologia")).toBeInTheDocument();
     expect(screen.queryByText("Dermatologia")).not.toBeInTheDocument();
+    expect(screen.getByText("1 resultado")).toBeInTheDocument();
   });
 
-  it("deve filtrar especialidades pelo ID", () => {
+  it("filtra especialidades pelo ID", () => {
     render(<SpecialtyList />);
-    fireEvent.change(screen.getByLabelText("Pesquisar especialidades"), {
-      target: { value: "2" },
-    });
+
+    fireEvent.change(
+      screen.getByRole("searchbox", { name: /pesquisar especialidades/i }),
+      { target: { value: "2" } }
+    );
+
     expect(screen.getByText("Dermatologia")).toBeInTheDocument();
     expect(screen.queryByText("Cardiologia")).not.toBeInTheDocument();
   });
 
-  it("deve exibir mensagem quando nenhuma especialidade for encontrada", () => {
+  it("diferencia pesquisa sem resultados de domínio vazio", () => {
     render(<SpecialtyList />);
-    fireEvent.change(screen.getByLabelText("Pesquisar especialidades"), {
-      target: { value: "Inexistente" },
-    });
-    expect(screen.getByText("Nenhuma especialidade encontrada.")).toBeInTheDocument();
+
+    fireEvent.change(
+      screen.getByRole("searchbox", { name: /pesquisar especialidades/i }),
+      { target: { value: "Inexistente" } }
+    );
+
+    expect(
+      screen.getByRole("heading", { name: /nenhum resultado encontrado/i })
+    ).toBeInTheDocument();
+    expect(screen.getByText("0 resultados")).toBeInTheDocument();
   });
 
-  it("deve navegar para detalhes da especialidade", () => {
+  it("exibe estado vazio quando não existem especialidades", () => {
+    useSpecialtyMock.mockReturnValue({ specialties: [] });
+
     render(<SpecialtyList />);
-    fireEvent.click(screen.getAllByTitle("Detalhes")[0]);
-    expect(pushMock).toHaveBeenCalledWith("/specialty/details/1");
+
+    expect(
+      screen.getByRole("heading", { name: /nenhuma especialidade cadastrada/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /cadastrar especialidade/i })
+    ).toHaveAttribute("href", "/specialty/create");
   });
 
-  it("deve navegar para edição da especialidade", () => {
+  it("preserva as rotas de detalhes, edição e exclusão com nomes acessíveis", () => {
     render(<SpecialtyList />);
-    fireEvent.click(screen.getAllByTitle("Editar")[0]);
-    expect(pushMock).toHaveBeenCalledWith("/specialty/edit/1");
-  });
 
-  it("deve navegar para a página de exclusão da especialidade", () => {
-    render(<SpecialtyList />);
-    fireEvent.click(screen.getAllByTitle("Excluir")[0]);
-    expect(pushMock).toHaveBeenCalledWith("/specialty/delete/1");
+    expect(
+      screen.getByRole("link", { name: /detalhes da especialidade cardiologia/i })
+    ).toHaveAttribute("href", "/specialty/details/1");
+
+    expect(
+      screen.getByRole("link", { name: /editar especialidade cardiologia/i })
+    ).toHaveAttribute("href", "/specialty/edit/1");
+
+    expect(
+      screen.getByRole("link", { name: /excluir especialidade cardiologia/i })
+    ).toHaveAttribute("href", "/specialty/delete/1");
   });
 });

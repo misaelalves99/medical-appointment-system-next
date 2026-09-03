@@ -1,9 +1,8 @@
-// src/app/specialty/edit/[id]/page.tsx
-
 "use client";
 
-import { useState, useEffect, FormEvent } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { FormEvent, useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { FaArrowLeft, FaSave } from "react-icons/fa";
 import styles from "../EditSpecialty.module.css";
 import { useSpecialty } from "../../../hooks/useSpecialty";
 
@@ -13,20 +12,26 @@ export default function EditSpecialtyPage() {
   const { id } = params as { id: string };
   const { specialties, updateSpecialty } = useSpecialty();
 
-  const specialty = specialties.find((s) => s.id === Number(id));
+  const specialty = specialties.find((item) => item.id === Number(id));
 
   const [name, setName] = useState(specialty?.name || "");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (specialty) setName(specialty.name);
+    if (specialty) {
+      setName(specialty.name);
+    }
   }, [specialty]);
 
   if (!specialty) {
     return (
-      <div className={styles.container}>
-        <p>Especialidade não encontrada.</p>
-        <div className={styles.actions}>
+      <section className={styles.workspace} aria-labelledby="specialty-not-found-title">
+        <div className={styles.notFoundCard}>
+          <p className={styles.eyebrow}>Catálogo clínico</p>
+          <h1 id="specialty-not-found-title">Especialidade não encontrada.</h1>
+          <p>
+            O registro solicitado não está disponível no catálogo atual.
+          </p>
           <button
             type="button"
             className={styles.buttonBack}
@@ -35,26 +40,52 @@ export default function EditSpecialtyPage() {
             Voltar
           </button>
         </div>
-      </div>
+      </section>
     );
   }
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    if (name.trim() === "") {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const normalizedName = name.trim();
+
+    if (!normalizedName) {
       setError("O nome da especialidade é obrigatório.");
       return;
     }
+
     setError(null);
-    updateSpecialty(specialty.id, name.trim());
+    updateSpecialty(specialty.id, normalizedName);
     router.push("/specialty");
   };
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Editar Especialidade</h1>
+    <section className={styles.workspace} aria-labelledby="edit-specialty-title">
+      <button
+        type="button"
+        className={styles.backLink}
+        onClick={() => router.push("/specialty")}
+      >
+        <FaArrowLeft aria-hidden="true" />
+        Voltar
+      </button>
 
-      <form className={styles.form} onSubmit={handleSubmit}>
+      <header className={styles.header}>
+        <p className={styles.eyebrow}>Catálogo clínico</p>
+        <h1 id="edit-specialty-title" className={styles.title}>
+          Editar Especialidade
+        </h1>
+        <p className={styles.description}>
+          Atualize o nome utilizado para identificar esta especialidade no sistema.
+        </p>
+      </header>
+
+      <form className={styles.formCard} onSubmit={handleSubmit}>
+        <div className={styles.identity}>
+          <span>Registro</span>
+          <strong>#{specialty.id}</strong>
+        </div>
+
         <div className={styles.formGroup}>
           <label className={styles.formLabel} htmlFor="specialtyName">
             Nome da Especialidade:
@@ -64,14 +95,25 @@ export default function EditSpecialtyPage() {
             type="text"
             className={styles.formInput}
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(event) => setName(event.target.value)}
+            aria-describedby={error ? "specialty-name-error" : undefined}
+            aria-invalid={error ? true : undefined}
             required
           />
-          {error && <span className={styles.textDanger}>{error}</span>}
+          {error && (
+            <span
+              id="specialty-name-error"
+              className={styles.textDanger}
+              role="alert"
+            >
+              {error}
+            </span>
+          )}
         </div>
 
         <div className={styles.actions}>
           <button type="submit" className={styles.buttonSave}>
+            <FaSave aria-hidden="true" />
             Salvar Alterações
           </button>
           <button
@@ -79,10 +121,10 @@ export default function EditSpecialtyPage() {
             className={styles.buttonBack}
             onClick={() => router.push("/specialty")}
           >
-            Voltar
+            Cancelar
           </button>
         </div>
       </form>
-    </div>
+    </section>
   );
 }

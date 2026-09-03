@@ -48,7 +48,7 @@ describe("DeleteDoctorPage", () => {
   it("renderiza corretamente os dados do médico", () => {
     render(<DeleteDoctorPage />);
     expect(screen.getByText(/confirmar exclusão/i)).toBeInTheDocument();
-    expect(screen.getByText(/dr\. teste/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/dr\. teste/i).length).toBeGreaterThan(0);
   });
 
   it("chama removeDoctor e router.push ao clicar em Excluir", async () => {

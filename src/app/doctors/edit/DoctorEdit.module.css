@@ -1,114 +1,235 @@
-.container {
-  max-width: 400px;
-  margin: 2rem auto;
-  padding: 1.75rem 1.5rem;
-  background-color: #fff;
+.workspace {
+  display: grid;
+  gap: 22px;
+  width: min(100%, 1040px);
+  margin: 0 auto;
+}
+
+.backLink {
+  justify-self: start;
+  color: #0f766e;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: #0f766e;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.header h1,
+.header p,
+.formHeading h2,
+.formHeading p,
+.notFound h1,
+.notFound p {
+  margin-top: 0;
+}
+
+.header h1,
+.notFound h1 {
+  margin-bottom: 8px;
+  color: #163334;
+  font-size: clamp(1.6rem, 2.4vw, 2.15rem);
+}
+
+.header > p:last-child,
+.notFound > p:not(.eyebrow) {
+  margin-bottom: 0;
+  color: #607576;
+  line-height: 1.6;
+}
+
+.formCard,
+.notFound {
+  border: 1px solid #dce7e6;
+  border-radius: 16px;
+  background: #ffffff;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(22, 51, 52, 0.06);
+}
+
+.formHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e5eded;
+}
+
+.formHeading h2 {
+  margin-bottom: 6px;
+  color: #294849;
+  font-size: 1.1rem;
+}
+
+.formHeading p {
+  margin-bottom: 0;
+  color: #687b7c;
+  line-height: 1.5;
+}
+
+.requiredGuide {
+  flex: 0 0 auto;
+  font-size: 0.82rem;
+}
+
+.requiredGuide span,
+.field label span {
+  color: #b42318;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  padding: 24px 0;
+}
+
+.field {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+}
+
+.field label {
+  color: #304c4d;
+  font-size: 0.9rem;
+  font-weight: 750;
+}
+
+.field input:not([type="checkbox"]),
+.field select {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid #bfd0cf;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #163334;
+  padding: 0 12px;
+  font: inherit;
+}
+
+.field small {
+  color: #718384;
+  line-height: 1.45;
+}
+
+.checkboxField {
+  align-content: center;
+  border: 1px solid #dce7e6;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #1f2937;
-}
-
-.title {
-  font-size: 1.6rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 1.25rem;
-  color: #111827;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
-.formGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  font-weight: 600;
-  font-size: 0.925rem;
-  color: #374151;
-}
-
-.formInput,
-.formSelect {
-  padding: 0.5rem 0.65rem;
-  font-size: 0.925rem;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  transition: all 0.15s ease;
-}
-
-.formInput:focus,
-.formSelect:focus {
-  outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  background: #f8fbfb;
+  padding: 16px;
 }
 
 .checkboxLabel {
-  display: flex;
-  flex-direction: row;
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-}
-
-.checkboxInput {
-  transform: scale(1.2);
+  gap: 10px;
   cursor: pointer;
 }
 
-.buttonGroup {
+.checkboxLabel input {
+  width: 18px;
+  height: 18px;
+  accent-color: #0f766e;
+}
+
+.actions {
   display: flex;
-  gap: 0.75rem;
-  margin-top: 0.75rem;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 20px;
+  border-top: 1px solid #e5eded;
 }
 
-.buttonSubmit {
-  flex: 1;
-  padding: 0.5rem 1.15rem;
-  font-size: 0.925rem;
-  font-weight: 600;
-  border-radius: 8px;
-  border: none;
-  background-color: #2563eb;
-  color: #fff;
+.primaryAction,
+.secondaryAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border-radius: 10px;
+  padding: 0 18px;
+  font: inherit;
+  font-weight: 750;
+  text-decoration: none;
   cursor: pointer;
-  transition: all 0.15s ease-in-out;
 }
 
-.buttonSubmit:hover {
-  background-color: #1d4ed8;
-  transform: translateY(-1px);
+.primaryAction {
+  border: 1px solid #0f766e;
+  background: #0f766e;
+  color: #ffffff;
 }
 
-.buttonCancel {
-  flex: 1;
-  padding: 0.5rem 1.15rem;
-  font-size: 0.925rem;
-  font-weight: 600;
-  border-radius: 8px;
-  border: none;
-  background-color: #e5e7eb;
-  color: #374151;
-  cursor: pointer;
-  transition: all 0.15s ease-in-out;
+.secondaryAction {
+  border: 1px solid #d5dfdf;
+  background: #f5f8f8;
+  color: #304c4d;
 }
 
-.buttonCancel:hover {
-  background-color: #d1d5db;
-  transform: translateY(-1px);
+.notFound {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  width: min(100%, 720px);
+  margin: 0 auto;
+}
+
+.notFound .primaryAction {
+  margin-top: 8px;
+}
+
+.backLink:focus-visible,
+.primaryAction:focus-visible,
+.secondaryAction:focus-visible,
+.field input:focus-visible,
+.field select:focus-visible {
+  outline: 3px solid rgba(15, 118, 110, 0.28);
+  outline-offset: 3px;
+}
+
+@media (max-width: 760px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .formHeading {
+    flex-direction: column;
+  }
+
+  .requiredGuide {
+    flex: auto;
+  }
 }
 
 @media (max-width: 480px) {
-  .container {
-    width: 90%;
-    padding: 1.25rem;
+  .formCard,
+  .notFound {
+    padding: 22px 18px;
   }
 
-  .buttonGroup {
-    flex-direction: column;
+  .actions {
+    flex-direction: column-reverse;
+  }
+
+  .primaryAction,
+  .secondaryAction {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .primaryAction,
+  .secondaryAction,
+  .backLink {
+    scroll-behavior: auto;
   }
 }

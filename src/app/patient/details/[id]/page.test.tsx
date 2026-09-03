@@ -61,7 +61,7 @@ describe("DetailsPatientPage", () => {
     const patient = mockPatients.find((p) => p.id === 1)!;
 
     expect(screen.getByText(/Detalhes do Paciente/i)).toBeInTheDocument();
-    expect(screen.getByText(new RegExp(patient.name, "i"))).toBeInTheDocument();
+    expect(screen.getAllByText(new RegExp(patient.name, "i")).length).toBeGreaterThan(0);
     expect(screen.getByText(new RegExp(patient.cpf, "i"))).toBeInTheDocument();
     expect(
       screen.getByText(new RegExp(new Date(patient.dateOfBirth).toLocaleDateString("pt-BR")))

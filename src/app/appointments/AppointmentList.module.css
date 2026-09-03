@@ -1,188 +1,358 @@
-/* src/pages/Appointments/AppointmentList.module.css */
-
-/* Container principal */
-.container {
-  max-width: 950px;
-  margin: 2.5rem auto;
-  padding: 2.5rem;
-  background-color: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #1f2937;
+.workspace {
+  display: grid;
+  gap: 20px;
+  width: 100%;
 }
 
-/* Título */
-.title {
-  font-size: 2rem;
-  font-weight: 700;
-  text-align: center;
-  color: #098996;
-  margin-bottom: 2rem;
-}
-
-/* Ações do topo (botão + input) */
-.actions {
+.workspaceHeader {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.eyebrow,
+.stateEyebrow {
+  margin: 0 0 6px;
+  color: #0f766e;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.workspaceHeader h2 {
+  margin: 0;
+  color: #172033;
+  font-size: clamp(1.4rem, 2vw, 1.9rem);
+}
+
+.description {
+  max-width: 760px;
+  margin: 8px 0 0;
+  color: #64748b;
+  line-height: 1.6;
 }
 
 .createBtn {
-  align-self: flex-start;
-  background: linear-gradient(90deg, #09D696, #09CADB, #098996);
-  color: #fff;
-  padding: 0.75rem 1.5rem;
-  border: none;
+  display: inline-flex;
+  min-height: 44px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 0;
   border-radius: 12px;
-  font-weight: 600;
+  background: linear-gradient(135deg, #10b981, #0891b2);
+  padding: 0 18px;
+  color: #fff;
+  font: inherit;
+  font-weight: 750;
   cursor: pointer;
-  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(8, 145, 178, 0.16);
+  transition: transform 0.16s ease, box-shadow 0.16s ease;
 }
 
 .createBtn:hover {
-  background: linear-gradient(90deg, #098996, #09CADB, #09D696);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(8, 145, 178, 0.2);
 }
 
-/* Input de busca */
+.toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  border: 1px solid #e4ebf1;
+  border-radius: 16px;
+  background: #fff;
+  padding: 16px;
+  box-shadow: 0 8px 26px rgba(15, 23, 42, 0.045);
+}
+
+.searchField {
+  display: grid;
+  width: min(100%, 620px);
+  gap: 7px;
+}
+
+.searchLabel {
+  color: #334155;
+  font-size: 0.8rem;
+  font-weight: 750;
+}
+
+.searchControl {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 14px;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
 .searchInput {
   width: 100%;
-  max-width: 320px;
-  padding: 0.65rem 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 12px;
-  font-size: 0.95rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  min-height: 44px;
+  border: 1px solid #dbe4ea;
+  border-radius: 11px;
+  background: #f8fafc;
+  padding: 0 14px 0 40px;
+  color: #172033;
+  font: inherit;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+}
+
+.searchInput::placeholder {
+  color: #94a3b8;
 }
 
 .searchInput:focus {
+  border-color: #0f766e;
+  background: #fff;
   outline: none;
-  border-color: #09CADB;
-  box-shadow: 0 0 0 3px rgba(9, 202, 219, 0.25);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
 }
 
-/* Tabela de consultas */
+.resultCount {
+  flex: 0 0 auto;
+  padding-bottom: 11px;
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.tablePanel {
+  overflow: hidden;
+  border: 1px solid #e4ebf1;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+}
+
+.tableScroll {
+  width: 100%;
+  overflow-x: auto;
+}
+
 .table {
   width: 100%;
+  min-width: 920px;
   border-collapse: collapse;
-  background-color: #f9fafb;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.03);
+  color: #334155;
 }
 
 .table th,
 .table td {
-  padding: 0.85rem 1.25rem;
+  padding: 15px 16px;
+  border-bottom: 1px solid #edf1f5;
   text-align: left;
+  vertical-align: middle;
 }
 
 .table th {
-  background-color: #e0f7f5;
-  font-weight: 600;
-  color: #098996;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 0.73rem;
+  font-weight: 800;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
 }
 
-.table tr:nth-child(even) {
-  background-color: #ffffff;
+.table td {
+  font-size: 0.88rem;
 }
 
-.table tr:nth-child(odd) {
-  background-color: #f9fafb;
+.table tbody tr {
+  transition: background 0.15s ease;
 }
 
-.table tr:hover {
-  background-color: #d0f0ec;
-  transition: background 0.2s ease;
+.table tbody tr:hover {
+  background: #fbfefd;
 }
 
-/* Coluna de ações */
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.primaryCell {
+  color: #172033;
+  font-weight: 750;
+}
+
+.idBadge {
+  display: inline-flex;
+  min-width: 34px;
+  justify-content: center;
+  border-radius: 8px;
+  background: #f1f5f9;
+  padding: 5px 8px;
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.statusScheduled {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.statusConfirmed {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.statusCancelled {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.statusCompleted {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.actionsHeading {
+  text-align: right !important;
+}
+
 .actionButtons {
   display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 7px;
 }
 
-/* Botões de ação */
-.detailsBtn,
-.editBtn,
-.deleteBtn {
-  padding: 0.5rem 0.9rem;
-  font-size: 0.85rem;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s ease-in-out;
-  color: #fff;
-}
-
-/* Gradientes para detalhes e editar */
-.detailsBtn {
-  background: linear-gradient(90deg, #09CADB, #098996);
-}
-.detailsBtn:hover {
-  background: linear-gradient(90deg, #098996, #09CADB);
-}
-
-.editBtn {
-  background: linear-gradient(90deg, #09D696, #098996);
-}
-.editBtn:hover {
-  background: linear-gradient(90deg, #098996, #09D696);
-}
-
-/* Excluir em vermelho */
-.deleteBtn {
-  background-color: #ef4444;
-}
-.deleteBtn:hover {
-  background-color: #dc2626;
-}
-
-/* Botões de ação com ícones */
 .iconBtn {
+  display: inline-grid;
   width: 36px;
   height: 36px;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  font-size: 1rem;
-  transition: all 0.2s ease;
+  place-items: center;
+  border: 1px solid #dbe4ea;
+  border-radius: 9px;
+  background: #fff;
+  color: #0f766e;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease;
 }
 
 .iconBtn:hover {
-  transform: translateY(-1px) scale(1.1);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  transform: translateY(-1px);
+  border-color: #99d5cf;
+  background: #f0fdfa;
 }
 
-/* Mensagem quando não há resultados */
-.table td[colspan="6"] {
+.deleteBtn {
+  color: #b91c1c;
+}
+
+.deleteBtn:hover {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.createBtn:focus-visible,
+.iconBtn:focus-visible,
+.emptyState button:focus-visible {
+  outline: 3px solid #0f766e;
+  outline-offset: 3px;
+}
+
+.statePanel,
+.emptyState {
+  display: grid;
+  min-height: 240px;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 18px;
+  background: #fff;
+  padding: 28px;
+  color: #64748b;
   text-align: center;
-  padding: 1rem;
-  color: #6b7280;
-  font-style: italic;
 }
 
-/* Responsividade */
-@media (max-width: 768px) {
-  .actions {
+.statePanel strong,
+.emptyState strong {
+  color: #172033;
+  font-size: 1rem;
+}
+
+.emptyState > svg {
+  margin-bottom: 4px;
+  color: #0f766e;
+  font-size: 1.45rem;
+}
+
+.emptyState button {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 10px;
+  background: #0f766e;
+  padding: 0 14px;
+  color: #fff;
+  font: inherit;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+@media (max-width: 820px) {
+  .workspaceHeader,
+  .toolbar {
+    align-items: stretch;
     flex-direction: column;
-    gap: 0.75rem;
   }
 
-  .searchInput {
+  .createBtn {
+    align-self: flex-start;
+  }
+
+  .searchField {
     width: 100%;
   }
 
-  .actionButtons button {
-    display: block;
-    margin-bottom: 0.25rem;
-    width: 100%;
-    text-align: center;
+  .resultCount {
+    padding-bottom: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .workspace {
+    gap: 16px;
+  }
+
+  .workspaceHeader h2 {
+    font-size: 1.35rem;
+  }
+
+  .toolbar {
+    padding: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .createBtn,
+  .table tbody tr,
+  .iconBtn {
+    transition: none;
   }
 }

@@ -1,19 +1,17 @@
-// src/app/doctors/page.tsx
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import styles from "./DoctorList.module.css";
 import { useDoctor } from "../hooks/useDoctor";
 import type { Doctor } from "../types/Doctor";
-
-// Ícones
-import { FaInfoCircle, FaEdit, FaTrash } from "react-icons/fa";
+import { FaInfoCircle, FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 
 export default function DoctorList() {
   const { doctors } = useDoctor();
   const [search, setSearch] = useState("");
-  const router = useRouter();
+
+  const normalizedSearch = search.trim().toLowerCase();
 
   const filteredDoctors: Doctor[] = doctors.filter((doctor: Doctor) =>
     [
@@ -21,79 +19,129 @@ export default function DoctorList() {
       doctor.name,
       doctor.crm,
       doctor.specialty,
+      doctor.email,
+      doctor.phone,
       doctor.isActive ? "Sim" : "Não",
-    ].some((value) => String(value).toLowerCase().includes(search.toLowerCase()))
+    ].some((value) =>
+      String(value).toLowerCase().includes(normalizedSearch)
+    )
   );
 
+  const hasDoctors = doctors.length > 0;
+  const hasResults = filteredDoctors.length > 0;
+
   return (
-    <div className={styles.container}>
-      <h1>Lista de Médicos</h1>
-      <div className={styles.actionsContainer}>
-        <button
-          className={styles.createButton}
-          onClick={() => router.push("/doctors/create")}
-        >
-          Novo Médico
-        </button>
-        <input
-          type="text"
-          placeholder="Pesquisar por ID, Nome, CRM, Especialidade ou Status..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className={styles.searchInput}
-        />
+    <section className={styles.workspace} aria-labelledby="doctor-list-title">
+      <header className={styles.header}>
+        <div>
+          <p className={styles.eyebrow}>Equipe clínica</p>
+          <h1 id="doctor-list-title">Gerenciamento de médicos</h1>
+          <p className={styles.description}>
+            Consulte e mantenha os profissionais disponíveis para atendimento.
+          </p>
+        </div>
+
+        <Link href="/doctors/create" className={styles.primaryAction}>
+          <FaPlus aria-hidden="true" />
+          Novo médico
+        </Link>
+      </header>
+
+      <div className={styles.toolbar}>
+        <div className={styles.searchGroup}>
+          <label htmlFor="doctor-search">Pesquisar médicos</label>
+          <input
+            id="doctor-search"
+            type="search"
+            placeholder="ID, nome, CRM, especialidade, email, telefone ou status"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+        </div>
+
+        <p className={styles.resultCount} aria-live="polite">
+          {filteredDoctors.length} de {doctors.length} médicos
+        </p>
       </div>
 
-      {filteredDoctors.length === 0 ? (
-        <p className={styles.noResults}>Nenhum médico encontrado.</p>
+      {!hasDoctors ? (
+        <div className={styles.emptyState}>
+          <h2>Nenhum médico cadastrado</h2>
+          <p>Cadastre o primeiro profissional para iniciar a equipe clínica.</p>
+          <Link href="/doctors/create" className={styles.emptyAction}>
+            Cadastrar médico
+          </Link>
+        </div>
+      ) : !hasResults ? (
+        <div className={styles.emptyState}>
+          <h2>Nenhum resultado encontrado</h2>
+          <p>Tente ajustar os termos utilizados na pesquisa.</p>
+        </div>
       ) : (
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nome</th>
-              <th>CRM</th>
-              <th>Especialidade</th>
-              <th>Ativo</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredDoctors.map((doctor: Doctor) => (
-              <tr key={doctor.id}>
-                <td>{doctor.id}</td>
-                <td>{doctor.name}</td>
-                <td>{doctor.crm}</td>
-                <td>{doctor.specialty}</td>
-                <td>{doctor.isActive ? "Sim" : "Não"}</td>
-                <td className={styles.actionsColumn}>
-                  <button
-                    className={`${styles.detailsButton} ${styles.iconBtn}`}
-                    onClick={() => router.push(`/doctors/details/${doctor.id}`)}
-                    title="Detalhes"
-                  >
-                    <FaInfoCircle size={16} />
-                  </button>
-                  <button
-                    className={`${styles.editButton} ${styles.iconBtn}`}
-                    onClick={() => router.push(`/doctors/edit/${doctor.id}`)}
-                    title="Editar"
-                  >
-                    <FaEdit size={16} />
-                  </button>
-                  <button
-                    className={`${styles.deleteButton} ${styles.iconBtn}`}
-                    onClick={() => router.push(`/doctors/delete/${doctor.id}`)}
-                    title="Excluir"
-                  >
-                    <FaTrash size={16} />
-                  </button>
-                </td>
+        <div className={styles.tableWrapper}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nome</th>
+                <th scope="col">CRM</th>
+                <th scope="col">Especialidade</th>
+                <th scope="col">Status</th>
+                <th scope="col">Ações</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredDoctors.map((doctor: Doctor) => (
+                <tr key={doctor.id}>
+                  <td>{doctor.id}</td>
+                  <td>
+                    <span className={styles.doctorName}>{doctor.name}</span>
+                  </td>
+                  <td>{doctor.crm}</td>
+                  <td>{doctor.specialty}</td>
+                  <td>
+                    <span
+                      className={`${styles.statusBadge} ${
+                        doctor.isActive ? styles.statusActive : styles.statusInactive
+                      }`}
+                    >
+                      {doctor.isActive ? "Ativo" : "Inativo"}
+                    </span>
+                  </td>
+                  <td>
+                    <div className={styles.actions}>
+                      <Link
+                        href={`/doctors/details/${doctor.id}`}
+                        className={styles.iconAction}
+                        aria-label={`Detalhes do médico ${doctor.name}`}
+                        title="Detalhes"
+                      >
+                        <FaInfoCircle aria-hidden="true" />
+                      </Link>
+                      <Link
+                        href={`/doctors/edit/${doctor.id}`}
+                        className={styles.iconAction}
+                        aria-label={`Editar médico ${doctor.name}`}
+                        title="Editar"
+                      >
+                        <FaEdit aria-hidden="true" />
+                      </Link>
+                      <Link
+                        href={`/doctors/delete/${doctor.id}`}
+                        className={`${styles.iconAction} ${styles.deleteAction}`}
+                        aria-label={`Excluir médico ${doctor.name}`}
+                        title="Excluir"
+                      >
+                        <FaTrash aria-hidden="true" />
+                      </Link>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
-    </div>
+    </section>
   );
 }

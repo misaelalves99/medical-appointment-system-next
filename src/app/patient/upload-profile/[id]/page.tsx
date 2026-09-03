@@ -1,9 +1,8 @@
-// src/app/patient/upload-profile/[id]/page.tsx
-
 "use client";
 
 import { useState, FormEvent } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { FaArrowLeft, FaImage, FaUpload } from "react-icons/fa";
 import styles from "../UploadProfilePicture.module.css";
 import { patientsMock } from "../../../mocks/patients";
 
@@ -13,11 +12,15 @@ export default function UploadProfilePicturePage() {
   const params = useParams();
   const idParam = params?.id ? Number(params.id) : undefined;
 
-  if (!idParam) return <div>Paciente não encontrado</div>;
+  if (!idParam) {
+    return <div className={styles.notFound}>Paciente não encontrado</div>;
+  }
 
-  // Simula encontrar o paciente
-  const patient = patientsMock.find((p) => p.id === idParam);
-  if (!patient) return <div>Paciente não encontrado</div>;
+  const patient = patientsMock.find((item) => item.id === idParam);
+
+  if (!patient) {
+    return <div className={styles.notFound}>Paciente não encontrado</div>;
+  }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -29,7 +32,6 @@ export default function UploadProfilePicturePage() {
     e.preventDefault();
     if (!selectedFile) return;
 
-    // Simula upload
     console.log("Arquivo enviado para paciente:", patient.id, selectedFile);
     alert(`Foto enviada para o paciente ${patient.name}!`);
 
@@ -38,32 +40,78 @@ export default function UploadProfilePicturePage() {
   };
 
   return (
-    <div className={styles.uploadProfileContainer}>
-      <h1>Upload de Foto de Perfil</h1>
-      <p><strong>Paciente:</strong> {patient.name}</p>
-
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
-        <input type="hidden" name="id" value={patient.id} />
-
-        <div>
-          <label htmlFor="profilePicture">Selecionar Foto:</label>
-          <input
-            type="file"
-            id="profilePicture"
-            name="profilePicture"
-            accept="image/*"
-            onChange={handleFileChange}
-          />
-        </div>
-
-        <button type="submit" disabled={!selectedFile}>
-          Enviar Foto
-        </button>
-      </form>
-
-      <button className={styles.back} onClick={() => router.push("/patient")}>
+    <section className={styles.workspace} aria-labelledby="upload-profile-title">
+      <button type="button" className={styles.backLink} onClick={() => router.push("/patient")}>
+        <FaArrowLeft aria-hidden="true" />
         Voltar
       </button>
-    </div>
+
+      <div className={styles.header}>
+        <p className={styles.eyebrow}>Cadastro clínico</p>
+        <h1 id="upload-profile-title">Upload de Foto de Perfil</h1>
+        <p className={styles.description}>
+          Selecione uma imagem para atualizar a representação visual do cadastro.
+        </p>
+      </div>
+
+      <div className={styles.uploadCard}>
+        <div className={styles.patientIdentity}>
+          <div className={styles.patientIcon} aria-hidden="true">
+            <FaImage />
+          </div>
+          <div>
+            <span>Paciente</span>
+            <strong>{patient.name}</strong>
+            <small>Identificador #{patient.id}</small>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} encType="multipart/form-data" className={styles.form}>
+          <input type="hidden" name="id" value={patient.id} />
+
+          <div className={styles.fieldGroup}>
+            <label htmlFor="profilePicture">Selecionar Foto:</label>
+            <p id="profile-picture-help" className={styles.helperText}>
+              Selecione um arquivo de imagem disponível no dispositivo.
+            </p>
+            <input
+              className={styles.fileInput}
+              type="file"
+              id="profilePicture"
+              name="profilePicture"
+              accept="image/*"
+              aria-describedby="profile-picture-help selected-file-status"
+              onChange={handleFileChange}
+            />
+          </div>
+
+          <div id="selected-file-status" className={styles.fileStatus} aria-live="polite">
+            {selectedFile ? (
+              <>Arquivo selecionado: <strong>{selectedFile.name}</strong></>
+            ) : (
+              "Nenhum arquivo selecionado."
+            )}
+          </div>
+
+          <div className={styles.actions}>
+            <button
+              type="button"
+              className={styles.secondaryButton}
+              onClick={() => router.push("/patient")}
+            >
+              Voltar
+            </button>
+            <button
+              type="submit"
+              className={styles.primaryButton}
+              disabled={!selectedFile}
+            >
+              <FaUpload aria-hidden="true" />
+              Enviar Foto
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
   );
 }

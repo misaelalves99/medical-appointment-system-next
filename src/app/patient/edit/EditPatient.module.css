@@ -1,125 +1,222 @@
-/* src/pages/Patient/Edit/EditPatient.module.css */
-
-/* Container principal */
-.editPatientContainer {
-  max-width: 400px;
-  margin: 2rem auto;
-  padding: 1.75rem 1.5rem;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #1f2937;
+.workspace {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  color: #162033;
 }
 
-/* Título */
-.title {
-  font-size: 1.6rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 1.25rem;
-  color: #111827;
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 22px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: #087f79;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 800;
+  cursor: pointer;
 }
 
-/* Formulário */
-.form {
+.header {
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #087f79;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.header h1,
+.notFoundCard h1 {
+  margin: 0;
+  color: #101828;
+  font-size: clamp(1.75rem, 3vw, 2.15rem);
+  line-height: 1.15;
+}
+
+.description {
+  margin: 10px 0 0;
+  color: #667085;
+  line-height: 1.6;
+}
+
+.formCard,
+.notFoundCard {
+  border: 1px solid #e4e7ec;
+  border-radius: 18px;
+  background: #ffffff;
+  padding: 26px;
+  box-shadow: 0 12px 30px rgba(16, 24, 40, 0.05);
+}
+
+.formHeading {
   display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #eaecf0;
 }
 
-/* Grupo de campos */
+.formHeading h2 {
+  margin: 0;
+  color: #101828;
+  font-size: 1.15rem;
+}
+
+.formHeading p {
+  margin: 6px 0 0;
+  color: #667085;
+  font-size: 0.9rem;
+}
+
+.formHeading span,
+.formGroup label span {
+  color: #dc2626;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
 .formGroup {
+  min-width: 0;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 7px;
+  color: #344054;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.formGroup input,
+.formGroup select {
+  width: 100%;
+  min-height: 48px;
+  box-sizing: border-box;
+  border: 1px solid #d0d5dd;
+  border-radius: 11px;
+  background: #ffffff;
+  padding: 0 13px;
+  color: #101828;
+  font: inherit;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.helperText {
+  display: block;
+  margin-top: 6px;
+  color: #667085;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.actions {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #eaecf0;
 }
 
-/* Labels */
-.formLabel {
-  font-weight: 600;
-  font-size: 0.925rem;
-  color: #374151;
-}
-
-/* Inputs e selects */
-.formInput,
-.formSelect {
-  padding: 0.5rem 0.65rem;
-  font-size: 0.925rem;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  transition: all 0.15s ease;
-}
-
-.formInput:focus,
-.formSelect:focus {
-  outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
-}
-
-/* Botões */
-.buttonGroup {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.buttonSubmit {
-  padding: 0.5rem 1.15rem;
-  font-size: 0.925rem;
-  font-weight: 600;
-  border-radius: 8px;
-  border: none;
+.submitButton,
+.cancelButton {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 11px;
+  padding: 0 18px;
+  font: inherit;
+  font-weight: 800;
   cursor: pointer;
-  transition: all 0.15s ease-in-out;
-  background-color: #2563eb;
-  color: #fff;
+  transition: transform 150ms ease, background 150ms ease, box-shadow 150ms ease;
 }
 
-.buttonSubmit:hover {
-  background-color: #1d4ed8;
+.submitButton {
+  background: linear-gradient(135deg, #10b981, #0891b2);
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(8, 145, 178, 0.16);
+}
+
+.cancelButton {
+  background: #f2f4f7;
+  color: #344054;
+}
+
+.submitButton:hover,
+.cancelButton:hover {
   transform: translateY(-1px);
 }
 
-.buttonCancel {
-  padding: 0.5rem 1.15rem;
-  font-size: 0.925rem;
-  font-weight: 600;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.15s ease-in-out;
-  background-color: #e5e7eb;
-  color: #374151;
+.notFoundCard p:not(.eyebrow) {
+  margin: 12px 0 20px;
+  color: #667085;
 }
 
-.buttonCancel:hover {
-  background-color: #d1d5db;
-  transform: translateY(-1px);
+.backLink:focus-visible,
+.formGroup input:focus-visible,
+.formGroup select:focus-visible,
+.submitButton:focus-visible,
+.cancelButton:focus-visible {
+  outline: 3px solid rgba(8, 145, 178, 0.28);
+  outline-offset: 3px;
 }
 
-/* Mensagem de paciente não encontrado */
-.notFoundMessage {
-  text-align: center;
-  margin: 1rem 0;
-  color: #6b7280;
-}
-
-/* Responsividade */
-@media (max-width: 480px) {
-  .editPatientContainer {
-    width: 90%;
-    padding: 1.25rem;
+@media (max-width: 720px) {
+  .formGrid {
+    grid-template-columns: 1fr;
   }
 
-  .buttonGroup {
-    flex-direction: column;
+  .fullWidth {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 520px) {
+  .formCard,
+  .notFoundCard {
+    padding: 20px 16px;
   }
 
-  .buttonSubmit,
-  .buttonCancel {
+  .actions {
+    flex-direction: column-reverse;
+  }
+
+  .submitButton,
+  .cancelButton {
     width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .formGroup input,
+  .formGroup select,
+  .submitButton,
+  .cancelButton {
+    transition: none;
+  }
+
+  .submitButton:hover,
+  .cancelButton:hover {
+    transform: none;
   }
 }

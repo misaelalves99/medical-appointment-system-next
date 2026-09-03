@@ -83,10 +83,10 @@ describe("EditAppointmentPage", () => {
     render(<EditAppointmentPage />);
 
     expect(screen.getByText("Editar Consulta")).toBeInTheDocument();
-    expect((screen.getByLabelText("Paciente") as HTMLSelectElement).value).toBe("11");
-    expect((screen.getByLabelText("Médico") as HTMLSelectElement).value).toBe("21");
+    expect((screen.getByLabelText(/^Paciente/) as HTMLSelectElement).value).toBe("11");
+    expect((screen.getByLabelText(/^M.dico/) as HTMLSelectElement).value).toBe("21");
     expect(screen.getByDisplayValue("2025-08-22T10:00")).toBeInTheDocument();
-    expect((screen.getByLabelText("Status") as HTMLSelectElement).value).toBe(AppointmentStatus.Confirmed.toString());
+    expect((screen.getByLabelText(/^Status/) as HTMLSelectElement).value).toBe(AppointmentStatus.Confirmed.toString());
     expect(screen.getByDisplayValue("Observação inicial")).toBeInTheDocument();
   });
 
@@ -94,9 +94,9 @@ describe("EditAppointmentPage", () => {
     (useParams as jest.Mock).mockReturnValue({ id: "1" });
     render(<EditAppointmentPage />);
 
-    const patientSelect = screen.getByLabelText("Paciente") as HTMLSelectElement;
-    const doctorSelect = screen.getByLabelText("Médico") as HTMLSelectElement;
-    const dateInput = screen.getByLabelText("Data da Consulta") as HTMLInputElement;
+    const patientSelect = screen.getByLabelText(/^Paciente/) as HTMLSelectElement;
+    const doctorSelect = screen.getByLabelText(/^M.dico/) as HTMLSelectElement;
+    const dateInput = screen.getByLabelText(/^Data da Consulta/) as HTMLInputElement;
     const notesInput = screen.getByLabelText("Observações") as HTMLTextAreaElement;
 
     fireEvent.change(patientSelect, { target: { value: "11" } });
@@ -114,9 +114,9 @@ describe("EditAppointmentPage", () => {
     (useParams as jest.Mock).mockReturnValue({ id: "1" });
     render(<EditAppointmentPage />);
 
-    fireEvent.change(screen.getByLabelText("Paciente"), { target: { value: "11" } });
-    fireEvent.change(screen.getByLabelText("Médico"), { target: { value: "21" } });
-    fireEvent.change(screen.getByLabelText("Data da Consulta"), { target: { value: "2025-08-23T14:00" } });
+    fireEvent.change(screen.getByLabelText(/^Paciente/), { target: { value: "11" } });
+    fireEvent.change(screen.getByLabelText(/^M.dico/), { target: { value: "21" } });
+    fireEvent.change(screen.getByLabelText(/^Data da Consulta/), { target: { value: "2025-08-23T14:00" } });
     fireEvent.change(screen.getByLabelText("Observações"), { target: { value: "Nova observação" } });
 
     fireEvent.click(screen.getByText("Salvar"));
@@ -146,7 +146,7 @@ describe("EditAppointmentPage", () => {
 
     render(<EditAppointmentPage />);
 
-    expect((screen.getByLabelText("Paciente") as HTMLSelectElement).value).toBe("11");
-    expect((screen.getByLabelText("Médico") as HTMLSelectElement).value).toBe("21");
+    expect((screen.getByLabelText(/^Paciente/) as HTMLSelectElement).value).toBe("11");
+    expect((screen.getByLabelText(/^M.dico/) as HTMLSelectElement).value).toBe("21");
   });
 });

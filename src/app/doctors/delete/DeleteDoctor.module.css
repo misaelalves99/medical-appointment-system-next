@@ -1,92 +1,154 @@
-/* src/app/doctors/DeleteDoctor.module.css */
+.workspace {
+  display: grid;
+  place-items: start center;
+  width: min(100%, 900px);
+  margin: 0 auto;
+  padding: 3rem 2rem 4rem;
+}
 
-/* Container principal */
-.container {
-  max-width: 450px;
-  margin: 3rem auto;
+.dangerCard {
+  width: min(100%, 680px);
   padding: 2rem;
-  background-color: #ffffff;
+  border: 1px solid #fecaca;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 16px 40px rgba(127, 29, 29, 0.08);
+}
+
+.warningIcon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 1.25rem;
+  border-radius: 14px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 1.35rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  color: #b91c1c;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.dangerCard h1 {
+  margin: 0;
+  color: #7f1d1d;
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.confirmation {
+  margin: 1rem 0 0;
+  color: #475467;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.confirmation strong {
+  color: #7f1d1d;
+}
+
+.warningBox {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border: 1px solid #fecaca;
   border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #1f2937;
+  background: #fff7f7;
+  color: #991b1b;
+  line-height: 1.5;
+}
+
+.identityGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 0;
+  padding: 1.25rem;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.identityGrid div { min-width: 0; }
+
+.identityGrid dt {
+  margin-bottom: 0.35rem;
+  color: #667085;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.identityGrid dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: #102a2a;
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #fee2e2;
+}
+
+.deleteButton,
+.cancelButton {
+  min-height: 46px;
+  padding: 0.75rem 1.15rem;
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.deleteButton {
+  border: 1px solid #b91c1c;
+  background: #b91c1c;
+  color: #fff;
+}
+
+.cancelButton {
+  border: 1px solid #d0d5dd;
+  background: #fff;
+  color: #344054;
+}
+
+.loading {
+  margin: 3rem auto;
+  padding: 1rem 1.25rem;
+  color: #667085;
   text-align: center;
 }
 
-/* Título */
-.container h1 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: #b91c1c; /* Vermelho forte para alerta */
+.deleteButton:focus-visible,
+.cancelButton:focus-visible {
+  outline: 3px solid rgba(185, 28, 28, 0.22);
+  outline-offset: 4px;
 }
 
-/* Mensagem de confirmação */
-.container p {
-  font-size: 1rem;
-  margin-bottom: 2rem;
+@media (max-width: 760px) {
+  .workspace { padding: 2rem 1rem 3rem; }
+  .dangerCard { padding: 1.5rem; }
+  .identityGrid { grid-template-columns: 1fr; }
+  .actions { flex-direction: column-reverse; }
+  .deleteButton,
+  .cancelButton { width: 100%; }
 }
 
-.container strong {
-  color: #b91c1c;
-}
-
-/* Área dos botões */
-.actions {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-/* Botão de exclusão */
-.deleteButton {
-  padding: 0.55rem 1.5rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  color: #fff;
-  background-color: #b91c1c;
-  border: none;
-}
-
-.deleteButton:hover {
-  background-color: #991b1b;
-  transform: translateY(-1px);
-}
-
-/* Botão de cancelamento */
-.cancelButton {
-  padding: 0.55rem 1.5rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  color: #374151;
-  background-color: #e5e7eb;
-  border: none;
-}
-
-.cancelButton:hover {
-  background-color: #d1d5db;
-  transform: translateY(-1px);
-}
-
-/* Responsividade */
-@media (max-width: 480px) {
-  .container {
-    padding: 1.5rem;
-  }
-
-  .actions {
-    flex-direction: column;
-  }
-
+@media (prefers-reduced-motion: reduce) {
   .deleteButton,
   .cancelButton {
-    width: 100%;
+    scroll-behavior: auto;
   }
 }

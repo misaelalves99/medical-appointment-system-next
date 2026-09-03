@@ -22,13 +22,13 @@ export default function LoginPage() {
   const mapError = useMemo(
     () => mapAuthError ?? ((code?: string) => {
       switch (code) {
-        case 'auth/invalid-email': return 'E-mail invÃ¡lido.';
-        case 'auth/user-not-found': return 'UsuÃ¡rio nÃ£o encontrado.';
+        case 'auth/invalid-email': return 'E-mail inválido.';
+        case 'auth/user-not-found': return 'Usuário não encontrado.';
         case 'auth/wrong-password':
         case 'auth/invalid-credential': return 'E-mail ou senha incorretos.';
         case 'auth/too-many-requests': return 'Muitas tentativas. Tente novamente mais tarde.';
-        case 'auth/unauthorized-domain': return 'DomÃ­nio nÃ£o autorizado nas configuraÃ§Ãµes do Firebase.';
-        default: return 'Falha na autenticaÃ§Ã£o. Tente novamente.';
+        case 'auth/unauthorized-domain': return 'Domínio não autorizado nas configurações do Firebase.';
+        default: return 'Falha na autenticação. Tente novamente.';
       }
     }),
     [mapAuthError]
@@ -65,16 +65,16 @@ export default function LoginPage() {
       <div className={styles.imageSide}>
         <div className={styles.overlay}>
           <h2 className={styles.welcomeTitle}>Movendo a empresa para frente</h2>
-          <p className={styles.welcomeText}>Priorizando eficiÃªncia, inovaÃ§Ã£o e confianÃ§a em cada aÃ§Ã£o.</p>
+          <p className={styles.welcomeText}>Priorizando eficiência, inovação e confiança em cada ação.</p>
         </div>
-        <img src="/assets/auth-banner.png" alt="Sistema MÃ©dico" />
+        <img src="/assets/auth-banner.png" alt="Sistema Médico" />
       </div>
 
       <div className={styles.formSide}>
         <h1 className={styles.title}>Login</h1>
-        <p className={styles.subtitle}>Bem-vindo! Entre na sua conta ou registre-se para comeÃ§ar.</p>
+        <p className={styles.subtitle}>Bem-vindo! Entre na sua conta ou registre-se para começar.</p>
 
-        {errorMsg && <div className={styles.error}>{errorMsg}</div>}
+        {errorMsg && <div className={styles.error} role="alert" aria-live="polite">{errorMsg}</div>}
 
         <form onSubmit={handleLogin} className={styles.form} noValidate>
           <input
@@ -99,7 +99,7 @@ export default function LoginPage() {
             aria-label="Senha"
           />
           <button type="submit" className={styles.btnPrimary} disabled={disabled}>
-            {submitting ? 'Entrandoâ€¦' : 'Entrar'}
+            {submitting ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
 
@@ -111,7 +111,7 @@ export default function LoginPage() {
         </div>
 
         <p className={styles.text}>
-          NÃ£o tem uma conta? <Link href="/auth/register" className={styles.link}>Registre-se</Link>
+          Não tem uma conta? <Link href="/auth/register" className={styles.link}>Registre-se</Link>
         </p>
       </div>
     </div>

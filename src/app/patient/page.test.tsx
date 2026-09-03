@@ -1,96 +1,130 @@
-// src/app/patient/page.test.tsx
-
-import { render, screen, fireEvent } from "@testing-library/react";
-import PatientIndex from "./page";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { useRouter } from "next/navigation";
+import { usePatient } from "../hooks/usePatient";
+import PatientIndex from "./page";
 
-// Mock do Next.js router
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
 }));
 
-// Mock do hook usePatient
-const mockPatients = [
+jest.mock("../hooks/usePatient", () => ({
+  usePatient: jest.fn(),
+}));
+
+const pushMock = jest.fn();
+const mockedUseRouter = useRouter as jest.Mock;
+const mockedUsePatient = usePatient as jest.Mock;
+
+const patients = [
   {
     id: 1,
     name: "Carlos Oliveira",
-    cpf: "123.456.789-00",
-    phone: "3333-3333",
+    cpf: "111.111.111-11",
+    dateOfBirth: "1990-01-15",
+    gender: "Masculino",
+    phone: "11999999999",
+    email: "carlos@example.com",
+    address: "Rua A",
   },
   {
     id: 2,
-    name: "Maria Lima",
-    cpf: "987.654.321-00",
-    phone: "4444-4444",
+    name: "Mariana Souza",
+    cpf: "222.222.222-22",
+    dateOfBirth: "1988-05-10",
+    gender: "Feminino",
+    phone: "11888888888",
+    email: "mariana@example.com",
+    address: "Rua B",
   },
 ];
 
-jest.mock("../hooks/usePatient", () => ({
-  usePatient: jest.fn(() => ({
-    patients: mockPatients,
-  })),
-}));
+const patientContext = {
+  patients,
+  addPatient: jest.fn(),
+  updatePatient: jest.fn(),
+  deletePatient: jest.fn(),
+  updatePatientProfilePicture: jest.fn(),
+};
 
-describe("PatientIndex Page", () => {
-  let pushMock: jest.Mock;
-
+describe("Patient workspace", () => {
   beforeEach(() => {
-    pushMock = jest.fn();
-    (useRouter as jest.Mock).mockReturnValue({ push: pushMock });
+    pushMock.mockClear();
+    mockedUseRouter.mockReturnValue({ push: pushMock });
+    mockedUsePatient.mockReturnValue(patientContext);
   });
 
-  it("renderiza título e link para cadastrar", () => {
+  it("renders the patient management workspace with provider data", () => {
     render(<PatientIndex />);
-    expect(screen.getByText("Pacientes")).toBeInTheDocument();
-    fireEvent.click(
-      screen.getByRole("button", { name: /Novo Paciente/i })
-    );
+
+    expect(screen.getByRole("heading", { name: "Gerenciamento de pacientes" })).toBeInTheDocument();
+    expect(screen.getByText("Carlos Oliveira")).toBeInTheDocument();
+    expect(screen.getByText("Mariana Souza")).toBeInTheDocument();
+    expect(screen.getByText("2 pacientes encontrados")).toBeInTheDocument();
+  });
+
+  it("renders a labelled search and filters patients by name", () => {
+    render(<PatientIndex />);
+
+    const search = screen.getByRole("searchbox", { name: "Pesquisar pacientes" });
+    fireEvent.change(search, { target: { value: "Mariana" } });
+
+    expect(screen.queryByText("Carlos Oliveira")).not.toBeInTheDocument();
+    expect(screen.getByText("Mariana Souza")).toBeInTheDocument();
+    expect(screen.getByText("1 paciente encontrado")).toBeInTheDocument();
+  });
+
+  it("filters by CPF as part of the patient search contract", () => {
+    render(<PatientIndex />);
+
+    fireEvent.change(screen.getByRole("searchbox", { name: "Pesquisar pacientes" }), {
+      target: { value: "222.222" },
+    });
+
+    expect(screen.queryByText("Carlos Oliveira")).not.toBeInTheDocument();
+    expect(screen.getByText("Mariana Souza")).toBeInTheDocument();
+  });
+
+  it("shows a distinct no-results state for unmatched search", () => {
+    render(<PatientIndex />);
+
+    fireEvent.change(screen.getByRole("searchbox", { name: "Pesquisar pacientes" }), {
+      target: { value: "inexistente" },
+    });
+
+    expect(screen.getByRole("heading", { name: "Nenhum resultado encontrado" })).toBeInTheDocument();
+    expect(screen.getByText("0 pacientes encontrados")).toBeInTheDocument();
+  });
+
+  it("shows the empty-domain state when no patients exist", () => {
+    mockedUsePatient.mockReturnValue({
+      ...patientContext,
+      patients: [],
+    });
+
+    render(<PatientIndex />);
+
+    expect(screen.getByRole("heading", { name: "Nenhum paciente cadastrado" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Cadastrar paciente" })).toBeInTheDocument();
+  });
+
+  it("navigates to patient creation from the primary action", () => {
+    render(<PatientIndex />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Novo paciente" }));
+
     expect(pushMock).toHaveBeenCalledWith("/patient/create");
   });
 
-  it("renderiza pacientes do mock", () => {
+  it("exposes explicit accessible names for row actions and preserves routing", () => {
     render(<PatientIndex />);
-    mockPatients.forEach((p) => {
-      expect(screen.getByText(p.name)).toBeInTheDocument();
-      expect(screen.getByText(p.cpf)).toBeInTheDocument();
-      expect(screen.getByText(p.phone || "-")).toBeInTheDocument();
-    });
-  });
 
-  it("filtra pacientes pelo nome", () => {
-    render(<PatientIndex />);
-    const searchInput = screen.getByPlaceholderText(
-      /Pesquisar por ID, Nome, CPF ou Telefone/i
-    );
-    fireEvent.change(searchInput, { target: { value: mockPatients[0].name } });
+    fireEvent.click(screen.getByRole("button", { name: "Detalhes do paciente 1" }));
+    expect(pushMock).toHaveBeenCalledWith("/patient/details/1");
 
-    expect(screen.getByText(mockPatients[0].name)).toBeInTheDocument();
-    // Outros pacientes não aparecem
-    mockPatients.slice(1).forEach((p) => {
-      expect(screen.queryByText(p.name)).not.toBeInTheDocument();
-    });
-  });
+    fireEvent.click(screen.getByRole("button", { name: "Editar paciente 1" }));
+    expect(pushMock).toHaveBeenCalledWith("/patient/edit/1");
 
-  it("exibe mensagem quando nenhum paciente é encontrado", () => {
-    render(<PatientIndex />);
-    const searchInput = screen.getByPlaceholderText(
-      /Pesquisar por ID, Nome, CPF ou Telefone/i
-    );
-    fireEvent.change(searchInput, { target: { value: "naoexiste" } });
-    expect(screen.getByText("Nenhum paciente encontrado.")).toBeInTheDocument();
-  });
-
-  it("executa router.push ao clicar nos botões de ação", () => {
-    render(<PatientIndex />);
-    const firstPatient = mockPatients[0];
-
-    fireEvent.click(screen.getAllByRole("button", { name: "Detalhes" })[0]);
-    expect(pushMock).toHaveBeenCalledWith(`/patient/details/${firstPatient.id}`);
-
-    fireEvent.click(screen.getAllByRole("button", { name: "Editar" })[0]);
-    expect(pushMock).toHaveBeenCalledWith(`/patient/edit/${firstPatient.id}`);
-
-    fireEvent.click(screen.getAllByRole("button", { name: "Excluir" })[0]);
-    expect(pushMock).toHaveBeenCalledWith(`/patient/delete/${firstPatient.id}`);
+    fireEvent.click(screen.getByRole("button", { name: "Excluir paciente 1" }));
+    expect(pushMock).toHaveBeenCalledWith("/patient/delete/1");
   });
 });

@@ -50,7 +50,7 @@ describe("DeleteAppointmentPage", () => {
     const formattedDate = dt.toLocaleDateString();
     const formattedTime = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    expect(screen.getByText("Confirmar Exclusão")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Confirmar exclusão" })).toBeInTheDocument();
     if (appointment.patientName)
       expect(screen.getByText(new RegExp(appointment.patientName, "i"))).toBeInTheDocument();
     if (appointment.doctorName)
@@ -73,7 +73,7 @@ describe("DeleteAppointmentPage", () => {
     const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
 
     // Simula a exclusão do mock
-    fireEvent.click(screen.getByText("Excluir"));
+    fireEvent.click(screen.getByRole("button", { name: "Excluir consulta" }));
     expect(deleteAppointmentMock).toHaveBeenCalledWith(1);
     expect(pushMock).toHaveBeenCalledWith("/appointments");
 

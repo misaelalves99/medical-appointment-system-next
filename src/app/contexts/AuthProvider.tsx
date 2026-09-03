@@ -15,7 +15,7 @@ import {
   type User as FirebaseUser,
 } from 'firebase/auth';
 
-/** âžœ normaliza o usuÃ¡rio do Firebase */
+/** normaliza o usuário do Firebase */
 const toUser = (u: FirebaseUser): User => ({
   id: u.uid,
   name: u.displayName ?? '',
@@ -23,26 +23,26 @@ const toUser = (u: FirebaseUser): User => ({
   photoURL: u.photoURL ?? undefined,
 });
 
-/** âžœ mensagens amigÃ¡veis de erro */
+/** mensagens amigáveis de erro */
 export const mapAuthError = (code?: string) => {
   switch (code) {
     case 'auth/invalid-email':
-      return 'E-mail invÃ¡lido.';
+      return 'E-mail inválido.';
     case 'auth/user-not-found':
-      return 'UsuÃ¡rio nÃ£o encontrado.';
+      return 'Usuário não encontrado.';
     case 'auth/wrong-password':
     case 'auth/invalid-credential':
       return 'E-mail ou senha incorretos.';
     case 'auth/email-already-in-use':
-      return 'Este e-mail jÃ¡ estÃ¡ cadastrado.';
+      return 'Este e-mail já está cadastrado.';
     case 'auth/weak-password':
       return 'A senha deve ter pelo menos 6 caracteres.';
     case 'auth/too-many-requests':
       return 'Muitas tentativas. Tente novamente mais tarde.';
     case 'auth/unauthorized-domain':
-      return 'DomÃ­nio nÃ£o autorizado nas configuraÃ§Ãµes do Firebase.';
+      return 'Domínio não autorizado nas configurações do Firebase.';
     default:
-      return 'Falha na autenticaÃ§Ã£o. Tente novamente.';
+      return 'Falha na autenticação. Tente novamente.';
   }
 };
 
@@ -61,7 +61,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // observa a sessÃ£o
+  // observa a sessão
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (fb) => {
       if (fb) setUser(toUser(fb));

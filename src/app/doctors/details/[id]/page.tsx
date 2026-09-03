@@ -1,9 +1,8 @@
-// src/app/doctors/details/[id]/page.tsx
-
 "use client";
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { FaArrowLeft, FaPen } from "react-icons/fa6";
 import styles from "../DoctorDetails.module.css";
 import type { Doctor } from "../../../types/Doctor";
 import { useDoctor } from "../../../hooks/useDoctor";
@@ -12,13 +11,12 @@ export default function DoctorDetailsPage() {
   const router = useRouter();
   const params = useParams();
   const idParam = params?.id ? Number(params.id) : undefined;
-
   const { doctors } = useDoctor();
   const [doctor, setDoctor] = useState<Doctor | null>(null);
 
   useEffect(() => {
     if (idParam) {
-      const foundDoctor = doctors.find((d) => d.id === idParam) || null;
+      const foundDoctor = doctors.find((item) => item.id === idParam) || null;
       setDoctor(foundDoctor);
     }
   }, [idParam, doctors]);
@@ -33,31 +31,64 @@ export default function DoctorDetailsPage() {
 
   if (!doctor) {
     return (
-      <div className={styles.container}>
-        <h1>Detalhes do Médico</h1>
-        <p>Médico não encontrado.</p>
-        <button className={styles.back} onClick={handleBack}>
-          Voltar
+      <section className={styles.workspace} aria-labelledby="doctor-details-title">
+        <button type="button" className={styles.backLink} onClick={handleBack}>
+          <FaArrowLeft aria-hidden="true" />
+          Voltar para médicos
         </button>
-      </div>
+        <div className={styles.emptyCard}>
+          <p className={styles.eyebrow}>Equipe clínica</p>
+          <h1 id="doctor-details-title">Detalhes do Médico</h1>
+          <p>Médico não encontrado.</p>
+        </div>
+      </section>
     );
   }
 
   return (
-    <div className={styles.container}>
-      <h1>Detalhes do Médico</h1>
+    <section className={styles.workspace} aria-labelledby="doctor-details-title">
+      <button type="button" className={styles.backLink} onClick={handleBack}>
+        <FaArrowLeft aria-hidden="true" />
+        Voltar para médicos
+      </button>
 
-      <p><strong>Nome:</strong> {doctor.name}</p>
-      <p><strong>CRM:</strong> {doctor.crm}</p>
-      <p><strong>Especialidade:</strong> {doctor.specialty}</p>
-      <p><strong>Email:</strong> {doctor.email}</p>
-      <p><strong>Telefone:</strong> {doctor.phone}</p>
-      <p><strong>Ativo:</strong> {doctor.isActive ? "Sim" : "Não"}</p>
+      <header className={styles.header}>
+        <div>
+          <p className={styles.eyebrow}>Equipe clínica</p>
+          <h1 id="doctor-details-title">Detalhes do Médico</h1>
+          <p className={styles.description}>
+            Consulte os dados profissionais e a disponibilidade do médico.
+          </p>
+        </div>
+        <button type="button" className={styles.editAction} onClick={handleEdit}>
+          <FaPen aria-hidden="true" />
+          Editar
+        </button>
+      </header>
 
-      <div className={styles.actions}>
-        <button className={styles.edit} onClick={handleEdit}>Editar</button>
-        <button className={styles.back} onClick={handleBack}>Voltar</button>
-      </div>
-    </div>
+      <article className={styles.card}>
+        <div className={styles.identity}>
+          <div>
+            <span className={styles.identityLabel}>Médico</span>
+            <h2>{doctor.name}</h2>
+            <p>Identificador #{doctor.id}</p>
+          </div>
+          <span
+            className={doctor.isActive ? styles.activeBadge : styles.inactiveBadge}
+          >
+            {doctor.isActive ? "Ativo" : "Inativo"}
+          </span>
+        </div>
+
+        <dl className={styles.detailsGrid}>
+          <div><dt>Nome</dt><dd>{doctor.name}</dd></div>
+          <div><dt>CRM</dt><dd>{doctor.crm}</dd></div>
+          <div><dt>Especialidade</dt><dd>{doctor.specialty}</dd></div>
+          <div><dt>Email</dt><dd>{doctor.email}</dd></div>
+          <div><dt>Telefone</dt><dd>{doctor.phone}</dd></div>
+          <div><dt>Ativo</dt><dd>{doctor.isActive ? "Sim" : "Não"}</dd></div>
+        </dl>
+      </article>
+    </section>
   );
 }

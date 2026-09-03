@@ -1,54 +1,179 @@
-/* src/app/patient/history/HistoryPatient.module.css */
-
-.patientHistoryContainer {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 1rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+.workspace {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  color: #162033;
 }
 
-.patientHistoryContainer h1 {
-  text-align: center;
-  margin-bottom: 1rem;
-  color: #007bff;
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 22px;
+  color: #087f79;
+  font-size: 0.92rem;
+  font-weight: 800;
+  text-decoration: none;
 }
 
-/* Adicionei uma classe para a tabela para ser CSS Module puro */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #087f79;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.header h1 {
+  margin: 0;
+  color: #101828;
+  font-size: clamp(1.75rem, 3vw, 2.15rem);
+  line-height: 1.15;
+}
+
+.description {
+  max-width: 680px;
+  margin: 10px 0 0;
+  color: #667085;
+  line-height: 1.6;
+}
+
+.headerIcon,
+.emptyIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #e9f9f6;
+  color: #087f79;
+}
+
+.headerIcon {
+  width: 54px;
+  height: 54px;
+  flex: 0 0 auto;
+  font-size: 1.25rem;
+}
+
+.historyCard,
+.emptyState {
+  border: 1px solid #e4e7ec;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 12px 30px rgba(16, 24, 40, 0.05);
+}
+
+.historyCard {
+  overflow: hidden;
+}
+
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
+  min-width: 680px;
 }
 
 .table th,
 .table td {
-  border: 1px solid #ddd;
-  padding: 0.5rem;
+  padding: 17px 18px;
+  border-bottom: 1px solid #eaecf0;
   text-align: left;
+  vertical-align: top;
 }
 
 .table th {
-  background-color: #007bff;
-  color: white;
+  background: #f8fafc;
+  color: #667085;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
-.table tr:nth-child(even) {
-  background-color: #f9f9f9;
+.table td {
+  color: #344054;
+  line-height: 1.55;
 }
 
-.table tr:hover {
-  background-color: #f1f1f1;
+.table tbody tr:last-child td {
+  border-bottom: 0;
 }
 
-.backLink {
-  display: inline-block;
-  margin-top: 1rem;
-  color: #007bff;
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.2s;
+.table tbody tr:hover {
+  background: #f9fbfc;
 }
 
-.backLink:hover {
-  color: #0056b3;
+.emptyState {
+  padding: 36px 26px;
+  text-align: center;
+}
+
+.emptyIcon {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 14px;
+  font-size: 1.2rem;
+}
+
+.emptyState h2 {
+  margin: 0;
+  color: #101828;
+  font-size: 1.15rem;
+}
+
+.emptyState p {
+  margin: 8px 0 0;
+  color: #667085;
+}
+
+.backLink:focus-visible {
+  outline: 3px solid rgba(8, 145, 178, 0.28);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+@media (max-width: 720px) {
+  .header {
+    align-items: flex-start;
+  }
+
+  .headerIcon {
+    width: 46px;
+    height: 46px;
+  }
+}
+
+@media (max-width: 560px) {
+  .headerIcon {
+    display: none;
+  }
+
+  .table {
+    min-width: 620px;
+  }
+
+  .table th,
+  .table td {
+    padding: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backLink {
+    scroll-behavior: auto;
+  }
 }

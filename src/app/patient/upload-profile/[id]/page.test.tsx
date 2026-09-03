@@ -68,7 +68,7 @@ describe("UploadProfilePicturePage", () => {
   it("botão de voltar deve chamar router.push", () => {
     (useParams as jest.Mock).mockReturnValue({ id: "1" });
     render(<UploadProfilePicturePage />);
-    const backButton = screen.getByRole("button", { name: /Voltar/i });
+    const backButton = screen.getAllByRole("button", { name: /Voltar/i })[0];
     fireEvent.click(backButton);
     expect(pushMock).toHaveBeenCalledWith("/patient");
   });

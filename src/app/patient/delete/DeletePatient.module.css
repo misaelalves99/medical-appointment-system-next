@@ -1,92 +1,199 @@
-/* src/app/patient/delete/DeletePatient.module.css */
-
-/* Container principal */
-.container {
-  max-width: 450px;
-  margin: 3rem auto;
-  padding: 2rem;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #1f2937;
-  text-align: center;
+.workspace {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  color: #162033;
 }
 
-/* Título */
-.container h1 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: #b91c1c; /* Vermelho forte para alerta */
+.dangerCard {
+  border: 1px solid #fecaca;
+  border-radius: 18px;
+  background: #ffffff;
+  padding: 30px;
+  box-shadow: 0 14px 34px rgba(127, 29, 29, 0.08);
 }
 
-/* Mensagem de confirmação */
-.container p {
+.warningIcon {
+  display: flex;
+  width: 54px;
+  height: 54px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  border-radius: 15px;
+  background: #fff1f2;
+  color: #dc2626;
+  font-size: 1.35rem;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #b42318;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dangerCard h1 {
+  margin: 0;
+  color: #7f1d1d;
+  font-size: clamp(1.75rem, 3vw, 2.1rem);
+  line-height: 1.15;
+}
+
+.confirmationText {
+  margin: 14px 0 0;
+  color: #475467;
   font-size: 1rem;
-  margin-bottom: 2rem;
+  line-height: 1.65;
 }
 
-.container strong {
-  color: #b91c1c;
+.confirmationText strong {
+  color: #101828;
 }
 
-/* Área dos botões */
+.warningBox {
+  margin-top: 22px;
+  border: 1px solid #fed7aa;
+  border-radius: 12px;
+  background: #fff7ed;
+  padding: 15px 16px;
+}
+
+.warningBox strong {
+  color: #9a3412;
+}
+
+.warningBox p {
+  margin: 5px 0 0;
+  color: #9a3412;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.patientIdentity {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.5fr;
+  gap: 12px;
+  margin: 22px 0 0;
+}
+
+.patientIdentity > div {
+  min-width: 0;
+  border: 1px solid #eaecf0;
+  border-radius: 12px;
+  background: #fcfcfd;
+  padding: 14px;
+}
+
+.patientIdentity dt {
+  margin-bottom: 5px;
+  color: #667085;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.patientIdentity dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: #101828;
+  font-weight: 800;
+}
+
 .actions {
   display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #eaecf0;
 }
 
-/* Botão de exclusão */
-.deleteButton {
-  padding: 0.55rem 1.5rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  border-radius: 8px;
+.deleteButton,
+.cancelButton {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 11px;
+  padding: 0 18px;
+  font: inherit;
+  font-weight: 800;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  color: #fff;
-  background-color: #b91c1c;
-  border: none;
+  transition: transform 150ms ease, background 150ms ease, box-shadow 150ms ease;
+}
+
+.deleteButton {
+  background: #dc2626;
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.16);
 }
 
 .deleteButton:hover {
-  background-color: #991b1b;
+  background: #b91c1c;
   transform: translateY(-1px);
 }
 
-/* Botão de cancelamento */
 .cancelButton {
-  padding: 0.55rem 1.5rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  color: #374151;
-  background-color: #e5e7eb;
-  border: none;
+  background: #f2f4f7;
+  color: #344054;
 }
 
 .cancelButton:hover {
-  background-color: #d1d5db;
+  background: #e4e7ec;
   transform: translateY(-1px);
 }
 
-/* Responsividade */
-@media (max-width: 480px) {
-  .container {
-    padding: 1.5rem;
+.loading {
+  margin: 0;
+  border: 1px solid #e4e7ec;
+  border-radius: 14px;
+  background: #ffffff;
+  padding: 24px;
+  color: #667085;
+  text-align: center;
+}
+
+.deleteButton:focus-visible,
+.cancelButton:focus-visible {
+  outline: 3px solid rgba(8, 145, 178, 0.28);
+  outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .patientIdentity {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .dangerCard {
+    padding: 22px 16px;
   }
 
   .actions {
-    flex-direction: column;
+    flex-direction: column-reverse;
   }
 
   .deleteButton,
   .cancelButton {
     width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deleteButton,
+  .cancelButton {
+    transition: none;
+  }
+
+  .deleteButton:hover,
+  .cancelButton:hover {
+    transform: none;
   }
 }

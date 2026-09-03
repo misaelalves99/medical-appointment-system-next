@@ -44,7 +44,7 @@ describe("DeletePatientPage", () => {
   it("renderiza detalhes do paciente corretamente", () => {
     render(<DeletePatientPage />);
     expect(screen.getByText(/Confirmar Exclusão/i)).toBeInTheDocument();
-    expect(screen.getByText(/Carlos Oliveira/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Carlos Oliveira/i).length).toBeGreaterThan(0);
     expect(screen.getByRole("button", { name: /Excluir/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Cancelar/i })).toBeInTheDocument();
   });

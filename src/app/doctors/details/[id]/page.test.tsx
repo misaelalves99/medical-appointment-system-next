@@ -43,7 +43,7 @@ describe("DoctorDetailsPage", () => {
     render(<DoctorDetailsPage />);
 
     expect(screen.getByText("Detalhes do Médico")).toBeInTheDocument();
-    expect(screen.getByText(new RegExp(doctor.name, "i"))).toBeInTheDocument();
+    expect(screen.getAllByText(new RegExp(doctor.name, "i")).length).toBeGreaterThan(0);
     expect(screen.getByText(new RegExp(doctor.crm, "i"))).toBeInTheDocument();
     expect(screen.getByText(new RegExp(doctor.specialty, "i"))).toBeInTheDocument();
     expect(screen.getByText(new RegExp(doctor.email, "i"))).toBeInTheDocument();

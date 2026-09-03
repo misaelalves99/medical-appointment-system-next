@@ -75,8 +75,8 @@ describe("EditPatientPage", () => {
 
   it("atualiza os valores do formulário ao alterar inputs", () => {
     render(<EditPatientPage />);
-    const inputName = screen.getByLabelText(/Nome:/i) as HTMLInputElement;
-    const selectGender = screen.getByLabelText(/Sexo:/i) as HTMLSelectElement;
+    const inputName = screen.getByLabelText(/Nome/i) as HTMLInputElement;
+    const selectGender = screen.getByLabelText(/Sexo/i) as HTMLSelectElement;
 
     fireEvent.change(inputName, { target: { value: "Novo Nome" } });
     fireEvent.change(selectGender, { target: { value: "Outro" } });

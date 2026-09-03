@@ -38,21 +38,21 @@ describe("CreatePatientPage", () => {
 
   it("permite preencher os campos corretamente", () => {
     render(<CreatePatientPage />);
-    fireEvent.change(screen.getByLabelText(/Nome:/i), { target: { value: "João Teste" } });
-    fireEvent.change(screen.getByLabelText(/CPF:/i), { target: { value: "123.456.789-00" } });
-    fireEvent.change(screen.getByLabelText(/Data de Nascimento:/i), { target: { value: "1995-12-25" } });
-    fireEvent.change(screen.getByLabelText(/Sexo:/i), { target: { value: "Masculino" } });
-    fireEvent.change(screen.getByLabelText(/Telefone:/i), { target: { value: "99999-9999" } });
-    fireEvent.change(screen.getByLabelText(/Email:/i), { target: { value: "joao@teste.com" } });
-    fireEvent.change(screen.getByLabelText(/Endereço:/i), { target: { value: "Rua Teste, 123" } });
+    fireEvent.change(screen.getByLabelText(/Nome/i), { target: { value: "João Teste" } });
+    fireEvent.change(screen.getByLabelText(/CPF/i), { target: { value: "123.456.789-00" } });
+    fireEvent.change(screen.getByLabelText(/Data de nascimento/i), { target: { value: "1995-12-25" } });
+    fireEvent.change(screen.getByLabelText(/Sexo/i), { target: { value: "Masculino" } });
+    fireEvent.change(screen.getByLabelText(/Telefone/i), { target: { value: "99999-9999" } });
+    fireEvent.change(screen.getByLabelText(/Email/i), { target: { value: "joao@teste.com" } });
+    fireEvent.change(screen.getByLabelText(/Endereço/i), { target: { value: "Rua Teste, 123" } });
 
-    expect(screen.getByLabelText(/Nome:/i)).toHaveValue("João Teste");
-    expect(screen.getByLabelText(/CPF:/i)).toHaveValue("123.456.789-00");
-    expect(screen.getByLabelText(/Data de Nascimento:/i)).toHaveValue("1995-12-25");
-    expect(screen.getByLabelText(/Sexo:/i)).toHaveValue("Masculino");
-    expect(screen.getByLabelText(/Telefone:/i)).toHaveValue("99999-9999");
-    expect(screen.getByLabelText(/Email:/i)).toHaveValue("joao@teste.com");
-    expect(screen.getByLabelText(/Endereço:/i)).toHaveValue("Rua Teste, 123");
+    expect(screen.getByLabelText(/Nome/i)).toHaveValue("João Teste");
+    expect(screen.getByLabelText(/CPF/i)).toHaveValue("123.456.789-00");
+    expect(screen.getByLabelText(/Data de nascimento/i)).toHaveValue("1995-12-25");
+    expect(screen.getByLabelText(/Sexo/i)).toHaveValue("Masculino");
+    expect(screen.getByLabelText(/Telefone/i)).toHaveValue("99999-9999");
+    expect(screen.getByLabelText(/Email/i)).toHaveValue("joao@teste.com");
+    expect(screen.getByLabelText(/Endereço/i)).toHaveValue("Rua Teste, 123");
   });
 
   it("adiciona paciente e redireciona corretamente", () => {
@@ -69,13 +69,13 @@ describe("CreatePatientPage", () => {
     };
 
     const fieldLabels: Record<keyof typeof patientData, RegExp> = {
-      name: /Nome:/i,
-      cpf: /CPF:/i,
-      dateOfBirth: /Data de Nascimento:/i,
-      gender: /Sexo:/i,
-      phone: /Telefone:/i,
-      email: /Email:/i,
-      address: /Endereço:/i,
+      name: /Nome/i,
+      cpf: /CPF/i,
+      dateOfBirth: /Data de nascimento/i,
+      gender: /Sexo/i,
+      phone: /Telefone/i,
+      email: /Email/i,
+      address: /Endereço/i,
     };
 
     Object.entries(patientData).forEach(([key, value]) => {
@@ -112,11 +112,11 @@ describe("CreatePatientPage", () => {
     (usePatient as jest.Mock).mockReturnValue({ patients: [], addPatient: addPatientMock });
 
     render(<CreatePatientPage />);
-    fireEvent.change(screen.getByLabelText(/Nome:/i), { target: { value: "Paciente Único" } });
-    fireEvent.change(screen.getByLabelText(/CPF:/i), { target: { value: "000.000.000-00" } });
-    fireEvent.change(screen.getByLabelText(/Data de Nascimento:/i), { target: { value: "1990-01-01" } });
-    fireEvent.change(screen.getByLabelText(/Sexo:/i), { target: { value: "Masculino" } });
-    fireEvent.change(screen.getByLabelText(/Endereço:/i), { target: { value: "Rua Única, 1" } });
+    fireEvent.change(screen.getByLabelText(/Nome/i), { target: { value: "Paciente Único" } });
+    fireEvent.change(screen.getByLabelText(/CPF/i), { target: { value: "000.000.000-00" } });
+    fireEvent.change(screen.getByLabelText(/Data de nascimento/i), { target: { value: "1990-01-01" } });
+    fireEvent.change(screen.getByLabelText(/Sexo/i), { target: { value: "Masculino" } });
+    fireEvent.change(screen.getByLabelText(/Endereço/i), { target: { value: "Rua Única, 1" } });
 
     fireEvent.submit(screen.getByRole("button", { name: /Salvar/i }));
     expect(addPatientMock).toHaveBeenCalledWith(expect.objectContaining({ id: 1 }));

@@ -1,89 +1,202 @@
-/* src/pages/Doctor/Details/DoctorDetails.module.css */
-
-/* Container principal */
-.container {
-  max-width: 500px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #1f2937;
+.workspace {
+  width: min(100%, 1180px);
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+  color: #102a2a;
 }
 
-/* Título */
-.container h1 {
-  font-size: 1.8rem;
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #087f78;
+  font: inherit;
   font-weight: 700;
-  margin-bottom: 1.5rem;
-  text-align: center;
-  color: #111827;
-}
-
-/* Campos de informação */
-.container p {
-  font-size: 0.95rem;
-  margin-bottom: 0.75rem;
-  line-height: 1.4;
-}
-
-.container strong {
-  color: #374151;
-}
-
-/* Botões */
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
-  flex-wrap: wrap;
-}
-
-.actions button {
-  padding: 0.55rem 1.25rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  border-radius: 8px;
-  border: none;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
 }
 
-/* Botão de edição */
-.actions .edit {
-  background-color: #2563eb;
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.55rem;
+  color: #087f78;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.header h1,
+.emptyCard h1 {
+  margin: 0;
+  color: #102a2a;
+  font-size: clamp(2rem, 4vw, 2.7rem);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.description {
+  margin: 0.8rem 0 0;
+  color: #667085;
+  font-size: 1rem;
+}
+
+.editAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 46px;
+  padding: 0.75rem 1.1rem;
+  border: 1px solid #087f78;
+  border-radius: 10px;
+  background: #087f78;
   color: #fff;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
 }
 
-.actions .edit:hover {
-  background-color: #1d4ed8;
-  transform: translateY(-1px);
+.card,
+.emptyCard {
+  border: 1px solid #dbe7e5;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 14px 36px rgba(16, 42, 42, 0.07);
 }
 
-/* Botão de voltar */
-.actions .back {
-  background-color: #e5e7eb;
-  color: #374151;
+.card {
+  overflow: hidden;
 }
 
-.actions .back:hover {
-  background-color: #d1d5db;
-  transform: translateY(-1px);
+.emptyCard {
+  padding: 2rem;
 }
 
-/* Responsividade */
-@media (max-width: 480px) {
-  .container {
-    padding: 1.5rem;
-  }
+.emptyCard p:last-child {
+  margin: 1rem 0 0;
+  color: #667085;
+}
 
-  .actions {
-    flex-direction: column;
-  }
+.identity {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.75rem;
+  border-bottom: 1px solid #e5eceb;
+  background: #fbfdfd;
+}
 
-  .actions button {
-    width: 100%;
+.identityLabel {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #667085;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.identity h2 {
+  margin: 0;
+  color: #102a2a;
+  font-size: 1.35rem;
+}
+
+.identity p {
+  margin: 0.3rem 0 0;
+  color: #667085;
+}
+
+.activeBadge,
+.inactiveBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.activeBadge {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.inactiveBadge {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+  padding: 0.5rem 1.75rem 1.75rem;
+}
+
+.detailsGrid > div {
+  min-width: 0;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid #edf2f1;
+}
+
+.detailsGrid > div:nth-child(odd) {
+  padding-right: 1.5rem;
+}
+
+.detailsGrid > div:nth-child(even) {
+  padding-left: 1.5rem;
+}
+
+.detailsGrid dt {
+  margin-bottom: 0.4rem;
+  color: #667085;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.detailsGrid dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: #102a2a;
+  font-weight: 600;
+}
+
+.backLink:focus-visible,
+.editAction:focus-visible {
+  outline: 3px solid rgba(8, 127, 120, 0.28);
+  outline-offset: 4px;
+}
+
+@media (max-width: 760px) {
+  .workspace { padding: 2rem 1rem 3rem; }
+  .header { align-items: stretch; flex-direction: column; }
+  .editAction { width: 100%; }
+  .identity { align-items: flex-start; flex-direction: column; }
+  .detailsGrid { grid-template-columns: 1fr; }
+  .detailsGrid > div:nth-child(odd),
+  .detailsGrid > div:nth-child(even) { padding-left: 0; padding-right: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backLink,
+  .editAction {
+    scroll-behavior: auto;
   }
 }

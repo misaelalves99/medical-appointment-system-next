@@ -1,88 +1,261 @@
-/* src/app/appointments/delete/[id]/DeleteAppointment.module.css */
-
-/* Container principal */
-.container {
-  max-width: 450px;
-  margin: 3rem auto;
-  padding: 2rem;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  color: #1f2937;
-  text-align: center;
+.workspace {
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+  display: grid;
+  gap: 1.5rem;
 }
 
-/* Título */
-.container h1 {
-  font-size: 1.8rem;
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  color: #0f766e;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  color: #0f172a;
+  font-size: clamp(1.75rem, 3vw, 2.35rem);
+  line-height: 1.1;
+}
+
+.description {
+  max-width: 650px;
+  margin: 0.65rem 0 0;
+  color: #64748b;
+  font-size: 0.98rem;
+  line-height: 1.65;
+}
+
+.dangerCard,
+.notFoundCard {
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+}
+
+.dangerCard {
+  overflow: hidden;
+  border: 1px solid #fecaca;
+}
+
+.notFoundCard {
+  max-width: 680px;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+}
+
+.notFoundText {
+  margin: 0.75rem 0 1.25rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.warningHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.4rem 1.5rem;
+  border-bottom: 1px solid #fecaca;
+  background: #fff7f7;
+}
+
+.warningIcon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: #fee2e2;
+  color: #991b1b;
+  font-size: 1.1rem;
+  font-weight: 900;
+}
+
+.warningTitle {
+  margin: 0;
+  color: #991b1b;
+  font-size: 1.05rem;
+}
+
+.warningText {
+  margin: 0.35rem 0 0;
+  color: #7f1d1d;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0 1.5rem;
+}
+
+.summaryItem {
+  min-width: 0;
+  padding: 1.15rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.summaryItem:nth-child(odd) {
+  padding-right: 1.5rem;
+}
+
+.summaryItem:nth-child(even) {
+  padding-left: 1.5rem;
+  border-left: 1px solid #e2e8f0;
+}
+
+.summaryLabel {
+  margin: 0 0 0.35rem;
+  color: #64748b;
+  font-size: 0.78rem;
   font-weight: 700;
-  margin-bottom: 1rem;
-  color: #b91c1c;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-/* Mensagem de confirmação */
-.container p {
+.summaryValue {
+  margin: 0;
+  color: #0f172a;
   font-size: 1rem;
-  margin-bottom: 2rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
 }
 
-.container strong {
-  color: #b91c1c;
+.confirmationText {
+  margin: 1.35rem 1.5rem 0;
+  color: #475569;
+  line-height: 1.6;
 }
 
-/* Área dos botões */
 .actions {
   display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin: 1.25rem 1.5rem 0;
+  padding: 1.25rem 0 1.5rem;
+  border-top: 1px solid #e2e8f0;
 }
 
-/* Botão de exclusão */
+.backButton,
+.cancelButton,
 .deleteButton {
-  padding: 0.55rem 1.5rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  border-radius: 8px;
+  min-height: 44px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  padding: 0.7rem 1rem;
+  font: inherit;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  color: #fff;
-  background-color: #b91c1c;
-  border: none;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.backButton,
+.cancelButton {
+  border-color: #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+}
+
+.backButton:hover,
+.cancelButton:hover {
+  border-color: #94a3b8;
+  background: #f8fafc;
+}
+
+.deleteButton {
+  border-color: #b91c1c;
+  background: #b91c1c;
+  color: #ffffff;
 }
 
 .deleteButton:hover {
-  background-color: #991b1b;
+  border-color: #991b1b;
+  background: #991b1b;
   transform: translateY(-1px);
 }
 
-/* Botão de cancelamento */
-.cancelButton {
-  padding: 0.55rem 1.5rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  color: #374151;
-  background-color: #e5e7eb;
-  border: none;
+.backButton:focus-visible,
+.cancelButton:focus-visible,
+.deleteButton:focus-visible {
+  outline: 3px solid rgba(13, 148, 136, 0.24);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 1px #0d9488;
 }
 
-.cancelButton:hover {
-  background-color: #d1d5db;
-  transform: translateY(-1px);
-}
-
-/* Responsividade */
-@media (max-width: 480px) {
-  .container {
-    padding: 1.5rem;
+@media (max-width: 760px) {
+  .header {
+    flex-direction: column;
   }
 
-  .deleteButton,
-  .cancelButton {
+  .backButton {
     width: 100%;
+  }
+
+  .summaryGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .summaryItem:nth-child(odd),
+  .summaryItem:nth-child(even) {
+    padding-left: 0;
+    padding-right: 0;
+    border-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .warningHeader {
+    padding: 1rem;
+  }
+
+  .summaryGrid {
+    padding: 0 1rem;
+  }
+
+  .confirmationText {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  .actions {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    flex-direction: column;
+  }
+
+  .cancelButton,
+  .deleteButton {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backButton,
+  .cancelButton,
+  .deleteButton {
+    transition: none;
+  }
+
+  .deleteButton:hover {
+    transform: none;
   }
 }
