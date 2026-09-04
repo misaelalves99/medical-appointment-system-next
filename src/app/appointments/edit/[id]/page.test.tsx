@@ -126,7 +126,7 @@ describe("EditAppointmentPage", () => {
       id: 1,
       patientId: 11,
       doctorId: 21,
-      appointmentDate: "2025-08-23T17:00:00.000Z",
+      appointmentDate: new Date("2025-08-23T14:00").toISOString(),
       status: AppointmentStatus.Confirmed,
       notes: "Nova observação",
     });

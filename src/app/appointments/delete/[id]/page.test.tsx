@@ -47,8 +47,8 @@ describe("DeleteAppointmentPage", () => {
     const appointment = appointmentsMock[0];
     const dt = new Date(appointment.appointmentDate);
 
-    const formattedDate = dt.toLocaleDateString();
-    const formattedTime = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const formattedDate = dt.toLocaleDateString("pt-BR");
+    const formattedTime = dt.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
     expect(screen.getByRole("heading", { name: "Confirmar exclusão" })).toBeInTheDocument();
     if (appointment.patientName)
