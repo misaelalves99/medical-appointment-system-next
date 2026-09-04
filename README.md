@@ -48,4 +48,3 @@ Copy .env.example to .env.local and provide the environment-specific values loca
 ### Deployment status
 
 Stage 07 is preparing the repository delivery foundation. A successful local build or CI run does not by itself mean that the application has been published to a production environment.
-
