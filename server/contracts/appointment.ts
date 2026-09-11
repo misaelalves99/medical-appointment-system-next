@@ -9,11 +9,13 @@ export const createAppointmentSchema = z.object({
 });
 
 export type CreateAppointmentInput = z.infer<typeof createAppointmentSchema>;
+export type CreateAppointmentCommand = CreateAppointmentInput & { ownerUserId: string };
 
 export interface AppointmentDto {
   id: string;
   patientId: string;
   practitionerId: string;
+  ownerUserId: string | null;
   startAt: string;
   endAt: string;
   reason?: string;

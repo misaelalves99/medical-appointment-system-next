@@ -1,10 +1,5 @@
-import type {
-  AppointmentDto,
-  CreateAppointmentInput,
-} from "../contracts/appointment";
+import type { AppointmentDto, CreateAppointmentCommand } from "../contracts/appointment";
 
 export interface AppointmentRepository {
-  createIfNoOverlap(
-    input: CreateAppointmentInput,
-  ): Promise<AppointmentDto | null>;
+  createIfNoOverlap(input: CreateAppointmentCommand): Promise<AppointmentDto | null>;
 }
