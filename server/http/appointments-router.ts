@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, type RequestHandler } from "express";
 import { ZodError } from "zod";
 import { createAppointmentSchema } from "../contracts/appointment";
 import {
@@ -6,17 +6,45 @@ import {
   AppointmentDomainError,
 } from "../application/create-appointment";
 import type { createAppointmentService } from "../application/create-appointment";
+import type { AuthenticatedRequest } from "../auth/middleware";
 
 type CreateAppointmentHandler = ReturnType<typeof createAppointmentService>;
 
+function canCreateAppointment(
+  request: AuthenticatedRequest,
+  patientId: string,
+  practitionerId: string,
+): boolean {
+  const principal = request.auth;
+  if (!principal) return false;
+  if (principal.role === "ADMIN") return true;
+  if (principal.role === "PATIENT") return principal.sub === patientId;
+  return (
+    principal.role === "PRACTITIONER" &&
+    principal.practitionerId !== null &&
+    principal.practitionerId === practitionerId
+  );
+}
+
 export function appointmentsRouter(
   createAppointment: CreateAppointmentHandler,
+  requireAuth: RequestHandler,
 ): Router {
   const router = Router();
 
-  router.post("/", async (request, response) => {
+  router.post("/", requireAuth, async (request, response) => {
     try {
       const input = createAppointmentSchema.parse(request.body);
+      if (!canCreateAppointment(request as AuthenticatedRequest, input.patientId, input.practitionerId)) {
+        response.status(403).json({
+          error: {
+            code: "FORBIDDEN",
+            message: "Authenticated principal cannot create this appointment.",
+          },
+        });
+        return;
+      }
+
       const appointment = await createAppointment(input);
       response.status(201).json({ data: appointment });
     } catch (error) {
