@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: medical-appointment-system-next
+spec:
+  type: ClusterIP
+  selector:
+    app: medical-appointment-system-next
+  ports:
+    - name: http
+      port: 3000
+      targetPort: http
