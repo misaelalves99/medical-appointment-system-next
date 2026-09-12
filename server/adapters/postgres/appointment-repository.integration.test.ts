@@ -8,7 +8,10 @@ const databaseUrl = process.env.TEST_DATABASE_URL;
 const describeDatabase = databaseUrl ? describe : describe.skip;
 
 describeDatabase("PostgresAppointmentRepository", () => {
-  if (!databaseUrl) return;
+  if (!databaseUrl) {
+    it.skip("requires TEST_DATABASE_URL for PostgreSQL integration tests", () => {});
+    return;
+  }
 
   const client = createPostgresClient(databaseUrl);
   const repository = new PostgresAppointmentRepository(client.db);

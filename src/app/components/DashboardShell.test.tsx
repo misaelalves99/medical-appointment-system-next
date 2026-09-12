@@ -24,6 +24,7 @@ describe('DashboardShell', () => {
       push,
       replace: jest.fn(),
       prefetch: jest.fn(),
+  bfcacheId: "test-bfcache",
     });
     mockUseAuth.mockReturnValue({
       user: { id: 'stage04-user', name: 'Usuário Teste Stage04', email: 'stage04@example.com' },
@@ -73,3 +74,4 @@ describe('DashboardShell', () => {
     expect(push).toHaveBeenCalledWith('/auth/login');
   });
 });
+

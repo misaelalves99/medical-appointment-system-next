@@ -1,8 +1,8 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { useAuth } from './hooks/useAuth';
-import { usePathname, redirect } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import DashboardShell from './components/DashboardShell';
 
 interface ProtectedAppProps {
@@ -12,14 +12,20 @@ interface ProtectedAppProps {
 export default function ProtectedApp({ children }: ProtectedAppProps) {
   const { user } = useAuth();
   const pathname = usePathname();
-
+  const router = useRouter();
   const publicRoutes = ['/auth/login', '/auth/register'];
+  const requiresLogin = !user && !publicRoutes.includes(pathname);
 
-  if (!user && !publicRoutes.includes(pathname)) {
-    redirect('/auth/login');
+  useEffect(() => {
+    if (requiresLogin) {
+      router.replace('/auth/login');
+    }
+  }, [requiresLogin, router]);
+
+  if (requiresLogin) {
+    return null;
   }
-
-  const isPublicRoute = publicRoutes.includes(pathname);
+const isPublicRoute = publicRoutes.includes(pathname);
 
   if (isPublicRoute) {
     return <main style={{ minHeight: '100vh' }}>{children}</main>;

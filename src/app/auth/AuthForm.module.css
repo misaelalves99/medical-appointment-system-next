@@ -37,7 +37,7 @@
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  color: #57A8EE;
+  color: #1769AA;
   text-align: center;
 }
 
@@ -66,7 +66,7 @@
 }
 
 .input:focus {
-  border-color: #2A9DDA;
+  border-color: #006FA6;
   box-shadow: 0 0 0 3px rgba(42,157,218,0.25);
   outline: none;
 }
@@ -105,7 +105,7 @@
   text-align: center;
   margin: 1.8rem 0;
   font-size: 0.9rem;
-  color: #777;
+  color: #595959;
   position: relative;
 }
 
@@ -173,7 +173,7 @@
 }
 
 .link {
-  color: #2A9DDA;
+  color: #006FA6;
   font-weight: 500;
   text-decoration: underline;
   transition: color 0.3s;
