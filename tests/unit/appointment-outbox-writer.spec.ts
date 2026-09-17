@@ -17,10 +17,10 @@ describe("writeAppointmentAndOutbox", () => {
     const appointment = { id: "apt-001" } as any;
     const event = {
       eventId: "evt-001",
-      eventType: "appointment.reminder.requested.v1",
-      occurredAt: new Date("2026-09-17T12:00:00.000Z"),
+      eventType: "appointment.reminder.requested.v1" as const,
+      occurredAt: new Date("2026-09-17T12:00:00.000Z").toISOString(),
       appointmentId: "apt-001",
-      scheduledFor: new Date("2026-09-18T12:00:00.000Z"),
+      scheduledFor: new Date("2026-09-18T12:00:00.000Z").toISOString(),
     };
 
     await writeAppointmentAndOutbox(tx, appointment, event);
@@ -38,3 +38,5 @@ describe("writeAppointmentAndOutbox", () => {
     }]);
   });
 });
+
+
