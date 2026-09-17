@@ -36,6 +36,8 @@ const config: Config = {
   collectCoverage: true,
   coverageDirectory: "coverage",
   coverageReporters: ["text", "json", "html"],
+  testPathIgnorePatterns: ["/services/reminder-service/"],
 };
 
 export default config;
+

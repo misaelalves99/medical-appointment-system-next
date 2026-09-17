@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid , jsonb } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -35,4 +35,13 @@ export const appointments = pgTable("appointments", {
   createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
     .defaultNow()
     .notNull(),
+});
+
+export const outboxEvents = pgTable("outbox_events", {
+  id: uuid("id").primaryKey(),
+  eventType: text("event_type").notNull(),
+  aggregateId: text("aggregate_id").notNull(),
+  payload: jsonb("payload").notNull(),
+  occurredAt: timestamp("occurred_at", { withTimezone: true }).notNull(),
+  publishedAt: timestamp("published_at", { withTimezone: true }),
 });

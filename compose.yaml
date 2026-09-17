@@ -8,3 +8,22 @@ services:
       - "3000:3000"
     environment:
       NODE_ENV: production
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: medical_appointment
+      POSTGRES_USER: medical_app
+      POSTGRES_PASSWORD: local_dev_only
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U medical_app -d medical_appointment"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - medical_appointment_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  medical_appointment_postgres_data:
