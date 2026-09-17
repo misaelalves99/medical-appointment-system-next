@@ -1,0 +1,20 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Cycle 03 bounded-context table owned only by reminder-service.
+/// Existing scheduling/auth tables remain owned by the Express/Drizzle application.
+model ReminderRecord {
+  id            String   @id @default(uuid())
+  appointmentId String   @unique @map("appointment_id")
+  scheduledFor  DateTime @map("scheduled_for")
+  status        String
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@map("c3_reminder_records")
+}
