@@ -1,3 +1,4 @@
+import { and, eq } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import type { AppointmentDto, CreateAppointmentCommand } from "../../contracts/appointment";
 import { appointments } from "../../db/schema";
@@ -49,5 +50,15 @@ export class PostgresAppointmentRepository implements AppointmentRepository {
       if (getErrorCode(error) === "23P01") return null;
       throw error;
     }
+  }
+
+  async findByIdForPrincipal(id: string, principalId: string): Promise<AppointmentDto | null> {
+    const rows = await this.db
+      .select()
+      .from(appointments)
+      .where(and(eq(appointments.id, id), eq(appointments.ownerUserId, principalId)))
+      .limit(1);
+    const appointment = rows[0];
+    return appointment ? toDto(appointment) : null;
   }
 }

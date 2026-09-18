@@ -23,7 +23,7 @@ function patientAuth(request: Request, _response: Response, next: NextFunction) 
 
 describe("POST /api/appointments", () => {
   it("returns 401 without an authenticated principal", async () => {
-    const repository: AppointmentRepository = { createIfNoOverlap: jest.fn() };
+    const repository: AppointmentRepository = { createIfNoOverlap: jest.fn(), findByIdForPrincipal: jest.fn() };
     await request(createHttpApp(createAppointmentService(repository)))
       .post("/api/appointments").send(validPayload).expect(401);
   });
@@ -31,6 +31,7 @@ describe("POST /api/appointments", () => {
   it("returns 201 and persists authenticated ownership", async () => {
     const repository: AppointmentRepository = {
       createIfNoOverlap: jest.fn().mockImplementation(async (input) => ({ id: "appointment-demo-001", ...input })),
+      findByIdForPrincipal: jest.fn(),
     };
     const app = createHttpApp(createAppointmentService(repository), { requireAuth: patientAuth });
     await request(app).post("/api/appointments").send(validPayload).expect(201);
@@ -38,7 +39,7 @@ describe("POST /api/appointments", () => {
   });
 
   it("returns 403 before repository access for a patient cross-owner attempt", async () => {
-    const repository: AppointmentRepository = { createIfNoOverlap: jest.fn() };
+    const repository: AppointmentRepository = { createIfNoOverlap: jest.fn(), findByIdForPrincipal: jest.fn() };
     const app = createHttpApp(createAppointmentService(repository), { requireAuth: patientAuth });
     await request(app).post("/api/appointments")
       .send({ ...validPayload, patientId: "22222222-2222-4222-8222-222222222222" }).expect(403);
@@ -46,7 +47,7 @@ describe("POST /api/appointments", () => {
   });
 
   it("returns 400 for an invalid time interval", async () => {
-    const repository: AppointmentRepository = { createIfNoOverlap: jest.fn() };
+    const repository: AppointmentRepository = { createIfNoOverlap: jest.fn(), findByIdForPrincipal: jest.fn() };
     const app = createHttpApp(createAppointmentService(repository), { requireAuth: patientAuth });
     await request(app).post("/api/appointments")
       .send({ ...validPayload, startAt: "2026-09-11T14:00:00.000Z", endAt: "2026-09-11T13:00:00.000Z" })
@@ -55,7 +56,9 @@ describe("POST /api/appointments", () => {
   });
 
   it("returns 409 when the repository rejects an overlap", async () => {
-    const repository: AppointmentRepository = { createIfNoOverlap: jest.fn().mockResolvedValue(null) };
+    const repository: AppointmentRepository = { createIfNoOverlap: jest.fn().mockResolvedValue(null),
+      findByIdForPrincipal: jest.fn(),
+    };
     const app = createHttpApp(createAppointmentService(repository), { requireAuth: patientAuth });
     await request(app).post("/api/appointments").send(validPayload).expect(409);
   });
@@ -63,6 +66,7 @@ describe("POST /api/appointments", () => {
   it("returns 500 without leaking an internal exception", async () => {
     const repository: AppointmentRepository = {
       createIfNoOverlap: jest.fn().mockRejectedValue(new Error("synthetic internal failure")),
+      findByIdForPrincipal: jest.fn(),
     };
     const app = createHttpApp(createAppointmentService(repository), { requireAuth: patientAuth });
     await request(app).post("/api/appointments").send(validPayload).expect(500).expect({

@@ -1,3 +1,4 @@
+import { assertAppointmentReminderRequestedV1 } from "../../../../server/contracts/events/appointment-reminder-requested-v1";
 import type { ReminderRequestedEvent } from "../../../../server/domain/outbox-event";
 
 export interface ReminderEventHandler {
@@ -8,6 +9,7 @@ export async function processReminderQueueJob(
   job: { name: string; data: ReminderRequestedEvent },
   handler: ReminderEventHandler,
 ): Promise<void> {
+  assertAppointmentReminderRequestedV1(job.data);
   if (job.name !== "appointment.reminder.requested.v1") {
     throw new Error(`unsupported reminder event type: ${job.name}`);
   }

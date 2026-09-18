@@ -1,6 +1,8 @@
 import express, { Router, type Express, type RequestHandler } from "express";
 import type { createAppointmentService } from "../application/create-appointment";
+import { createAppointmentGraphqlHandler, type AppointmentReadPort } from "./graphql-appointment";
 import { appointmentsRouter } from "./appointments-router";
+import { createAppointmentStatusStreamHandler } from "./appointment-status-stream";
 
 type CreateAppointmentHandler = ReturnType<typeof createAppointmentService>;
 
@@ -13,6 +15,7 @@ const denyUnauthenticated: RequestHandler = (_request, response) => {
 export interface HttpAuthDependencies {
   router?: Router;
   requireAuth?: RequestHandler;
+  appointmentReadPort?: AppointmentReadPort;
 }
 
 export function createHttpApp(
@@ -24,6 +27,18 @@ export function createHttpApp(
   app.use(express.json());
   if (auth.router) {
     app.use("/api/auth", auth.router);
+  }
+  if (auth.appointmentReadPort) {
+    app.get(
+      "/api/appointments/:id/status-stream",
+      auth.requireAuth ?? denyUnauthenticated,
+      createAppointmentStatusStreamHandler(auth.appointmentReadPort),
+    );
+    app.post(
+      "/graphql",
+      auth.requireAuth ?? denyUnauthenticated,
+      createAppointmentGraphqlHandler(auth.appointmentReadPort),
+    );
   }
   app.use(
     "/api/appointments",

@@ -14,13 +14,16 @@ describe("create appointment service", () => {
   it("returns the record created by the repository contract", async () => {
     const repository: AppointmentRepository = {
       createIfNoOverlap: jest.fn().mockResolvedValue({ id: "appointment-demo-001", ...input }),
+      findByIdForPrincipal: jest.fn(),
     };
     const createAppointment = createAppointmentService(repository);
     await expect(createAppointment(input)).resolves.toEqual({ id: "appointment-demo-001", ...input });
   });
 
   it("maps repository overlap rejection to a conflict error", async () => {
-    const repository: AppointmentRepository = { createIfNoOverlap: jest.fn().mockResolvedValue(null) };
+    const repository: AppointmentRepository = { createIfNoOverlap: jest.fn().mockResolvedValue(null),
+      findByIdForPrincipal: jest.fn(),
+    };
     await expect(createAppointmentService(repository)(input)).rejects.toBeInstanceOf(AppointmentConflictError);
   });
 });

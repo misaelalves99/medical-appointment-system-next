@@ -40,6 +40,33 @@ describeDatabase("PostgresAppointmentRepository", () => {
     expect(result.rows[0]?.owner_user_id).toBe(ownerUserId);
   });
 
+  it("reads an appointment only for its owning principal", async () => {
+    const created = await repository.createIfNoOverlap({
+      patientId: ownerUserId,
+      practitionerId: "doctor-read-scope",
+      ownerUserId,
+      startAt: "2030-01-02T10:00:00.000Z",
+      endAt: "2030-01-02T10:30:00.000Z",
+      reason: "Synthetic owner-scoped read proof",
+    });
+    expect(created).not.toBeNull();
+
+    const ownerRead = await repository.findByIdForPrincipal(created!.id, ownerUserId);
+    expect(ownerRead?.id).toBe(created!.id);
+    expect(ownerRead?.ownerUserId).toBe(ownerUserId);
+
+    const differentPrincipalRead = await repository.findByIdForPrincipal(
+      created!.id,
+      "22222222-2222-4222-8222-222222222222",
+    );
+    expect(differentPrincipalRead).toBeNull();
+
+    const unknownRead = await repository.findByIdForPrincipal(
+      "33333333-3333-4333-8333-333333333333",
+      ownerUserId,
+    );
+    expect(unknownRead).toBeNull();
+  });
   it("allows only one winner for concurrent overlapping appointments", async () => {
     const first = repository.createIfNoOverlap({
       patientId: ownerUserId, practitionerId: "doctor-concurrency", ownerUserId,

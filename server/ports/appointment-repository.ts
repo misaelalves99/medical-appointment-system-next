@@ -2,4 +2,5 @@ import type { AppointmentDto, CreateAppointmentCommand } from "../contracts/appo
 
 export interface AppointmentRepository {
   createIfNoOverlap(input: CreateAppointmentCommand): Promise<AppointmentDto | null>;
+  findByIdForPrincipal(id: string, principalId: string): Promise<AppointmentDto | null>;
 }
