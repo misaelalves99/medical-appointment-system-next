@@ -1,3 +1,4 @@
+import { createObservabilityMiddleware } from "../observability/http-middleware";
 import express, { Router, type Express, type RequestHandler } from "express";
 import type { createAppointmentService } from "../application/create-appointment";
 import { createAppointmentGraphqlHandler, type AppointmentReadPort } from "./graphql-appointment";
@@ -21,8 +22,11 @@ export interface HttpAuthDependencies {
 export function createHttpApp(
   createAppointment: CreateAppointmentHandler,
   auth: HttpAuthDependencies = {},
+  observabilityMiddleware = createObservabilityMiddleware(),
 ): Express {
   const app = express();
+
+  app.use(observabilityMiddleware);
 
   app.use(express.json());
   if (auth.router) {
