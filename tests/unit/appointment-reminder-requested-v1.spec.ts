@@ -22,4 +22,3 @@ describe("appointment reminder integration event v1", () => {
   it("rejects unsupported event type", () => expect(isAppointmentReminderRequestedV1({ ...valid, eventType: "appointment.reminder.requested.v2" })).toBe(false));
   it("assertion throws for malformed event", () => expect(() => assertAppointmentReminderRequestedV1({ eventType: APPOINTMENT_REMINDER_REQUESTED_V1 })).toThrow());
 });
-
