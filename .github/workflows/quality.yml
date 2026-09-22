@@ -72,3 +72,32 @@ jobs:
         run: npm run build
       - name: Build Docker image
         run: docker build -t medical-appointment-system-next:ci .
+
+  infrastructure-contract:
+    name: Infrastructure contract
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Render Kubernetes manifests
+        run: kubectl kustomize k8s/base > /tmp/medical-appointment-system-next-k8s.yaml
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.16.2
+          terraform_wrapper: false
+
+      - name: Terraform format
+        run: terraform fmt -check -recursive infra/terraform/local-contract
+
+      - name: Terraform initialize without backend
+        working-directory: infra/terraform/local-contract
+        run: terraform init -backend=false -input=false
+
+      - name: Terraform validate
+        working-directory: infra/terraform/local-contract
+        run: terraform validate -no-color
+
+      - name: Terraform provider-free plan
+        working-directory: infra/terraform/local-contract
+        run: terraform plan -input=false -lock=false -refresh=false -no-color
